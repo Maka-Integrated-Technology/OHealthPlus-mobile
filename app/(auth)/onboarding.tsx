@@ -46,7 +46,7 @@ const onboardingData: OnboardingSlide[] = [
         id: "3",
         image: authAssets.onboarding.slide3,
         header: "Your health, your control",
-        description: "Your data is private and secure.Every healthcare professional is verified, so you can feel confident about the care you receive.",
+        description: "Your data is private and secure. \nEvery healthcare professional is verified, so you can feel confident about the care you receive.",
     },
 ];
 
@@ -95,7 +95,7 @@ export default function TabTwoScreen() {
             {/*image header */}
             <Image
                 source={require("@/assets/icons/icon.png")}
-                style={{ width: 100, height: 60, objectFit: 'contain', position: 'absolute', top: 60 }}
+                style={{ width: 100, height: 60, objectFit: 'contain', position: 'absolute', top: 40 }}
             />
 
             {/*Onboarding Image slider */}
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     imageContainer: {
         width: screenWidth * 1,
         height: "50%",
-        marginBottom: -75,
+        marginBottom: -20,
     },
     container: {
         flex: 1,
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     onboardImage: {
-        width: "80%",
+        width: "90%",
         objectFit: "contain",
         alignItems: "center",
     },
