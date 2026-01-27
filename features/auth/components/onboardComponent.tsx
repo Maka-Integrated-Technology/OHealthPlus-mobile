@@ -21,9 +21,14 @@ export const OnboardingContent = ({
 }: OnboardingContentProps) => {
     return (
         <View style={styles.container}>
+
             <View style={styles.textContainer}>
+
+                {/*Onboard title */}
                 <Text style={styles.title1}>{title1}</Text>
 
+
+                {/*Onboard description */}
                 {typeof title === "string" ? (
                     <Text style={styles.title}>{title}</Text>
                 ) : (
@@ -38,6 +43,9 @@ export const OnboardingContent = ({
                 )}
             </View>
 
+
+
+            {/*Onboard dots */}
             <View style={styles.dotsContainer}>
                 <View style={styles.dots}>
                     {Array.from({ length: totalSlides }).map((_, index) => (
