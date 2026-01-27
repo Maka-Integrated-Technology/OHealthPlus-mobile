@@ -10,9 +10,9 @@ export const ROUTES = {
     // ============================================
     // Authentication Routes
     // ============================================
-    AUTHENTICATION: "/(auth)/",
-    SIGN_UP: "/(auth)/screens/Signup",
-    SIGN_IN: "/(auth)/",
+
+    SIGN_UP: "/(auth)/signup",
+    SIGN_IN: "/(auth)/signin",
     FORGOT_PASSWORD: "/(auth)/screens/ForgotPassword",
     EMAIL_VERIFICATION: "/(auth)/screens/EmailVerification",
     PASSWORD_SUCCESS: "/(auth)/screens/PasswordSuccess",
