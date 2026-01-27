@@ -53,7 +53,7 @@ export const OnboardingContent = ({
             </View>
 
             <Button onPress={onNext} style={styles.button}>
-                {currentIndex === 2 ? "Get Started" : "Next"}
+                {currentIndex === 0 ? "start" : currentIndex === 2 ? "Get Started" : "Next"}
             </Button>
         </View>
     );
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     button: {
         width: "100%",
         marginTop: 20,
-        borderRadius: 12
+        borderRadius: 18
     },
     dotsContainer: {
         alignItems: "center",
