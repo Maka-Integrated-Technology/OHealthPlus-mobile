@@ -21,9 +21,14 @@ export const OnboardingContent = ({
 }: OnboardingContentProps) => {
     return (
         <View style={styles.container}>
+
             <View style={styles.textContainer}>
+
+                {/*Onboard title */}
                 <Text style={styles.title1}>{title1}</Text>
 
+
+                {/*Onboard description */}
                 {typeof title === "string" ? (
                     <Text style={styles.title}>{title}</Text>
                 ) : (
@@ -38,6 +43,9 @@ export const OnboardingContent = ({
                 )}
             </View>
 
+
+
+            {/*Onboard dots */}
             <View style={styles.dotsContainer}>
                 <View style={styles.dots}>
                     {Array.from({ length: totalSlides }).map((_, index) => (
@@ -53,7 +61,7 @@ export const OnboardingContent = ({
             </View>
 
             <Button onPress={onNext} style={styles.button}>
-                {currentIndex === 2 ? "Get Started" : "Next"}
+                {currentIndex === 0 ? "start" : currentIndex === 2 ? "Get Started" : "Next"}
             </Button>
         </View>
     );
@@ -104,7 +112,7 @@ const styles = StyleSheet.create({
     button: {
         width: "100%",
         marginTop: 20,
-        borderRadius: 12
+        borderRadius: 18
     },
     dotsContainer: {
         alignItems: "center",
