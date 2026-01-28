@@ -128,7 +128,7 @@ export default function TabTwoScreen() {
                 onNext={handleNext}
             />
 
-
+            {/*onboard Auth text */}
             <AuthModal
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
