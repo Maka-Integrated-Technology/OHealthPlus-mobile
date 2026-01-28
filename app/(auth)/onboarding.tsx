@@ -1,6 +1,6 @@
 import { authAssets } from "@/features/auth/assets";
 import { OnboardingContent } from "@/features/auth/components/onboardComponent";
-import { View } from "react-native";
+import { Alert, Modal, Pressable, View } from "react-native";
 import { useAppRouter } from "@/config/route";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
@@ -11,6 +11,8 @@ import {
     StyleSheet,
     ViewToken,
 } from "react-native";
+import { Text } from "@/components/Text";
+import Button, { GoogleButton, AppleButton } from "@/components/Button";
 
 export interface DescriptionObj {
     icon: ImageSourcePropType,
@@ -56,6 +58,7 @@ export default function TabTwoScreen() {
     const flatListRef = useRef<FlatList<any>>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const router = useAppRouter();
+    const [modalVisible, setModalVisible] = useState(false);
 
     const onViewableItemsChanged = useCallback(
         ({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -78,6 +81,19 @@ export default function TabTwoScreen() {
         router.toSignIn();
     };
 
+    const createAccount = () => {
+        router.toSignUp();
+    };
+
+    const handleGoogleSignin = () => {
+        console.log("Google signin");
+    };
+
+    const handleAppleSignin = () => {
+        console.log("Apple signin");
+    };
+
+
     const handleNext = () => {
         if (currentIndex < onboardingData.length - 1) {
             flatListRef.current?.scrollToIndex({
@@ -86,7 +102,7 @@ export default function TabTwoScreen() {
             });
         } else {
             console.log("Get started");
-            router.toSignIn();
+            setModalVisible(true);
         }
     };
 
@@ -124,6 +140,44 @@ export default function TabTwoScreen() {
                 totalSlides={onboardingData.length}
                 onNext={handleNext}
             />
+
+            <Modal
+                animationType="slide"
+                visible={modalVisible}
+                backdropColor={"#00000080"}
+                statusBarTranslucent
+                onDismiss={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                }}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <Pressable
+                    style={styles.centeredView}
+                    onPress={() => setModalVisible(false)}
+                >
+                    <Pressable
+                        style={styles.modalView}
+                    >
+
+                        <View style={styles.buttonContainer}>
+                            <Button style={{ width: '100%' }} onPress={createAccount}>
+                                Create an account
+                            </Button>
+                            <Button type="secondary" style={{ width: '100%' }} onPress={createAccount}>
+                                I have an account
+                            </Button>
+                        </View>
+
+                        <Image source={authAssets.onboarding.divider} style={{ width: "100%", height: 40, objectFit: 'contain', }} />
+
+                        <View style={styles.buttonContainer}>
+                            <GoogleButton style={{ width: '100%' }} onPress={handleGoogleSignin} />
+                            <AppleButton style={{ width: '100%' }} onPress={handleAppleSignin} />
+                        </View>
+                    </Pressable>
+                </Pressable>
+            </Modal >
         </View>
     );
 }
@@ -200,4 +254,48 @@ const styles = StyleSheet.create({
         gap: 12,
         backgroundColor: "#5669FF",
     },
-});
+
+
+    centeredView: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent backdrop
+    },
+    modalView: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    buttonContainer: {
+        width: '100%',
+        gap: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+}
+);
