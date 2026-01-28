@@ -1,18 +1,23 @@
 import { authAssets } from "@/features/auth/assets";
 import { OnboardingContent } from "@/features/auth/components/onboardComponent";
-import { Alert, Modal, Pressable, View } from "react-native";
+import AuthModal from "@/features/auth/components/AuthModal";
 import { useAppRouter } from "@/config/route";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
+    Alert,
     Dimensions,
     FlatList,
     Image,
     ImageSourcePropType,
+    Modal,
+    Pressable,
     StyleSheet,
     ViewToken,
 } from "react-native";
-import { Text } from "@/components/Text";
-import Button, { GoogleButton, AppleButton } from "@/components/Button";
+import { View } from "react-native";
+import useAuthModal from "@/features/auth/hooks/useAuthModal";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import Button, { AppleButton, GoogleButton } from "@/components/Button";
 
 export interface DescriptionObj {
     icon: ImageSourcePropType,
@@ -57,8 +62,7 @@ const screenWidth = Dimensions.get("window").width;
 export default function TabTwoScreen() {
     const flatListRef = useRef<FlatList<any>>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const router = useAppRouter();
-    const [modalVisible, setModalVisible] = useState(false);
+    const { createAccount, handleGoogleSignin, modalVisible, setModalVisible, handleAppleSignin } = useAuthModal();
 
     const onViewableItemsChanged = useCallback(
         ({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -77,23 +81,6 @@ export default function TabTwoScreen() {
         []
     );
 
-    const handleSkip = () => {
-        router.toSignIn();
-    };
-
-    const createAccount = () => {
-        router.toSignUp();
-    };
-
-    const handleGoogleSignin = () => {
-        console.log("Google signin");
-    };
-
-    const handleAppleSignin = () => {
-        console.log("Apple signin");
-    };
-
-
     const handleNext = () => {
         if (currentIndex < onboardingData.length - 1) {
             flatListRef.current?.scrollToIndex({
@@ -107,7 +94,7 @@ export default function TabTwoScreen() {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             {/*image header */}
             <Image
                 source={require("@/assets/icons/icon.png")}
@@ -141,44 +128,15 @@ export default function TabTwoScreen() {
                 onNext={handleNext}
             />
 
-            <Modal
-                animationType="slide"
-                visible={modalVisible}
-                backdropColor={"#00000080"}
-                statusBarTranslucent
-                onDismiss={() => {
-                    Alert.alert('Modal has been closed.');
-                    setModalVisible(!modalVisible);
-                }}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <Pressable
-                    style={styles.centeredView}
-                    onPress={() => setModalVisible(false)}
-                >
-                    <Pressable
-                        style={styles.modalView}
-                    >
 
-                        <View style={styles.buttonContainer}>
-                            <Button style={{ width: '100%' }} onPress={createAccount}>
-                                Create an account
-                            </Button>
-                            <Button type="secondary" style={{ width: '100%' }} onPress={createAccount}>
-                                I have an account
-                            </Button>
-                        </View>
-
-                        <Image source={authAssets.onboarding.divider} style={{ width: "100%", height: 40, objectFit: 'contain', }} />
-
-                        <View style={styles.buttonContainer}>
-                            <GoogleButton style={{ width: '100%' }} onPress={handleGoogleSignin} />
-                            <AppleButton style={{ width: '100%' }} onPress={handleAppleSignin} />
-                        </View>
-                    </Pressable>
-                </Pressable>
-            </Modal >
-        </View>
+            <AuthModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                createAccount={createAccount}
+                handleGoogleSignin={handleGoogleSignin}
+                handleAppleSignin={handleAppleSignin}
+            />
+        </SafeAreaView>
     );
 }
 
@@ -259,7 +217,6 @@ const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
         justifyContent: 'flex-end',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent backdrop
     },
     modalView: {
         backgroundColor: 'white',
