@@ -4,13 +4,15 @@ export const authAssets = {
         slide2: require('./images/onboard-2.png'),
         slide3: require('./images/onboard-3.png'),
 
-
         icon1: require('./icons/icon-1.png'),
         icon2: require('./icons/icon-2.png'),
-        icon3: require('./icons/icon-3.png')
+        icon3: require('./icons/icon-3.png'),
+        divider: require('./icons/divider.png'),
     },
 
-
-    //   login: require('./login-illustration.png'),
-    //   signup: require('./signup-illustration.png'),
+    // Social login icons
+    icons: {
+        google: require('./icons/google.png'),
+        apple: require('./icons/apple.png'),
+    },
 };

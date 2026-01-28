@@ -8,5 +8,8 @@ export default {
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
     primary: '#155EEF',
-    secondary: 'red'
+    // secondary: '#EFF4FF'
+    secondary: '#B2CCFF',
+    secondaryLight: '#EFF4FF',
+
 };
