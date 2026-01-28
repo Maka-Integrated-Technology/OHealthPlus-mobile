@@ -1,8 +1,8 @@
-// OnboardingContent.tsx
-import { DescriptionObj } from "@/app/(auth)/onboarding";
+import { DescriptionObj } from "../types/onboarding";
 import Button from "@/components/Button";
 import Colors from "@/constants/Colors";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
+import { Text } from "@/components/Text";
 
 interface OnboardingContentProps {
     title1: string;
@@ -25,18 +25,18 @@ export const OnboardingContent = ({
             <View style={styles.textContainer}>
 
                 {/*Onboard title */}
-                <Text style={styles.title1}>{title1}</Text>
+                <Text weight="bold" style={[styles.title1]} >{title1}</Text>
 
 
                 {/*Onboard description */}
                 {typeof title === "string" ? (
-                    <Text style={styles.title}>{title}</Text>
+                    <Text color="#4D5761" style={styles.title}>{title}</Text>
                 ) : (
                     <View style={styles.descriptionContainer}>
                         {title.map((item, index) => (
                             <View key={index} style={styles.descriptionItem}>
                                 <Image source={item.icon} style={styles.icon} />
-                                <Text style={styles.description}>{item.description}</Text>
+                                <Text color="#4D5761" style={styles.description}>{item.description}</Text>
                             </View>
                         ))}
                     </View>
@@ -61,7 +61,7 @@ export const OnboardingContent = ({
             </View>
 
             <Button onPress={onNext} style={styles.button}>
-                {currentIndex === 0 ? "start" : currentIndex === 2 ? "Get Started" : "Next"}
+                {currentIndex === 0 ? "Start" : currentIndex === 2 ? "Get Started" : "Next"}
             </Button>
         </View>
     );
@@ -79,13 +79,13 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     title1: {
-        fontSize: 32,
+        fontSize: 28,
         marginBottom: 4,
         textAlign: "left",
-        fontWeight: 'bold',
+        // fontWeight: '700',
     },
     title: {
-        fontSize: 20,
+        fontSize: 16,
         marginBottom: 10,
         textAlign: "left",
         color: '#666',
