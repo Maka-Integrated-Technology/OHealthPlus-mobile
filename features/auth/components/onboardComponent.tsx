@@ -1,5 +1,4 @@
-// OnboardingContent.tsx
-import { DescriptionObj } from "@/app/(auth)/onboarding";
+import { DescriptionObj } from "../types/onboarding";
 import Button from "@/components/Button";
 import Colors from "@/constants/Colors";
 import { View, StyleSheet, Image } from "react-native";

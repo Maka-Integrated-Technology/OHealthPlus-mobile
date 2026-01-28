@@ -4,58 +4,18 @@ import AuthModal from "@/features/auth/components/AuthModal";
 import { useAppRouter } from "@/config/route";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
-    Alert,
     Dimensions,
     FlatList,
     Image,
-    ImageSourcePropType,
-    Modal,
-    Pressable,
     StyleSheet,
     ViewToken,
 } from "react-native";
 import { View } from "react-native";
 import useAuthModal from "@/features/auth/hooks/useAuthModal";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import Button, { AppleButton, GoogleButton } from "@/components/Button";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { onboardingData } from "@/features/auth/constants/onboardingData";
+import { OnboardingSlide } from "@/features/auth/types/onboarding";
 
-export interface DescriptionObj {
-    icon: ImageSourcePropType,
-    description: string
-}
-
-interface OnboardingSlide {
-    id: string;
-    image: ImageSourcePropType;
-    header: string;
-    description: string | DescriptionObj[];
-}
-
-const onboardingData: OnboardingSlide[] = [
-    {
-        id: "1",
-        image: authAssets.onboarding.slide1,
-        header: "Healthcare, Made Simple ",
-        description: "Connect with verified healthcare professionals and get the care you need, without the stress of long waits or travel",
-    },
-    {
-        id: "2",
-        image: authAssets.onboarding.slide2,
-        header: "What you can do",
-        description: [
-            { icon: authAssets.onboarding.icon1, description: 'Book video or chat consultations' },
-            { icon: authAssets.onboarding.icon2, description: "Manage your care in one place" },
-            { icon: authAssets.onboarding.icon3, description: "Get instant AI health guidance" },
-        ],
-
-    },
-    {
-        id: "3",
-        image: authAssets.onboarding.slide3,
-        header: "Your health, your control",
-        description: "Your data is private and secure. \nEvery healthcare professional is verified, so you can feel confident about the care you receive.",
-    },
-];
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -128,7 +88,7 @@ export default function TabTwoScreen() {
                 onNext={handleNext}
             />
 
-            {/*onboard Auth text */}
+            {/*onboard Auth modal */}
             <AuthModal
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
