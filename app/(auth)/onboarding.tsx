@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     imageContainer: {
         width: screenWidth * 1,
         height: "50%",
-        marginBottom: -20,
+        marginTop: -30,
     },
     container: {
         flex: 1,
