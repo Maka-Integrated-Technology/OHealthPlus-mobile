@@ -1,61 +1,28 @@
 import { authAssets } from "@/features/auth/assets";
 import { OnboardingContent } from "@/features/auth/components/onboardComponent";
-import { View } from "react-native";
+import AuthModal from "@/features/auth/components/AuthModal";
 import { useAppRouter } from "@/config/route";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
     Dimensions,
     FlatList,
     Image,
-    ImageSourcePropType,
     StyleSheet,
     ViewToken,
 } from "react-native";
+import { View } from "react-native";
+import useAuthModal from "@/features/auth/hooks/useAuthModal";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { onboardingData } from "@/features/auth/constants/onboardingData";
+import { OnboardingSlide } from "@/features/auth/types/onboarding";
 
-export interface DescriptionObj {
-    icon: ImageSourcePropType,
-    description: string
-}
-
-interface OnboardingSlide {
-    id: string;
-    image: ImageSourcePropType;
-    header: string;
-    description: string | DescriptionObj[];
-}
-
-const onboardingData: OnboardingSlide[] = [
-    {
-        id: "1",
-        image: authAssets.onboarding.slide1,
-        header: "Healthcare, Made Simple ",
-        description: "Connect with verified healthcare professionals and get the care you need, without the stress of long waits or travel",
-    },
-    {
-        id: "2",
-        image: authAssets.onboarding.slide2,
-        header: "What you can do",
-        description: [
-            { icon: authAssets.onboarding.icon1, description: 'Book video or chat consultations' },
-            { icon: authAssets.onboarding.icon2, description: "Manage your care in one place" },
-            { icon: authAssets.onboarding.icon3, description: "Get instant AI health guidance" },
-        ],
-
-    },
-    {
-        id: "3",
-        image: authAssets.onboarding.slide3,
-        header: "Your health, your control",
-        description: "Your data is private and secure.Every healthcare professional is verified, so you can feel confident about the care you receive.",
-    },
-];
 
 const screenWidth = Dimensions.get("window").width;
 
 export default function TabTwoScreen() {
     const flatListRef = useRef<FlatList<any>>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const router = useAppRouter();
+    const { createAccount, handleGoogleSignin, modalVisible, setModalVisible, handleAppleSignin } = useAuthModal();
 
     const onViewableItemsChanged = useCallback(
         ({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -74,10 +41,6 @@ export default function TabTwoScreen() {
         []
     );
 
-    const handleSkip = () => {
-        router.toSignIn();
-    };
-
     const handleNext = () => {
         if (currentIndex < onboardingData.length - 1) {
             flatListRef.current?.scrollToIndex({
@@ -86,16 +49,16 @@ export default function TabTwoScreen() {
             });
         } else {
             console.log("Get started");
-            router.toSignIn();
+            setModalVisible(true);
         }
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             {/*image header */}
             <Image
                 source={require("@/assets/icons/icon.png")}
-                style={{ width: 100, height: 60, objectFit: 'contain', position: 'absolute', top: 60 }}
+                style={{ width: 100, height: 60, objectFit: 'contain', position: 'absolute', top: 40 }}
             />
 
             {/*Onboarding Image slider */}
@@ -124,7 +87,16 @@ export default function TabTwoScreen() {
                 totalSlides={onboardingData.length}
                 onNext={handleNext}
             />
-        </View>
+
+            {/*onboard Auth modal */}
+            <AuthModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                createAccount={createAccount}
+                handleGoogleSignin={handleGoogleSignin}
+                handleAppleSignin={handleAppleSignin}
+            />
+        </SafeAreaView>
     );
 }
 
@@ -132,7 +104,7 @@ const styles = StyleSheet.create({
     imageContainer: {
         width: screenWidth * 1,
         height: "50%",
-        marginBottom: -75,
+        marginTop: -30,
     },
     container: {
         flex: 1,
@@ -148,7 +120,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     onboardImage: {
-        width: "80%",
+        width: "90%",
         objectFit: "contain",
         alignItems: "center",
     },
@@ -200,4 +172,47 @@ const styles = StyleSheet.create({
         gap: 12,
         backgroundColor: "#5669FF",
     },
-});
+
+
+    centeredView: {
+        flex: 1,
+        justifyContent: 'flex-end',
+    },
+    modalView: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    buttonContainer: {
+        width: '100%',
+        gap: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+}
+);
