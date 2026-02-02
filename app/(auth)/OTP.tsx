@@ -1,7 +1,8 @@
+import { BackButton } from '@/components/BackButton';
 import Button from '@/components/Button';
 import { Text } from '@/components/Text';
 import Colors from "@/constants/Colors";
-import { Ionicons } from '@expo/vector-icons';
+import { ROUTES } from '@/constants/routes';
 import { useNavigation, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
@@ -17,16 +18,14 @@ export default function VerificationScreen() {
     if (navigation.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(tabs)');
+      router.replace(ROUTES.TABS);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Ionicons name="chevron-back" size={20} color="black" />
-        </TouchableOpacity>
+        <BackButton onPress={handleBack} />
 
         <View style={styles.header}>
           <Text weight="bold" style={styles.title}>Enter Verification Code</Text>
@@ -51,7 +50,7 @@ export default function VerificationScreen() {
         </View>
 
         <View>
-          <Button onPress={() => router.replace('/(tabs)')} style={styles.verifyBtn}>Verify</Button>
+          <Button onPress={() => router.replace(ROUTES.TABS)} style={styles.verifyBtn}>Verify</Button>
           <TouchableOpacity>
             <Text style={styles.resendText}>No Code Received? <Text style={styles.link}>Resend Code</Text></Text>
           </TouchableOpacity>
@@ -64,17 +63,6 @@ export default function VerificationScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'white' },
-  backButton: { 
-    width: 40, 
-    height: 40, 
-    borderRadius: 12, 
-    borderWidth: 1, 
-    borderColor: '#155EEF', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    marginBottom: 8,
-    backgroundColor: '#FAFAFA',
-  },
   content: { padding: 24, },
   header: { marginBlock: 12 },
   title: { fontSize: 26, marginBottom: 8, lineHeight: 26, color: '#161A1D', letterSpacing: -0.5 },

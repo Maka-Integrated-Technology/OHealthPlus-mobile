@@ -1,7 +1,9 @@
+import { BackButton } from '@/components/BackButton';
 import Button, { AppleButton, GoogleButton } from '@/components/Button';
+import { InputField } from '@/components/InputField';
 import { Text } from '@/components/Text';
 import Colors from "@/constants/Colors";
-import { Ionicons } from '@expo/vector-icons';
+import { ROUTES } from '@/constants/routes';
 import { useNavigation, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -9,7 +11,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
@@ -27,7 +28,7 @@ export default function SignUpScreen() {
     if (navigation.canGoBack()) {
       router.back();
     } else {
-      router.replace('/(auth)/signin');
+      router.replace(ROUTES.SIGN_IN);
     }
   };
 
@@ -38,9 +39,7 @@ export default function SignUpScreen() {
         style={{ flex: 1 }}
       >
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <Ionicons name="chevron-back" size={20} color="black" />
-          </TouchableOpacity>
+          <BackButton onPress={handleBack} />
 
           <View style={styles.header}>
             <Text weight="bold" style={styles.title}>Create Your Account</Text>
@@ -51,54 +50,40 @@ export default function SignUpScreen() {
             <View>
               <View style={styles.inputGroup}>
                 {/* Name Input */}
-                <View style={styles.inputContainer}>
-                  <Ionicons name="person-outline" size={24} color="#4D5761" style={styles.inputIcon} />
-                  <TextInput
-                      placeholder="Name"
-                      style={styles.input}
-                      placeholderTextColor="#9CA3AF"
-                  />
-                </View>
+                <InputField
+                  icon="person-outline"
+                  placeholder="Name"
+                  placeholderTextColor="#9CA3AF"
+                />
 
                 {/* Email Input */}
-                <View style={styles.inputContainer}>
-                  <Ionicons name="mail-outline" size={24} color="#4D5761" style={styles.inputIcon} />
-                  <TextInput
-                    placeholder="Email"
-                    style={styles.input}
-                    keyboardType="email-address"
-                    placeholderTextColor="#9CA3AF"
-                    autoCapitalize="none"
-                  />
-                </View>
+                <InputField
+                  icon="mail-outline"
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  placeholderTextColor="#9CA3AF"
+                />
 
                 {/* Password Input */}
-                <View style={styles.inputContainer}>
-                  <Ionicons name="lock-closed-outline" size={24} color="#4D5761" style={styles.inputIcon} />
-                  <TextInput
-                    placeholder="Password"
-                    style={styles.input}
-                    secureTextEntry={!showPassword}
-                    placeholderTextColor="#9CA3AF"
-                  />
-                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                    <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={24} color="#4D5761" />
-                  </TouchableOpacity>
-                </View>
+                <InputField
+                  icon="lock-closed-outline"
+                  placeholder="Password"
+                  secureTextEntry={!showPassword}
+                  placeholderTextColor="#9CA3AF"
+                  rightIcon={showPassword ? "eye-off-outline" : "eye-outline"}
+                  onRightIconPress={() => setShowPassword(!showPassword)}
+                />
 
                 {/* Confirm Password Input with Eye Icon */}
-                <View style={styles.inputContainer}>
-                  <Ionicons name="lock-closed-outline" size={24} color="#4D5761" style={styles.inputIcon} />
-                  <TextInput
-                    placeholder="Confirm Password"
-                    style={styles.input}
-                    secureTextEntry={!showConfirmPassword}
-                    placeholderTextColor="#9CA3AF"
-                  />
-                  <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-                    <Ionicons name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} size={24} color="#4D5761" />
-                  </TouchableOpacity>
-                </View>
+                <InputField
+                  icon="lock-closed-outline"
+                  placeholder="Confirm Password"
+                  secureTextEntry={!showConfirmPassword}
+                  placeholderTextColor="#9CA3AF"
+                  rightIcon={showConfirmPassword ? "eye-off-outline" : "eye-outline"}
+                  onRightIconPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                />
               </View>
 
               <View style={styles.checkboxRow}>
@@ -109,7 +94,7 @@ export default function SignUpScreen() {
               </View>
             </View>
 
-            <Button onPress={() => router.push('/(auth)/OTP')} style={styles.submitBtn}>Sign Up →</Button>
+            <Button onPress={() => router.push(ROUTES.OTP)} style={styles.submitBtn}>Sign Up →</Button>
             
             <View style={styles.dividerRow}>
               <View style={styles.divider} />
@@ -122,7 +107,7 @@ export default function SignUpScreen() {
                 <GoogleButton onPress={() => {}} />
                 <AppleButton onPress={() => {}} />
               </View>
-              <TouchableOpacity style={styles.footerLink} onPress={() => router.push('/(auth)/signin')}>
+              <TouchableOpacity style={styles.footerLink} onPress={() => router.push(ROUTES.SIGN_IN)}>
                 <Text style={styles.footerText}>Already have an account? <Text style={styles.link}>Sign In</Text></Text>
               </TouchableOpacity>
             </View>
@@ -137,34 +122,11 @@ export default function SignUpScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'white' },
   scrollContent: { padding: 16 },
-  backButton: { 
-    width: 40, 
-    height: 40, 
-    borderRadius: 12, 
-    borderWidth: 1,
-    borderColor: '#155EEF', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    marginBottom: 8,
-    backgroundColor: '#FAFAFA',
-  },
   header: { marginBlock: 12 },
   title: { fontSize: 26, marginBottom: 8, lineHeight: 26, color: '#161A1D', letterSpacing: -0.5 },
   subtitle: { color: '#6B7280', fontSize: 12.5, lineHeight: 15, letterSpacing: -0.2 },
   form: { width: '100%', marginTop: 11, gap: 16 },
   inputGroup: { gap: 12 },
-  inputContainer: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    backgroundColor: '#F9FAFB', 
-    borderRadius: 16, 
-    padding: 16,
-    gap: 12,
-    borderWidth: 0.5, 
-    borderColor: '#E5E7EB' 
-  },
-  inputIcon: { marginRight: 0 },
-  input: { flex: 1, height: '100%', color: 'black', fontSize: 16, lineHeight: 19.2, letterSpacing: -0.8 },
   checkboxRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 11 },
   checkbox: { width: 24, height: 24, borderRadius: 5.3, borderWidth: 1, borderColor: '#155EEF', backgroundColor: '#FAFAFA' },
   termsText: { flex: 1, fontSize: 14, color: '#6C737F', lineHeight: 16.8, letterSpacing: -0.5 },
