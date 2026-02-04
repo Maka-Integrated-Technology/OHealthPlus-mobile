@@ -101,6 +101,7 @@ export const useAppRouter = () => {
         // Paywall Navigation
         // ============================================
         toSubscription: () => navigate(ROUTES.SUBSCRIPTION),
+        toOtp: () => navigate(ROUTES.OTP),
         toUpgradePlan: () => navigate(ROUTES.UPGRADE_PLAN),
         toPaymentSuccess: (params?: { plan?: string; amount?: string }) =>
             navigate(ROUTES.PAYMENT_SUCCESS, params),
