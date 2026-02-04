@@ -13,6 +13,7 @@ export const ROUTES = {
 
     SIGN_UP: "/(auth)/signup",
     SIGN_IN: "/(auth)/signin",
+    OTP: "/(auth)/otp",
     FORGOT_PASSWORD: "/(auth)/screens/ForgotPassword",
     EMAIL_VERIFICATION: "/(auth)/screens/EmailVerification",
     PASSWORD_SUCCESS: "/(auth)/screens/PasswordSuccess",
@@ -21,6 +22,7 @@ export const ROUTES = {
     // ============================================
     // Main App Routes
     // ============================================
+    TABS: "/(tabs)",
     HOME: "/(tabs)/explore",
     GALLERY_HOME: "/(manifestationMainHome)/(tabs)/gallery",
     SHARED: "/(manifestationMainHome)/(tabs)/shared",
