@@ -22,6 +22,8 @@ const screenWidth = Dimensions.get("window").width;
 export default function TabTwoScreen() {
     const flatListRef = useRef<FlatList<any>>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+
     const { createAccount, handleGoogleSignin, modalVisible, setModalVisible, handleAppleSignin } = useAuthModal();
 
     const onViewableItemsChanged = useCallback(
