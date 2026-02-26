@@ -14,7 +14,7 @@ export default function VerificationScreen() {
   const [code, setCode] = useState('');
   const codeLength = 5;
 
-    const handleBack = () => {
+  const handleBack = () => {
     if (navigation.canGoBack()) {
       router.back();
     } else {
@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
   otpText: { fontSize: 24 },
   hiddenInput: { ...StyleSheet.absoluteFillObject, opacity: 0 },
   verifyBtn: { width: '100%', marginBottom: 16 },
-  resendText: {fontSize: 14, color: '#6C737F', fontWeight: '400', lineHeight: 14, letterSpacing: -0.5 },
+  resendText: { fontSize: 14, color: '#6C737F', fontWeight: '400', lineHeight: 14, letterSpacing: -0.5 },
   link: { fontSize: 14, color: Colors.primary, fontWeight: '600', lineHeight: 16.8, letterSpacing: -0.5 },
 });

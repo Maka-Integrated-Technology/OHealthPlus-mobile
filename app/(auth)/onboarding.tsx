@@ -1,20 +1,20 @@
-import { authAssets } from "@/features/auth/assets";
-import { OnboardingContent } from "@/features/auth/components/onboardComponent";
+
 import AuthModal from "@/features/auth/components/AuthModal";
-import { useAppRouter } from "@/config/route";
+import { OnboardingContent } from "@/features/auth/components/onboardComponent";
+
+import { onboardingData } from "@/features/auth/constants/onboardingData";
+import useAuthModal from "@/features/auth/hooks/useAuthModal";
+import { OnboardingSlide } from "@/features/auth/types/onboarding";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
     Dimensions,
     FlatList,
     Image,
     StyleSheet,
+    View,
     ViewToken,
 } from "react-native";
-import { View } from "react-native";
-import useAuthModal from "@/features/auth/hooks/useAuthModal";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { onboardingData } from "@/features/auth/constants/onboardingData";
-import { OnboardingSlide } from "@/features/auth/types/onboarding";
 
 
 const screenWidth = Dimensions.get("window").width;

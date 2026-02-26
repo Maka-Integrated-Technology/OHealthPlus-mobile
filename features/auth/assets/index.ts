@@ -14,5 +14,9 @@ export const authAssets = {
     icons: {
         google: require('./icons/google.png'),
         apple: require('./icons/apple.png'),
+        passwordIdon: require("./icons/password-icon.png"),
+        emailIcon: require("./icons/email-icon.png"),
+        nameIcon: require("./icons/name-icon.png"),
+        check: require("./icons/check.png"),
     },
 };
