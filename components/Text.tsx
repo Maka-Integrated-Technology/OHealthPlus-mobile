@@ -9,9 +9,9 @@ interface TextProps {
 }
 
 const fontFamilies = {
-    regular: 'OpenSans-Regular',
-    semibold: 'OpenSans-SemiBold',
-    bold: 'OpenSans-Bold',
+    regular: 'Inter-Regular',
+    semibold: 'Inter-SemiBold',
+    bold: 'Inter-Bold',
 } as const;
 
 export const Text = ({ children, style, weight = "regular" }: TextProps) => {

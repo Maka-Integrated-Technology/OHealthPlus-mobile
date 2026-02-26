@@ -74,7 +74,6 @@ export const useAppRouter = () => {
         toEmailVerification: (params?: { email?: string }) =>
             navigate(ROUTES.EMAIL_VERIFICATION, params),
         toPasswordSuccess: () => navigate(ROUTES.PASSWORD_SUCCESS),
-        toManifestationAspects: () => navigate(ROUTES.MANIFESTATION_ASPECTS),
 
         // ============================================
         // Main App Navigation

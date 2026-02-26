@@ -24,9 +24,9 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    'OpenSans-Regular': require('../assets/fonts/OpenSans-Regular.ttf'),
-    'OpenSans-SemiBold': require('../assets/fonts/OpenSans-SemiBold.ttf'),
-    'OpenSans-Bold': require('../assets/fonts/OpenSans-Bold.ttf'),
+    'Inter-Regular': require('../assets/fonts/Inter-Regular.ttf'),
+    'Inter-SemiBold': require('../assets/fonts/Inter-SemiBold.ttf'),
+    'Inter-Bold': require('../assets/fonts/Inter-Bold.ttf'),
     ...FontAwesome.font,
   });
 

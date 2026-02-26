@@ -5,11 +5,14 @@ import { Text } from '@/components/Text';
 import { useAppRouter } from '@/config/route';
 import Colors from "@/constants/Colors";
 import { ROUTES } from '@/constants/routes';
-import { useNavigation, useRouter } from 'expo-router';
+import { authAssets } from '@/features/auth/assets';
+import { useNavigation } from 'expo-router';
 import React, { useState } from 'react';
 import {
+    Image,
     KeyboardAvoidingView,
     Platform,
+    Pressable,
     ScrollView,
     StyleSheet,
     TouchableOpacity,
@@ -24,6 +27,7 @@ export default function SignUpScreen() {
     // Separate states for each password field
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [agreetoTerms, setAgreetoTerms] = useState(false);
 
     const handleBack = () => {
         if (navigation.canGoBack()) {
@@ -52,14 +56,14 @@ export default function SignUpScreen() {
                             <View style={styles.inputGroup}>
                                 {/* Name Input */}
                                 <InputField
-                                    icon="person-outline"
+                                    icon="name"
                                     placeholder="Name"
                                     placeholderTextColor="#9CA3AF"
                                 />
 
                                 {/* Email Input */}
                                 <InputField
-                                    icon="mail-outline"
+                                    icon="email"
                                     placeholder="Email"
                                     keyboardType="email-address"
                                     autoCapitalize="none"
@@ -68,7 +72,7 @@ export default function SignUpScreen() {
 
                                 {/* Password Input */}
                                 <InputField
-                                    icon="lock-closed-outline"
+                                    icon="password"
                                     placeholder="Password"
                                     secureTextEntry={!showPassword}
                                     placeholderTextColor="#9CA3AF"
@@ -78,7 +82,7 @@ export default function SignUpScreen() {
 
                                 {/* Confirm Password Input with Eye Icon */}
                                 <InputField
-                                    icon="lock-closed-outline"
+                                    icon="password"
                                     placeholder="Confirm Password"
                                     secureTextEntry={!showConfirmPassword}
                                     placeholderTextColor="#9CA3AF"
@@ -88,7 +92,9 @@ export default function SignUpScreen() {
                             </View>
 
                             <View style={styles.checkboxRow}>
-                                <View style={styles.checkbox} />
+                                <Pressable style={styles.checkbox} onPress={() => { setAgreetoTerms(!agreetoTerms) }}>
+                                    {agreetoTerms && <Image source={authAssets.icons.check} style={{ width: 12, height: 12 }} resizeMode="contain" />}
+                                </Pressable>
                                 <Text style={styles.termsText}>
                                     I agree to our <Text style={styles.link}>Terms & Conditions</Text> and <Text style={styles.link}>Privacy Policy</Text>.
                                 </Text>
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
     form: { width: '100%', marginTop: 11, gap: 16 },
     inputGroup: { gap: 12 },
     checkboxRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 11 },
-    checkbox: { width: 24, height: 24, borderRadius: 5.3, borderWidth: 1, borderColor: '#155EEF', backgroundColor: '#FAFAFA' },
+    checkbox: { width: 24, height: 24, borderRadius: 5.3, borderWidth: 1, borderColor: '#155EEF', backgroundColor: '#FAFAFA', justifyContent: 'center', alignItems: 'center' },
     termsText: { flex: 1, fontSize: 14, color: '#6C737F', lineHeight: 16.8, letterSpacing: -0.5 },
     link: { fontSize: 14, color: Colors.primary, fontWeight: '600', lineHeight: 16.8, letterSpacing: -0.5 },
     submitBtn: { marginVertical: 0 },
