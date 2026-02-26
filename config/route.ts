@@ -80,9 +80,9 @@ export const useAppRouter = () => {
         // Main App Navigation
         // ============================================
         toHome: () => navigateReplace(ROUTES.HOME),
-        toGalleryHome: () => navigate(ROUTES.GALLERY_HOME),
         toFavourites: () => navigate(ROUTES.FAVOURITES),
-        toShared: () => navigate(ROUTES.SHARED),
+
+        toProfile: () => navigate(ROUTES.PROFILE),
 
         toEvents: () => navigate(ROUTES.ALL_EVENTS),
 
