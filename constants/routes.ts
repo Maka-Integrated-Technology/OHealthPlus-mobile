@@ -22,11 +22,9 @@ export const ROUTES = {
     // ============================================
     // Main App Routes
     // ============================================
-    TABS: "/(tabs)",
-    HOME: "/(tabs)/explore",
-    GALLERY_HOME: "/(manifestationMainHome)/(tabs)/gallery",
-    SHARED: "/(manifestationMainHome)/(tabs)/shared",
-    PROFILE: "/(manifestationMainHome)/(tabs)/profile",
+
+    HOME: "/(tabs)",
+    PROFILE: "/(tabs)/profile",
 
     // ============================================
     // SCREENS

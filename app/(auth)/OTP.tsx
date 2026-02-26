@@ -44,7 +44,7 @@ export default function VerificationScreen() {
         </View>
 
         <View>
-          <Button onPress={() => router.replace(ROUTES.TABS)} style={styles.verifyBtn}>Verify</Button>
+          <Button onPress={() => router.replace(ROUTES.HOME)} style={styles.verifyBtn}>Verify</Button>
           <TouchableOpacity>
             <Text style={styles.resendText}>No Code Received? <Text style={styles.link}>Resend Code</Text></Text>
           </TouchableOpacity>
