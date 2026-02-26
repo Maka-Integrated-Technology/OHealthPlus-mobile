@@ -61,15 +61,20 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
-    borderRadius: 20,
-    padding: 12,
+    backgroundColor: Colors.neutral50,
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
     gap: 12,
     borderWidth: 0.5,
-    borderColor: '#E5E7EB',
+    borderColor: Colors.neutral200,
+  },
+  inputContainerFocused: {
+    borderColor: Colors.primary, // or your primary color
+    borderWidth: 1,
   },
   inputError: {
-    borderColor: '#EF4444',
+    borderColor: Colors.red500,
   },
   inputIcon: {
     marginRight: 0,
