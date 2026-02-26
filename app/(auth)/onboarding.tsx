@@ -1,4 +1,5 @@
 
+import { Text } from "@/components/Text";
 import AuthModal from "@/features/auth/components/AuthModal";
 import { OnboardingContent } from "@/features/auth/components/onboardComponent";
 
@@ -58,10 +59,18 @@ export default function TabTwoScreen() {
     return (
         <SafeAreaView style={styles.container}>
             {/*image header */}
-            <Image
-                source={require("@/assets/icons/icon.png")}
-                style={{ width: 100, height: 60, objectFit: 'contain', position: 'absolute', top: 40 }}
-            />
+            <View style={{ position: 'absolute', top: 40, flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                <Image
+                    style={{ width: 28, resizeMode: 'contain' }}
+                    source={require("@/assets/icons/logo.png")}
+
+                />
+                <View>
+                    <Text style={{ fontSize: 2 }} weight="bold">HealthBridge</Text>
+                </View>
+
+            </View>
+
 
             {/*Onboarding Image slider */}
             <FlatList
