@@ -14,10 +14,11 @@ export const ROUTES = {
     SIGN_UP: "/(auth)/signup",
     SIGN_IN: "/(auth)/signin",
     OTP: "/(auth)/OTP",
-    FORGOT_PASSWORD: "/(auth)/screens/ForgotPassword",
-    EMAIL_VERIFICATION: "/(auth)/screens/EmailVerification",
-    PASSWORD_SUCCESS: "/(auth)/screens/PasswordSuccess",
-    MANIFESTATION_ASPECTS: "/(auth)/screens/ManifestationAspects",
+    FORGOT_PASSWORD: "/(auth)/ForgotPassword",
+    NEW_PASSWORD: "/(auth)/NewPassword",
+    EMAIL_VERIFICATION: "/(auth)/EmailVerification",
+    PASSWORD_SUCCESS: "/(auth)/PasswordResetSuccess",
+    MANIFESTATION_ASPECTS: "/(auth)/ManifestationAspects",
 
     // ============================================
     // Main App Routes

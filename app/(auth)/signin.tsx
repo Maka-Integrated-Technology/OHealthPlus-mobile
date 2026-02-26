@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   subtitle: { color: '#6B7280', fontSize: 12.5, lineHeight: 12.5, letterSpacing: -0.2 },
   form: { width: '100%', marginTop: 11, gap: 16},
   inputGroup: { gap: 12, marginBottom: 16,  },
-  errorText: { color: '#EF4444', fontSize: 13, marginBottom: 16, marginTop: -8 },
+  errorText: { color: Colors.red500, fontSize: 13, marginBottom: 16, marginTop: -8 },
   forgotPassword: { alignSelf: 'flex-end' },
   linkText: { color: Colors.primary, fontWeight: '600', fontSize: 14, lineHeight: 18, letterSpacing: -0.5 },
   submitBtn: { marginVertical: 0 },
