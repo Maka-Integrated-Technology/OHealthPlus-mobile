@@ -23,13 +23,7 @@ export default function SignInScreen() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleBack = () => {
-        if (navigation.canGoBack()) {
-            router.back();
-        } else {
-            router.toHome();
-        }
-    };
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -38,7 +32,7 @@ export default function SignInScreen() {
                 style={{ flex: 1 }}
             >
                 <ScrollView contentContainerStyle={styles.scrollContent}>
-                    <BackButton onPress={handleBack} />
+                    <BackButton />
 
                     <View style={styles.header}>
                         <Text weight="bold" style={styles.title}>Welcome Back!</Text>

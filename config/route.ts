@@ -64,6 +64,7 @@ export const useAppRouter = () => {
         // Onboarding Navigation
         // ============================================
         toWelcome: () => navigateReplace(ROUTES.ONBOARDING),
+        toLegalTerms: (params: { param: 'terms' | 'privacy' }) => navigate(ROUTES.LEGAL_TERMS, params),
 
         // ============================================
         // Authentication Navigation

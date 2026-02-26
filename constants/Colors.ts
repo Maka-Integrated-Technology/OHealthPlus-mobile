@@ -11,6 +11,8 @@ export default {
     // secondary: '#EFF4FF'
     secondary: '#B2CCFF',
     secondaryLight: '#EFF4FF',
-    lightgray: '#71717A'
+    lightgray: '#71717A',
+    transparentPrimary: '#EFF4FF',
+    neutral: "#4D5761"
 
 };
