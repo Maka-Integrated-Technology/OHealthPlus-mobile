@@ -29,13 +29,7 @@ export default function SignUpScreen() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [agreetoTerms, setAgreetoTerms] = useState(false);
 
-    const handleBack = () => {
-        if (navigation.canGoBack()) {
-            router.back();
-        } else {
-            router.toSignIn();
-        }
-    };
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -44,7 +38,7 @@ export default function SignUpScreen() {
                 style={{ flex: 1 }}
             >
                 <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-                    <BackButton onPress={handleBack} />
+                    <BackButton />
 
                     <View style={styles.header}>
                         <Text weight="bold" style={styles.title}>Create Your Account</Text>
@@ -96,7 +90,15 @@ export default function SignUpScreen() {
                                     {agreetoTerms && <Image source={authAssets.icons.check} style={{ width: 12, height: 12 }} resizeMode="contain" />}
                                 </Pressable>
                                 <Text style={styles.termsText}>
-                                    I agree to our <Text style={styles.link}>Terms & Conditions</Text> and <Text style={styles.link}>Privacy Policy</Text>.
+                                    I agree to our{' '}
+                                    <Text style={styles.link} onPress={() => router.toLegalTerms({ param: "terms" })}>
+                                        Terms & Conditions
+                                    </Text>
+                                    {' '}and{' '}
+                                    <Text style={styles.link} onPress={() => router.toLegalTerms({ param: "privacy" })}>
+                                        Privacy Policy
+                                    </Text>
+                                    .
                                 </Text>
                             </View>
                         </View>
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
     inputGroup: { gap: 12 },
     checkboxRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 11 },
     checkbox: { width: 24, height: 24, borderRadius: 5.3, borderWidth: 1, borderColor: '#155EEF', backgroundColor: '#FAFAFA', justifyContent: 'center', alignItems: 'center' },
-    termsText: { flex: 1, fontSize: 14, color: '#6C737F', lineHeight: 16.8, letterSpacing: -0.5 },
+    termsText: { fontSize: 14, color: '#6C737F', fontWeight: '400', lineHeight: 16.8, letterSpacing: -0.5 },
     link: { fontSize: 14, color: Colors.primary, fontWeight: '600', lineHeight: 16.8, letterSpacing: -0.5 },
     submitBtn: { marginVertical: 0 },
     dividerRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 10 },

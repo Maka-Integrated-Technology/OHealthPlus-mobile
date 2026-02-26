@@ -14,18 +14,12 @@ export default function VerificationScreen() {
   const [code, setCode] = useState('');
   const codeLength = 5;
 
-  const handleBack = () => {
-    if (navigation.canGoBack()) {
-      router.back();
-    } else {
-      router.replace(ROUTES.TABS);
-    }
-  };
+
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <BackButton onPress={handleBack} />
+        <BackButton  />
 
         <View style={styles.header}>
           <Text weight="bold" style={styles.title}>Enter Verification Code</Text>
