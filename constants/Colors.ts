@@ -21,6 +21,9 @@ export default {
     neutral50: '#F9FAFB',
     neutral200: '#E5E7EB',
     neutral600: '#6C737F',
-    red500: '#F04438'
+    red500: '#F04438',
+    homeneutral: '#F3F4F6',
+    lightBeige: '#FCFCFC'
+
 
 };

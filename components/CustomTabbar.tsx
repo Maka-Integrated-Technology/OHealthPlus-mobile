@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
         borderLeftWidth: 4,
         borderRightWidth: 4,
         borderBottomWidth: 4,
-        borderColor: "#F3F4F6",
+        borderColor: Colors.homeneutral,
         height: 100,
         borderRadius: 24,
         width: "100%",
