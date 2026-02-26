@@ -66,7 +66,7 @@ export default function TabTwoScreen() {
 
                 />
                 <View>
-                    <Text style={{ fontSize: 2 }} weight="bold">HealthBridge</Text>
+                    <Text style={{ fontSize: 24 }} weight="bold">HealthBridge</Text>
                 </View>
 
             </View>
