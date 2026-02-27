@@ -20,6 +20,9 @@ const iconMap = {
 
 type IconName = keyof typeof iconMap;
 
+const TAB_BAR_RADIUS = 24;
+const TAB_BAR_PADDING = 5;
+
 export function CustomTabBar({
     state,
     navigation,
@@ -27,19 +30,22 @@ export function CustomTabBar({
 
     const insets = useSafeAreaInsets();
 
+
+
     return (
-        <View>
+        <View style={[styles.tabBarContainer, { bottom: Math.max(insets.bottom, 8) }]}>
+
             <LinearGradient
-                colors={['rgba(255,255,255,0.5)', 'rgba(255,255,255,1)']}
-                style={{ position: 'absolute', top: -40, left: 0, right: 0, height: 40, borderColor: 'red' }}
+                colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.85)']}
+                locations={[0, 0.4]}
+                style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 180, borderColor: 'red' }}
                 pointerEvents="none"
             />
 
 
 
-            <View style={[styles.tabBarContainer, { bottom: Math.max(insets.bottom, 16) }]}>
-                <View style={styles.tabBar}>
-
+            {/* <View style={{ backgroundColor: 'red', borderColor: 'red', borderWidth: 4 }}> */}
+            <View style={styles.tabBar}>
                     {state.routes.map((route, index) => {
                         const isFocused = state.index === index;
                         const Icon = iconMap[route.name as IconName];
@@ -108,7 +114,7 @@ export function CustomTabBar({
                         );
                     })}
                 </View>
-            </View>
+            {/* </View> */}
 
         </View>
     );
@@ -119,24 +125,30 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 8,
         position: 'absolute',
+
     },
 
     tabBar: {
         flexDirection: "row",
         backgroundColor: "#fff",
-        paddingVertical: 12,
-        paddingHorizontal: 10,
         justifyContent: "space-around",
         alignItems: "center",
-        borderTopWidth: 4,
-        borderLeftWidth: 4,
-        borderRightWidth: 4,
-        borderBottomWidth: 4,
+        borderTopWidth: 2,
+        borderLeftWidth: 2,
+        borderRightWidth: 2,
+        borderBottomWidth: 2,
         borderColor: Colors.homeneutral,
         height: 100,
-        borderRadius: 24,
+        borderRadius: TAB_BAR_RADIUS,
+        paddingVertical: TAB_BAR_PADDING,
+        paddingHorizontal: TAB_BAR_PADDING,
         width: "100%",
 
+        shadowColor: "#fff",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.08,
+        shadowRadius: 2,
+        elevation: 8, // Android
     },
     tabItem: {
         alignItems: "center",
@@ -191,6 +203,6 @@ const styles = StyleSheet.create({
     },
     tabItemActive: {
         backgroundColor: Colors.primary,
-        borderRadius: 24,
+        borderRadius: TAB_BAR_RADIUS - TAB_BAR_PADDING,
     }
 });
