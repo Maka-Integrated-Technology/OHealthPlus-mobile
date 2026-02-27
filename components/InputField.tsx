@@ -1,14 +1,21 @@
 import Colors from '@/constants/Colors';
+import { authAssets } from '@/features/auth/assets';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { Platform, StyleSheet, TextInput, TextInputProps, TouchableOpacity, View, ViewStyle } from 'react-native';
+import React, { useState } from 'react';
+import { Image, StyleSheet, TextInput, TextInputProps, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface InputFieldProps extends TextInputProps {
-  icon?: keyof typeof Ionicons.glyphMap;
+  icon?: 'email' | 'password' | 'name';
   rightIcon?: keyof typeof Ionicons.glyphMap;
   onRightIconPress?: () => void;
   error?: boolean;
   containerStyle?: ViewStyle;
+}
+
+const authIcons = {
+  email: authAssets.icons.emailIcon,
+  password: authAssets.icons.passwordIdon,
+  name: authAssets.icons.nameIcon,
 }
 
 export function InputField({
@@ -21,30 +28,24 @@ export function InputField({
   placeholderTextColor = "#9CA3AF",
   ...props
 }: InputFieldProps) {
-  const [isFocused, setIsFocused] = React.useState(false);
+
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View
-      style={[
-        styles.inputContainer,
-        isFocused && styles.inputContainerFocused,
-        error && styles.inputError,
-        containerStyle,
-      ]}
-    >
+    <View style={[styles.inputContainer, error && styles.inputError, containerStyle, isFocused && styles.inputFocused]}>
       {icon && (
-        <Ionicons name={icon} size={24} color="#4D5761" style={styles.inputIcon} />
+
+        <Image source={authIcons[icon]} style={{ width: 24, height: 24 }} resizeMode="contain" />
       )}
       <TextInput
-        // style={[styles.input, style]}
-        style={[
-          styles.input,
-          style,
-          Platform.OS === 'web' && ({ outlineStyle: 'none' } as any)
-        ]}
-        placeholderTextColor={placeholderTextColor}
         onFocus={() => setIsFocused(true)}
+        style={
+          [
+            styles.input,
+            style  // applies when focused
+          ]}
         onBlur={() => setIsFocused(false)}
+        placeholderTextColor={placeholderTextColor}
         {...props}
       />
       {rightIcon && (
@@ -62,7 +63,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.neutral50,
     borderRadius: 16,
-    padding: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
     gap: 12,
     borderWidth: 0.5,
     borderColor: Colors.neutral200,
@@ -84,5 +86,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19.2,
     letterSpacing: -0.8,
+    fontFamily: 'Inter-Regular'
   },
+  inputFocused: {
+    borderColor: Colors.primary,
+    borderWidth: 1
+  }
 });

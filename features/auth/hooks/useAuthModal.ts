@@ -3,6 +3,7 @@ import { useState } from "react";
 
 export default function useAuthModal() {
     const [modalVisible, setModalVisible] = useState(false);
+
     const router = useAppRouter()
 
     const handleSkip = () => {

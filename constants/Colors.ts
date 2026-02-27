@@ -12,12 +12,18 @@ export default {
     secondary: '#B2CCFF',
     lightBlue: '#EFF4FF',
     secondaryLight: '#EFF4FF',
+    lightgray: '#71717A',
+    transparentPrimary: '#EFF4FF',
+    neutral: "#4D5761",
     black100: '#161A1D',
     black200: '#1A1A1A',
     black80: '#71717A',
     neutral50: '#F9FAFB',
     neutral200: '#E5E7EB',
     neutral600: '#6C737F',
-    red500: '#F04438'
+    red500: '#F04438',
+    homeneutral: '#F3F4F6',
+    lightBeige: '#FCFCFC'
+
 
 };

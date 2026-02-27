@@ -1,14 +1,27 @@
+import { useAppRouter } from '@/config/route';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import { Pressable, StyleSheet, TouchableOpacityProps } from 'react-native';
 
 interface BackButtonProps extends TouchableOpacityProps {}
 
+
+
 export function BackButton({ style, ...props }: BackButtonProps) {
+  const router = useAppRouter();
+
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.toSignIn();
+    }
+  };
+
   return (
-    <TouchableOpacity style={[styles.backButton, style]} {...props}>
+    <Pressable style={[styles.backButton, style]} {...props} onPress={handleBack}>
       <Ionicons name="chevron-back" size={20} color="black" />
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

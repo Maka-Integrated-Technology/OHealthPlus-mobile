@@ -1,25 +1,21 @@
-import type { StyleProp, TextStyle } from "react-native";
-import { Text as RNText, StyleSheet } from "react-native";
+import { Text as RNText, TextProps } from "react-native";
 
-interface TextProps {
-    children: React.ReactNode;
-    style?: StyleProp<TextStyle>;
-
+interface Props extends TextProps {
     weight?: "semibold" | "bold" | "regular";
     color?: string;
 }
-const fontFamilies = {
-    regular: 'OpenSans-Regular',
-    semibold: 'OpenSans-SemiBold',
-    bold: 'OpenSans-Bold',
-};
 
-export const Text = ({ children, style, weight = "regular" }: TextProps) => {
+const fontFamilies = {
+    regular: 'Inter-Regular',
+    semibold: 'Inter-SemiBold',
+    bold: 'Inter-Bold',
+} as const;
+
+export const Text = ({ children, style, weight = "regular", ...props }: Props) => {
     return (
-        <RNText style={[style, { fontFamily: fontFamilies[weight] }]}>
+        <RNText style={[style, { fontFamily: fontFamilies[weight] }]} {...props}>
             {children}
         </RNText>
     );
 };
-
 

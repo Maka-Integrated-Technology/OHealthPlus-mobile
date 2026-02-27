@@ -1,20 +1,21 @@
-import { authAssets } from "@/features/auth/assets";
-import { OnboardingContent } from "@/features/auth/components/onboardComponent";
+
+import { Text } from "@/components/Text";
 import AuthModal from "@/features/auth/components/AuthModal";
-import { useAppRouter } from "@/config/route";
+import { OnboardingContent } from "@/features/auth/components/onboardComponent";
+
+import { onboardingData } from "@/features/auth/constants/onboardingData";
+import useAuthModal from "@/features/auth/hooks/useAuthModal";
+import { OnboardingSlide } from "@/features/auth/types/onboarding";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
     Dimensions,
     FlatList,
     Image,
     StyleSheet,
+    View,
     ViewToken,
 } from "react-native";
-import { View } from "react-native";
-import useAuthModal from "@/features/auth/hooks/useAuthModal";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { onboardingData } from "@/features/auth/constants/onboardingData";
-import { OnboardingSlide } from "@/features/auth/types/onboarding";
 
 
 const screenWidth = Dimensions.get("window").width;
@@ -22,6 +23,8 @@ const screenWidth = Dimensions.get("window").width;
 export default function TabTwoScreen() {
     const flatListRef = useRef<FlatList<any>>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+
     const { createAccount, handleGoogleSignin, modalVisible, setModalVisible, handleAppleSignin } = useAuthModal();
 
     const onViewableItemsChanged = useCallback(
@@ -56,10 +59,18 @@ export default function TabTwoScreen() {
     return (
         <SafeAreaView style={styles.container}>
             {/*image header */}
-            <Image
-                source={require("@/assets/icons/icon.png")}
-                style={{ width: 100, height: 60, objectFit: 'contain', position: 'absolute', top: 40 }}
-            />
+            <View style={{ position: 'absolute', top: 40, flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                <Image
+                    style={{ width: 28, resizeMode: 'contain' }}
+                    source={require("@/assets/icons/logo.png")}
+
+                />
+                <View>
+                    <Text style={{ fontSize: 24 }} weight="bold">HealthBridge</Text>
+                </View>
+
+            </View>
+
 
             {/*Onboarding Image slider */}
             <FlatList
