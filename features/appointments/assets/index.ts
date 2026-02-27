@@ -6,4 +6,13 @@ export const appointmentAssets = {
         chatIcon: require("./icons/chat-icon.png"),
         calendarIcon: require("./icons/calendar-icon.png")
     },
+    images: {
+        doctor: require("./images/doctor.png"),
+        nurse: require("./images/nurse.png"),
+        nutritionist: require("./images/nutritionist.jpg"),
+        counsellor: require("./images/counsellor.jpg"),
+
+
+
+    }
 };

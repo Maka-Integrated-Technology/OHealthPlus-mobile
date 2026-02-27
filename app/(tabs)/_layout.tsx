@@ -10,8 +10,10 @@ export default function TabLayout() {
             tabBar={(props) => <CustomTabBar {...props} />}
             screenOptions={{
                 tabBarStyle: {
-                    // backgroundColor: "#FCFCFC",
+                    backgroundColor: "#FCFCFC",
                     // borderColor: Colors.neutral,
+
+
 
                 },
             }}

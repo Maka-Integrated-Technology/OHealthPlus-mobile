@@ -2,6 +2,7 @@ import notificationIcon from "@/assets/icons/notification.png";
 import avatar from "@/assets/images/avatar.png";
 import Button from "@/components/Button";
 import Pressable from "@/components/Pressable";
+import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
@@ -9,14 +10,13 @@ import { appointmentAssets } from "@/features/appointments/assets";
 import AppointmentCard from "@/features/appointments/components/AppointmentCard";
 import { messagesAssets } from "@/features/messages/assets";
 import { FlatList, Image, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function TabOneScreen() {
   const router = useAppRouter();
 
   const QuickAction = [
-    { icon: appointmentAssets.icons.bookappointment, onPress: () => { }, description: `Book a \n consultation` },
+    { icon: appointmentAssets.icons.bookappointment, onPress: () => { router.toBookAppointments() }, description: `Book a \n consultation` },
     { icon: appointmentAssets.icons.bookconsultation, onPress: () => { }, description: `View your \n appointments` },
   ];
 
@@ -53,7 +53,7 @@ export default function TabOneScreen() {
 
 
   return (
-    <SafeAreaView style={styles.container}>
+    <Screen>
       <View style={styles.homeHeader}>
         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', gap: 6 }}>
           <Pressable onPress={() => router.toProfile()} >
@@ -95,7 +95,7 @@ export default function TabOneScreen() {
 
           {
             QuickAction.map((action, idx) => (
-              <Pressable key={idx} style={{ flex: 1, backgroundColor: Colors.lightBeige, borderColor: Colors.homeneutral, borderWidth: 2, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 12, borderRadius: 12 }}>
+              <Pressable onPress={action.onPress} key={idx} style={{ flex: 1, backgroundColor: Colors.lightBeige, borderColor: Colors.homeneutral, borderWidth: 2, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 12, borderRadius: 12 }}>
 
                 <Image style={{ height: 48, width: 48, resizeMode: 'cover', }} source={action.icon} />
 
@@ -139,7 +139,7 @@ export default function TabOneScreen() {
       </View>
 
 
-    </SafeAreaView >
+    </Screen >
   );
 }
 
