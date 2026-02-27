@@ -31,9 +31,12 @@ export const ROUTES = {
     // ============================================
     // SCREENS
     // ============================================
-    FAVOURITES: "/(manifestationMainHome)/screens/Favourites",
+    FAVOURITES: "/()/screens/Favourites",
     ALL_EVENTS: "/screens/AllEvents",
     EVENTS_PREVIEW: "/screens/EventPreview",
+    BOOK_APPOINTMENT: "/screens/appointments/BookAppointment",
+
+
 
     // ============================================
     // Paywall Routes

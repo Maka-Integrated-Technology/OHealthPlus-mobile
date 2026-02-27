@@ -80,6 +80,8 @@ export const useAppRouter = () => {
         // Main App Navigation
         // ============================================
         toHome: () => navigateReplace(ROUTES.HOME),
+        toBookAppointments: () => navigate(ROUTES.BOOK_APPOINTMENT),
+
         toFavourites: () => navigate(ROUTES.FAVOURITES),
 
         toProfile: () => navigate(ROUTES.PROFILE),
