@@ -29,13 +29,12 @@ export function CustomTabBar({
 
     return (
         <View>
+            <LinearGradient
+                colors={['rgba(255,255,255,0.5)', 'rgba(255,255,255,1)']}
+                style={{ position: 'absolute', top: -40, left: 0, right: 0, height: 40, borderColor: 'red' }}
+                pointerEvents="none"
+            />
 
-            <View style={{ position: 'absolute', top: -40, left: 0, right: 0, height: 40, zIndex: -1 }}>
-                <LinearGradient
-                    colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
-                    style={{ flex: 1 }}
-                />
-            </View>
 
 
             <View style={[styles.tabBarContainer, { bottom: Math.max(insets.bottom, 16) }]}>
