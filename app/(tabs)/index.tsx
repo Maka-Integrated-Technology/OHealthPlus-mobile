@@ -50,6 +50,67 @@ export default function TabOneScreen() {
       time: "Mon, 19 • 11:15 AM",
     },
   ];
+
+  const header = () => (
+    <>
+      <View style={styles.homeHeader}>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', gap: 6 }}>
+          <Pressable onPress={() => router.toProfile()} >
+            <Image source={avatar} style={{ height: 48, width: 48, resizeMode: 'contain' }} />
+          </Pressable>
+          <View>
+            <Text weight="bold">Hello, Olivia Jane</Text>
+            <Text style={{ color: Colors.neutral }}>Welcome back</Text>
+          </View>
+        </View>
+
+        <Pressable style={{ alignItems: 'center' }}>
+          <Image style={{ height: 24, resizeMode: 'contain' }} source={notificationIcon} />
+        </Pressable>
+      </View>
+
+
+      <View style={styles.homeCTA}>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 6 }}>
+          <View style={{ alignItems: 'center' }}>
+            <Image style={{ height: 34, width: 34, resizeMode: 'contain' }} source={messagesAssets.icons.splashIcon} />
+          </View>
+          <View style={{ justifyContent: 'flex-start' }}>
+            <Text style={{ fontSize: 20 }} weight="bold">
+              Ask Health Assistant
+            </Text>
+            <Text style={{ color: Colors.neutral, width: '100%' }}>
+              {`Get guidance, understand symptoms, and \nfind the right care.`}
+            </Text>
+          </View>
+        </View>
+
+        <Button onPress={() => router.toHome()} >Start Conversation →</Button>
+      </View>
+
+      <View style={styles.quickActions}>
+        <Text style={styles.quickActionHeader}>Quick Actions</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
+
+          {
+            QuickAction.map((action) => (
+              <Pressable style={{ flex: 1, backgroundColor: Colors.lightBeige, borderColor: Colors.homeneutral, borderWidth: 2, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 12, borderRadius: 12 }}>
+
+                <Image style={{ height: 48, width: 48, resizeMode: 'cover', }} source={action.icon} />
+
+                <View style={{ alignItems: 'center' }}>
+                  <Text style={{ fontSize: 18, textAlign: 'center' }}>{action.description}</Text>
+                </View>
+              </Pressable>
+            ))
+          }
+
+
+        </View>
+
+      </View></>
+  )
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.homeHeader}>
@@ -118,9 +179,9 @@ export default function TabOneScreen() {
         </View>
 
 
-
         <FlatList
           data={appointments}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
           renderItem={({ item }) => (
@@ -184,8 +245,8 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   upcomingAppointmnts: {
-    marginTop: 8,
-
+    marginTop: 16,
+    flex: 1,
   },
   upcomingAppointmntsHeader: {
     flexDirection: 'row',
@@ -193,8 +254,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // fontSize: 20
   },
-  list: {
 
+  list: {
+    marginTop: 8,
     gap: 12,
+    paddingBottom: "35%"
   },
 });
