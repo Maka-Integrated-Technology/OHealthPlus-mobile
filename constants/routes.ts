@@ -13,6 +13,7 @@ export const ROUTES = {
 
     SIGN_UP: "/(auth)/signup",
     SIGN_IN: "/(auth)/signin",
+    LEGAL_TERMS: "/(auth)/legalTerm",
     OTP: "/(auth)/OTP",
     FORGOT_PASSWORD: "/(auth)/ForgotPassword",
     NEW_PASSWORD: "/(auth)/NewPassword",
@@ -23,18 +24,19 @@ export const ROUTES = {
     // ============================================
     // Main App Routes
     // ============================================
-    TABS: "/(tabs)",
-    HOME: "/(tabs)/explore",
-    GALLERY_HOME: "/(manifestationMainHome)/(tabs)/gallery",
-    SHARED: "/(manifestationMainHome)/(tabs)/shared",
-    PROFILE: "/(manifestationMainHome)/(tabs)/profile",
+
+    HOME: "/(tabs)",
+    PROFILE: "/(tabs)/profile",
 
     // ============================================
     // SCREENS
     // ============================================
-    FAVOURITES: "/(manifestationMainHome)/screens/Favourites",
+    FAVOURITES: "/()/screens/Favourites",
     ALL_EVENTS: "/screens/AllEvents",
     EVENTS_PREVIEW: "/screens/EventPreview",
+    BOOK_APPOINTMENT: "/screens/appointments/BookAppointment",
+
+
 
     // ============================================
     // Paywall Routes

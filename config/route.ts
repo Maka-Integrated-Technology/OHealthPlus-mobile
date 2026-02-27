@@ -64,6 +64,7 @@ export const useAppRouter = () => {
         // Onboarding Navigation
         // ============================================
         toWelcome: () => navigateReplace(ROUTES.ONBOARDING),
+        toLegalTerms: (params: { param: 'terms' | 'privacy' }) => navigate(ROUTES.LEGAL_TERMS, params),
 
         // ============================================
         // Authentication Navigation
@@ -74,15 +75,16 @@ export const useAppRouter = () => {
         toEmailVerification: (params?: { email?: string }) =>
             navigate(ROUTES.EMAIL_VERIFICATION, params),
         toPasswordSuccess: () => navigate(ROUTES.PASSWORD_SUCCESS),
-        toManifestationAspects: () => navigate(ROUTES.MANIFESTATION_ASPECTS),
 
         // ============================================
         // Main App Navigation
         // ============================================
         toHome: () => navigateReplace(ROUTES.HOME),
-        toGalleryHome: () => navigate(ROUTES.GALLERY_HOME),
+        toBookAppointments: () => navigate(ROUTES.BOOK_APPOINTMENT),
+
         toFavourites: () => navigate(ROUTES.FAVOURITES),
-        toShared: () => navigate(ROUTES.SHARED),
+
+        toProfile: () => navigate(ROUTES.PROFILE),
 
         toEvents: () => navigate(ROUTES.ALL_EVENTS),
 
@@ -101,6 +103,7 @@ export const useAppRouter = () => {
         // Paywall Navigation
         // ============================================
         toSubscription: () => navigate(ROUTES.SUBSCRIPTION),
+        toOtp: () => navigate(ROUTES.OTP),
         toUpgradePlan: () => navigate(ROUTES.UPGRADE_PLAN),
         toPaymentSuccess: (params?: { plan?: string; amount?: string }) =>
             navigate(ROUTES.PAYMENT_SUCCESS, params),
