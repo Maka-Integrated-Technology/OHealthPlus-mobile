@@ -81,6 +81,7 @@ export const useAppRouter = () => {
         // ============================================
         toHome: () => navigateReplace(ROUTES.HOME),
         toBookAppointments: () => navigate(ROUTES.BOOK_APPOINTMENT),
+        toAvailabeleProfessionals: () => navigate(ROUTES.AVAILABLE_PROFESSIONALS),
 
         toFavourites: () => navigate(ROUTES.FAVOURITES),
 

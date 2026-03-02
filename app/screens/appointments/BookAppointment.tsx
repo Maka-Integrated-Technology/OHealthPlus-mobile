@@ -9,7 +9,7 @@ export default function BookAppointment() {
 
     return (
         <Screen>
-            <View style={{ borderBottomWidth: 1, borderColor: Colors.homeneutral, paddingBottom: 12, marginBottom: 12 }}>
+            <View style={{ borderBottomWidth: 1, borderColor: Colors.homeneutral, paddingBottom: 12, marginBottom: 20 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, }}>
                     <BackButton style={{ marginBottom: 0 }} />
                     <View >
@@ -17,7 +17,7 @@ export default function BookAppointment() {
                     </View>
                 </View>
                 <View>
-                    <Text style={{ fontSize: 20, color: Colors.neutral }}>Select the type of care you need</Text>
+                    <Text style={{ fontSize: 18, color: Colors.neutral }}>Select the type of care you need</Text>
                 </View>
 
             </View>
