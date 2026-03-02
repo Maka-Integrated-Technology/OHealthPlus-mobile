@@ -1,3 +1,4 @@
+import Pressable from "@/components/Pressable";
 import { Text } from "@/components/Text";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { BlurView } from "expo-blur";
@@ -7,11 +8,13 @@ import { ImageBackground, ImageSourcePropType, StyleSheet, View } from "react-na
 export interface Personnel {
     image: ImageSourcePropType;
     text: string;
+    onPress: () => void;
 }
 
 export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
     return (
-        <ImageBackground source={personnel.image} style={[styles.image, styles.container]}>
+        <Pressable onPress={personnel.onPress}>
+            <ImageBackground source={personnel.image} style={[styles.image, styles.container]}>
 
                 <MaskedView
                     style={StyleSheet.absoluteFill}
@@ -40,7 +43,8 @@ export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
                 <View style={styles.textContainer}>
                     <Text weight="bold" style={styles.personnelText}>{personnel.text}</Text>
                 </View>
-        </ImageBackground>
+            </ImageBackground>
+        </Pressable>
     );
 }
 
@@ -52,12 +56,8 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     image: {
-        // marginTop: 12,
         flex: 1,
         height: "130%",
-        // width: "100%",
-        // position: 'absolute',
-        // top: '20%',
     },
     personnelText: {
         // position: "absolute",
