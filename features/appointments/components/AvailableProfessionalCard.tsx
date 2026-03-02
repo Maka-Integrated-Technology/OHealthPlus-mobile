@@ -55,7 +55,7 @@ export default function AvailableProfessionalCard({ professional }: { profession
 
 const styles = StyleSheet.create({
     ProfessionalImage: {
-        height: 120,
+        height: 100,
         aspectRatio: 1 / 1,
         borderRadius: 20,
         // overflow: 'hidden', // ✅ clips the image to the border radius
