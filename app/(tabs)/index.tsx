@@ -72,7 +72,7 @@ export default function TabOneScreen() {
 
 
       <View style={styles.homeCTA}>
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 6 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 6, marginBottom: 12 }}>
           <View style={{ alignItems: 'center' }}>
             <Image style={{ height: 34, width: 34, resizeMode: 'contain' }} source={messagesAssets.icons.splashIcon} />
           </View>
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   upcomingAppointmnts: {
-    marginTop: 16,
+    marginTop: 24,
     flex: 1,
   },
   upcomingAppointmntsHeader: {

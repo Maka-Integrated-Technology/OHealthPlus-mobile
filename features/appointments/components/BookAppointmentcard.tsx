@@ -11,8 +11,7 @@ export interface Personnel {
 
 export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
     return (
-        <View style={styles.container}>
-            <ImageBackground source={personnel.image} style={styles.image}>
+        <ImageBackground source={personnel.image} style={[styles.image, styles.container]}>
 
                 <MaskedView
                     style={StyleSheet.absoluteFill}
@@ -41,8 +40,7 @@ export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
                 <View style={styles.textContainer}>
                     <Text weight="bold" style={styles.personnelText}>{personnel.text}</Text>
                 </View>
-            </ImageBackground>
-        </View >
+        </ImageBackground>
     );
 }
 
@@ -51,12 +49,15 @@ const styles = StyleSheet.create({
         aspectRatio: 16 / 7,
         width: "100%",
         borderRadius: 24,
-        borderWidth: 3,
-        borderColor: "white",
         overflow: "hidden",
     },
     image: {
+        // marginTop: 12,
         flex: 1,
+        height: "130%",
+        // width: "100%",
+        // position: 'absolute',
+        // top: '20%',
     },
     personnelText: {
         // position: "absolute",
@@ -75,5 +76,4 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start'
     }
 });
-
 
