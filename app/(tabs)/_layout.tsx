@@ -16,12 +16,14 @@ export default function TabLayout() {
 
 
                 },
+                headerShown: false,
             }}
         >
             <Tabs.Screen name="index" options={{ headerShown: false }} />
             <Tabs.Screen name="appointments" options={{ headerShown: false }} />
 
             <Tabs.Screen name="messages" options={{ headerShown: false }} />
+            <Tabs.Screen name="tests" options={{ headerShown: false }} />
             <Tabs.Screen name="profile" options={{ headerShown: false }} />
 
             <Tabs.Screen

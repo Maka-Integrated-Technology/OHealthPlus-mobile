@@ -1,3 +1,4 @@
+import Pressable from "@/components/Pressable";
 import { Text } from "@/components/Text";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { BlurView } from "expo-blur";
@@ -7,18 +8,19 @@ import { ImageBackground, ImageSourcePropType, StyleSheet, View } from "react-na
 export interface Personnel {
     image: ImageSourcePropType;
     text: string;
+    onPress: () => void;
 }
 
 export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
     return (
-        <View style={styles.container}>
-            <ImageBackground source={personnel.image} style={styles.image}>
+        <Pressable onPress={personnel.onPress}>
+            <ImageBackground source={personnel.image} style={[styles.image, styles.container]}>
 
                 <MaskedView
                     style={StyleSheet.absoluteFill}
                     maskElement={
                         <LinearGradient
-                            colors={['transparent', 'rgba(0,0,0,0.65)']}
+                            colors={['transparent', 'rgba(0,0,0,0.75)']}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
                             style={StyleSheet.absoluteFill}
@@ -31,7 +33,7 @@ export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
                         style={StyleSheet.absoluteFill}
                     />
                     <LinearGradient
-                        colors={['transparent', 'rgba(0,0,0,0.55)']}
+                        colors={['transparent', 'rgba(0,0,0,0.65)']}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}
                         style={StyleSheet.absoluteFill}
@@ -42,21 +44,20 @@ export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
                     <Text weight="bold" style={styles.personnelText}>{personnel.text}</Text>
                 </View>
             </ImageBackground>
-        </View >
+        </Pressable>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        aspectRatio: 16 / 8,
+        aspectRatio: 16 / 7,
         width: "100%",
         borderRadius: 24,
-        borderWidth: 3,
-        borderColor: "white",
         overflow: "hidden",
     },
     image: {
         flex: 1,
+        height: "130%",
     },
     personnelText: {
         // position: "absolute",
@@ -75,3 +76,4 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start'
     }
 });
+
