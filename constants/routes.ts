@@ -35,6 +35,7 @@ export const ROUTES = {
     ALL_EVENTS: "/screens/AllEvents",
     EVENTS_PREVIEW: "/screens/EventPreview",
     BOOK_APPOINTMENT: "/screens/appointments/BookAppointment",
+    AVAILABLE_PROFESSIONALS: "/screens/appointments/AvailableProfessionals",
 
 
 

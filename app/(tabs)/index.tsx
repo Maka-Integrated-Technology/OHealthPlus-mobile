@@ -16,8 +16,8 @@ export default function TabOneScreen() {
   const router = useAppRouter();
 
   const QuickAction = [
-    { icon: appointmentAssets.icons.bookappointment, onPress: () => { router.toBookAppointments() }, description: `Book a \n consultation` },
-    { icon: appointmentAssets.icons.bookconsultation, onPress: () => { }, description: `View your \n appointments` },
+    { icon: appointmentAssets.icons.bookconsultation, onPress: () => { router.toBookAppointments() }, description: `Book a consultation` },
+    { icon: appointmentAssets.icons.bookappointment, onPress: () => { }, description: `Book a lab-test` },
   ];
 
   const appointments = [
@@ -42,13 +42,6 @@ export default function TabOneScreen() {
       type: "video" as const,
       time: "Fri, 16 • 9:00 AM",
     },
-    {
-      id: "4",
-      image: { uri: "https://randomuser.me/api/portraits/men/76.jpg" },
-      name: "Dr. Chidi Nwosu",
-      type: "chat" as const,
-      time: "Mon, 19 • 11:15 AM",
-    },
   ];
 
 
@@ -72,7 +65,7 @@ export default function TabOneScreen() {
 
 
       <View style={styles.homeCTA}>
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 6 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 6, marginBottom: 12 }}>
           <View style={{ alignItems: 'center' }}>
             <Image style={{ height: 34, width: 34, resizeMode: 'contain' }} source={messagesAssets.icons.splashIcon} />
           </View>
@@ -95,14 +88,17 @@ export default function TabOneScreen() {
 
           {
             QuickAction.map((action, idx) => (
-              <Pressable onPress={action.onPress} key={idx} style={{ flex: 1, backgroundColor: Colors.lightBeige, borderColor: Colors.homeneutral, borderWidth: 2, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 12, borderRadius: 12 }}>
+              <View key={idx} style={{ flex: 1 }}>
+                <Pressable onPress={action.onPress} style={{ width: '100%', backgroundColor: Colors.lightBeige, borderColor: Colors.homeneutral, borderWidth: 2, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 12, borderRadius: 12 }}>
 
                 <Image style={{ height: 48, width: 48, resizeMode: 'cover', }} source={action.icon} />
 
-                <View style={{ alignItems: 'center' }}>
+                  <View style={{ alignItems: 'center', paddingHorizontal: 30, paddingTop: 12 }}>
                   <Text style={{ fontSize: 18, textAlign: 'center' }}>{action.description}</Text>
                 </View>
               </Pressable>
+
+              </View>
             ))
           }
 
@@ -186,7 +182,7 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   upcomingAppointmnts: {
-    marginTop: 16,
+    marginTop: 24,
     flex: 1,
   },
   upcomingAppointmntsHeader: {

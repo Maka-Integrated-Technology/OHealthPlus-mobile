@@ -1,0 +1,119 @@
+
+// import { Text } from "@/components/Text";
+// import {
+//     BlurImageFilter,
+//     Canvas,
+//     Group,
+//     Image as SkiaImage,
+//     useImage,
+// } from "@shopify/react-native-skia";
+// import { ImageSourcePropType, StyleSheet, View, useWindowDimensions } from "react-native";
+
+// export interface Personnel {
+//     image: ImageSourcePropType;
+//     text: string;
+// }
+
+// const SLICES = 12;
+// const MAX_BLUR = 20;
+
+// export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
+//     const { width: screenWidth } = useWindowDimensions();
+
+//     // Account for parent padding — adjust 32 to match your screen's horizontal padding
+//     const cardWidth = screenWidth - 32;
+//     const cardHeight = cardWidth * (7 / 16);
+
+//     const halfWidth = cardWidth / 2;
+
+//     // useImage requires a static require or uri string
+//     const image = useImage(personnel.image as number);
+
+//     return (
+//         <View style= { styles.container } >
+//         {/* Skia canvas covers the full card */ }
+//         < Canvas style = {{ width: cardWidth, height: cardHeight }
+// }>
+//     {/* Base image — full card */ }
+// {
+//     image && (
+//         <SkiaImage
+//                         image={ image }
+//     fit = "cover"
+//     x = { 0}
+//     y = { 0}
+//     width = { cardWidth }
+//     height = { cardHeight }
+//         />
+//                 )
+// }
+
+// {/* Progressive blur — right half only, blur grows left → right */ }
+// {
+//     image &&
+//     Array.from({ length: SLICES }).map((_, i) => {
+//         const t = i / (SLICES - 1); // 0 → 1
+//         const blur = Math.pow(t, 2) * MAX_BLUR;
+//         const sliceWidth = halfWidth / SLICES;
+//         const x = halfWidth + i * sliceWidth; // starts at midpoint
+
+//         return (
+//             <Group
+//                                 key= { i }
+//         clip = {{
+//             x,
+//                 y: 0,
+//                     width: sliceWidth + 1, // +1 avoids hairline gaps
+//                         height: cardHeight,
+//                                 }
+//     }
+//                             >
+//         <SkiaImage
+//                                     image={ image }
+//                                     fit = "cover"
+//                                     x = { 0}
+//                                     y = { 0}
+//                                     width = { cardWidth }
+//                                     height = { cardHeight }
+//         >
+//         <BlurImageFilter blur={ blur } />
+//         </SkiaImage>
+//     </Group>
+//     );
+// })}
+// </Canvas>
+
+// {/* Text overlay — right half */ }
+// <View style={ styles.textContainer }>
+//     <Text weight="bold" style = { styles.personnelText } >
+//         { personnel.text }
+//         </Text>
+//         </View>
+//         </View>
+//     );
+// }
+
+// const styles = StyleSheet.create({
+//     container: {
+//         aspectRatio: 16 / 7,
+//         width: "100%",
+//         borderRadius: 24,
+//         borderWidth: 3,
+//         borderColor: "white",
+//         overflow: "hidden",
+//     },
+//     textContainer: {
+//         position: "absolute",
+//         height: "100%",
+//         width: "50%",
+//         right: 0,
+//         justifyContent: "center",
+//         alignItems: "flex-start",
+//     },
+//     personnelText: {
+//         padding: 12,
+//         color: "white",
+//         textAlign: "left",
+//         fontSize: 24,
+//     },
+// });
