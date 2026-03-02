@@ -95,7 +95,8 @@ export default function TabOneScreen() {
 
           {
             QuickAction.map((action, idx) => (
-              <Pressable onPress={action.onPress} key={idx} style={{ flex: 1, backgroundColor: Colors.lightBeige, borderColor: Colors.homeneutral, borderWidth: 2, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 12, borderRadius: 12 }}>
+              <View style={{ flex: 1 }}>
+                <Pressable onPress={action.onPress} key={idx} style={{ width: '100%', backgroundColor: Colors.lightBeige, borderColor: Colors.homeneutral, borderWidth: 2, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 12, borderRadius: 12 }}>
 
                 <Image style={{ height: 48, width: 48, resizeMode: 'cover', }} source={action.icon} />
 
@@ -103,6 +104,8 @@ export default function TabOneScreen() {
                   <Text style={{ fontSize: 18, textAlign: 'center' }}>{action.description}</Text>
                 </View>
               </Pressable>
+
+              </View>
             ))
           }
 
