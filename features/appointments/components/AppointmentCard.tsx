@@ -1,4 +1,5 @@
 // Appointments.tsx
+import Pressable from "@/components/Pressable";
 import { Text } from "@/components/Text";
 import Colors from "@/constants/Colors";
 import { Image, ImageSourcePropType, StyleSheet, View } from "react-native";
@@ -15,7 +16,7 @@ export default function AppointmentCard({ image, name, type, time }: Props) {
     const icons = appointmentAssets.icons;
 
     return (
-        <View style={styles.card}>
+        <Pressable style={styles.card}>
             <Image source={image} style={styles.avatar} />
 
             <View style={styles.info}>
@@ -36,7 +37,7 @@ export default function AppointmentCard({ image, name, type, time }: Props) {
                     <Text style={styles.subText}>{time}</Text>
                 </View>
             </View>
-        </View>
+        </Pressable>
     );
 }
 
@@ -44,13 +45,13 @@ const styles = StyleSheet.create({
     card: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#fff",
+        backgroundColor: Colors.lightBeige,
         borderRadius: 16,
         padding: 14,
         gap: 12,
         shadowColor: "#000",
         shadowOpacity: 0.06,
-        borderColor: Colors.homeneutral,
+        borderColor: "#F3F4F6",
         borderWidth: 2,
         // shadowRadius: 8,
         // shadowOffset: { width: 0, height: 2 },
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     },
     info: {
         flex: 1,
-        gap: 1,
+        // gap: 0,
     },
     name: {
         fontSize: 25,
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
         height: 28,
     },
     subText: {
-        fontSize: 16,
+        fontSize: 14,
         color: Colors.neutral,
     },
 });

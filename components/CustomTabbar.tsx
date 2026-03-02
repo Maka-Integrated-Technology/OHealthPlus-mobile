@@ -1,4 +1,4 @@
-import { AppointmentsIcon, HomeIcon, MessagesIcon, ProfileIcon } from '@/components/TabIcons';
+import { AppointmentsIcon, HomeIcon, MessagesIcon, ProfileIcon, SparkIcon } from '@/components/TabIcons';
 import Colors from '@/constants/Colors';
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,6 +14,7 @@ const iconMap = {
     appointments: AppointmentsIcon,
     messages: MessagesIcon,
     profile: ProfileIcon,
+    tests: SparkIcon
 };
 
 
@@ -76,6 +77,8 @@ export function CustomTabBar({
                                     return "Messages";
                                 case "profile":
                                     return "Profile";
+                                case "tests":
+                                    return "Tests"
                                 default:
                                     return "";
                             }
@@ -131,7 +134,8 @@ const styles = StyleSheet.create({
     tabBar: {
         flexDirection: "row",
         backgroundColor: "#fff",
-        justifyContent: "space-around",
+        justifyContent: "space-between",
+        // justifyContent: "space-evenly",
         alignItems: "center",
         borderTopWidth: 2,
         borderLeftWidth: 2,
@@ -154,45 +158,25 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         height: '100%',
-        width: "25%",
+
+        // borderWidth: 3,
+        // width: "20%",
+        flex: 0.2,
     },
     tabLabel: {
         fontSize: 12,
         marginTop: 4,
-        fontWeight: "500",
+        textAlign: 'center',
+        display: 'none'
     },
     tabLabelActive: {
         color: "#ffff",
-    },
-    centerButton: {
-        position: "relative",
-        top: -20,
-        alignItems: "center",
-        justifyContent: "center",
-        flex: 1,
-    },
-    centerButtonInner: {
-        width: 56,
-        height: 56,
-        borderRadius: 28,
-        backgroundColor: "#5669FF",
-        alignItems: "center",
-        justifyContent: "center",
-        shadowColor: "#5669FF",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 8,
+        display: 'flex'
     },
 
-    centerButtonIcon: {
-        backgroundColor: "white",
-        height: 24,
-        borderRadius: 2,
-        width: 24,
-        justifyContent: "center",
-        alignItems: "center",
-    },
+
+
+
     iconContainer: {
         width: "100%",
         // height: "100%",
@@ -202,7 +186,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     tabItemActive: {
+        // width: '20%',
         backgroundColor: Colors.primary,
         borderRadius: TAB_BAR_RADIUS - TAB_BAR_PADDING,
+        flex: 0.3,
     }
 });
