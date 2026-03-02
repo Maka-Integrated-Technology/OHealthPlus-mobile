@@ -12,8 +12,8 @@ const iconMap = {
     index: HomeIcon,
     appointments: AppointmentsIcon,
     messages: MessagesIcon,
+    tests: SparkIcon,
     profile: ProfileIcon,
-    tests: SparkIcon
 };
 
 type IconName = keyof typeof iconMap;
@@ -35,9 +35,10 @@ function AnimatedTabItem({
     useEffect(() => {
         if (isFocused) {
             // WhatsApp-like: quick pop up then settle
-            scale.value = withSpring(1.15, { damping: 10, stiffness: 300 }, () => {
+            scale.value = withSpring(1.05, { damping: 10, stiffness: 300 }, () => {
                 scale.value = withSpring(1, { damping: 12, stiffness: 200 });
             });
+
             translateY.value = withSpring(-3, { damping: 10, stiffness: 300 }, () => {
                 translateY.value = withSpring(0, { damping: 12, stiffness: 200 });
             });
@@ -55,7 +56,7 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
     const insets = useSafeAreaInsets();
 
     return (
-        <View style={[styles.tabBarContainer, { bottom: Math.max(insets.bottom, 8) }]}>
+        <View style={[styles.tabBarContainer, { bottom: Math.max(insets.bottom, 0) }]}>
             <LinearGradient
                 colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.85)']}
                 locations={[0, 0.4]}
@@ -85,8 +86,8 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
                             case "index": return "Home";
                             case "appointments": return "Appointments";
                             case "messages": return "Messages";
-                            case "profile": return "Profile";
                             case "tests": return "Tests";
+                            case "profile": return "Profile";
                             default: return "";
                         }
                     };
@@ -113,6 +114,9 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
                     );
                 })}
             </View>
+
+            <View style={styles.whiteView}></View>
+
         </View>
     );
 }
@@ -133,7 +137,7 @@ const styles = StyleSheet.create({
         borderRightWidth: 2,
         borderBottomWidth: 2,
         borderColor: Colors.homeneutral,
-        height: 90,
+        height: 80,
         borderRadius: TAB_BAR_RADIUS,
         paddingVertical: TAB_BAR_PADDING,
         paddingHorizontal: TAB_BAR_PADDING,
@@ -148,7 +152,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         height: '100%',
-        flex: 0.2,
+        flex: 0.3,
     },
     tabLabel: {
         fontSize: 12,
@@ -170,7 +174,13 @@ const styles = StyleSheet.create({
     tabItemActive: {
         backgroundColor: Colors.primary,
         borderRadius: TAB_BAR_RADIUS - TAB_BAR_PADDING,
-        flex: 0.3,
+        flex: 0.4,
+    },
+    whiteView: {
+        // borderWidth: 23,
+        backgroundColor: 'white',
+        height: 12,
+        flex: 1,
     }
 });
 
