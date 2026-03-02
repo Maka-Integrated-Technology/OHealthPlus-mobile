@@ -14,7 +14,7 @@ import Animated, {
 
 const SHIMMER_WIDTH = 200;
 
-function ShimmerBar({ width, height, borderRadius = 24 }: { width?: DimensionValue, height: number, borderRadius?: number }) {
+function ShimmerBar({ width, height, borderRadius = 24, flex }: { width?: DimensionValue, height: number, borderRadius?: number, flex?: number }) {
     const translateX = useSharedValue(-SHIMMER_WIDTH);
 
     useEffect(() => {
@@ -30,7 +30,10 @@ function ShimmerBar({ width, height, borderRadius = 24 }: { width?: DimensionVal
     }));
 
     return (
-        <View style={[{ backgroundColor: Colors.neutral200, height, borderRadius, overflow: 'hidden' }, width ? { width } : { flex: 1 }]}>
+        <View style={[
+            { backgroundColor: Colors.neutral200, height, borderRadius, overflow: 'hidden' },
+            width ? { width } : flex ? { flex } : { alignSelf: 'stretch' }
+        ]}>
             <Animated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
                 <LinearGradient
                     colors={['transparent', 'rgba(255,255,255,0.5)', 'transparent']}
@@ -49,15 +52,15 @@ export default function AvailableProfessionalsSkeleton({ opacity }: { opacity?: 
             <Image source={SkeletonImage} style={{ width: 100, height: 100 }} />
 
             <View style={{ gap: 8, flex: 1 }}>
-                <ShimmerBar height={18} />
-                <ShimmerBar height={12} />
+                <ShimmerBar height={16} />
+                <ShimmerBar height={8} />
 
-                <View style={{ flexDirection: 'row', gap: 8 }}>
-                    <ShimmerBar height={12} />
-                    <ShimmerBar height={12} />
+                <View style={{ flexDirection: 'row', gap: 8, marginTop: 8, marginBottom: 4 }}>
+                    <ShimmerBar height={10} flex={1} />
+                    <ShimmerBar height={10} flex={1} />
                 </View>
 
-                <ShimmerBar height={13} />
+                <ShimmerBar height={10} />
             </View>
         </View>
     );
