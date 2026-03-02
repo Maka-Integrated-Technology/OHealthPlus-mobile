@@ -8,7 +8,7 @@ export default function Pressable({ children, style, ...props }: Props) {
     return (
         <RNPressable
             style={({ pressed }) => [
-                pressed && { transform: [{ scale: 0.87 }], opacity: 0.6 },
+                pressed && { transform: [{ scale: 0.92 }], opacity: 0.6 },
                 style,
             ]}
             {...props}

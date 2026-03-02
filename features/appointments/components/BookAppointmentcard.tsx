@@ -18,7 +18,7 @@ export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
                     style={StyleSheet.absoluteFill}
                     maskElement={
                         <LinearGradient
-                            colors={['transparent', 'rgba(0,0,0,0.65)']}
+                            colors={['transparent', 'rgba(0,0,0,0.75)']}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
                             style={StyleSheet.absoluteFill}
@@ -31,7 +31,7 @@ export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
                         style={StyleSheet.absoluteFill}
                     />
                     <LinearGradient
-                        colors={['transparent', 'rgba(0,0,0,0.55)']}
+                        colors={['transparent', 'rgba(0,0,0,0.65)']}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}
                         style={StyleSheet.absoluteFill}
@@ -48,7 +48,7 @@ export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
 
 const styles = StyleSheet.create({
     container: {
-        aspectRatio: 16 / 8,
+        aspectRatio: 16 / 7,
         width: "100%",
         borderRadius: 24,
         borderWidth: 3,
@@ -75,3 +75,5 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start'
     }
 });
+
+

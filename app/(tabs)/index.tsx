@@ -16,8 +16,8 @@ export default function TabOneScreen() {
   const router = useAppRouter();
 
   const QuickAction = [
-    { icon: appointmentAssets.icons.bookappointment, onPress: () => { router.toBookAppointments() }, description: `Book a \n consultation` },
-    { icon: appointmentAssets.icons.bookconsultation, onPress: () => { }, description: `View your \n appointments` },
+    { icon: appointmentAssets.icons.bookconsultation, onPress: () => { router.toBookAppointments() }, description: `Book a \n consultation` },
+    { icon: appointmentAssets.icons.bookappointment, onPress: () => { }, description: `Book a \n lab-test` },
   ];
 
   const appointments = [
