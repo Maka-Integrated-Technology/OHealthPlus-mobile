@@ -24,7 +24,7 @@ export default {
     red500: '#F04438',
     homeneutral: '#F3F4F6',
     lightBeige: '#FCFCFC',
-    lightYellow: '#FEFCE8'
-
-
+    lightYellow: '#FEFCE8',
+    lightBlue2: '#F5F8FF',
+    lightGray2: '#384250',
 };

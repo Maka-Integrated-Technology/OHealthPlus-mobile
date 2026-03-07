@@ -1,7 +1,7 @@
 import Colors from "@/constants/Colors";
-import { Pressable, StyleSheet, StyleProp, ViewStyle, View, Image, ImageSourcePropType } from "react-native";
-import { Text } from "./Text";
 import { authAssets } from "@/features/auth/assets";
+import { Image, ImageSourcePropType, Pressable, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { Text } from "./Text";
 
 interface CustomButtonProps {
     children: React.ReactNode;
@@ -25,7 +25,7 @@ export default function Button({ children, onPress, type = "primary", style, ico
         >
             <View style={styles.content}>
                 {icon && <Image source={icon} style={styles.icon} />}
-                <Text weight="semibold" style={[styles.text, type === 'clear' ? styles.clearButtonText : type == "primary" ? styles.primaryButtonText : styles.secondaryButtonText]}>
+                <Text weight="medium" style={[styles.text, type === 'clear' ? styles.clearButtonText : type == "primary" ? styles.primaryButtonText : styles.secondaryButtonText]}>
                     {children}
                 </Text>
             </View>
@@ -79,7 +79,9 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     primary: {
-        backgroundColor: Colors.primary
+        backgroundColor: Colors.primary,
+        borderWidth: 1,
+        borderColor: Colors.primary,
     },
     secondary: {
         backgroundColor: Colors.secondaryLight,
@@ -93,10 +95,10 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     text: {
-        fontSize: 18,
+        fontSize: 16,
+        lineHeight: 17.6,
+        letterSpacing: -0.2,
         textAlign: 'center',
-        fontWeight: '600',
-        fontFamily: 'OpenSans'
     },
     buttonText: {
         color: 'white'

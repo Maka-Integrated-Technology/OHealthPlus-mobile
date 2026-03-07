@@ -20,21 +20,21 @@ export default function AppointmentCard({ image, name, type, time }: Props) {
             <Image source={image} style={styles.avatar} />
 
             <View style={styles.info}>
-                <Text weight="bold" style={styles.name}>{name}</Text>
+                <Text weight="semibold" style={styles.name}>{name}</Text>
 
                 <View style={styles.row}>
                     <Image
                         source={type === "video" ? icons.cameraIcon : icons.chatIcon}
                         style={styles.icon}
                     />
-                    <Text style={styles.subText}>
+                    <Text weight="regular" style={styles.subText}>
                         {type === "video" ? "Video" : "Chat"} Consultation
                     </Text>
                 </View>
 
                 <View style={styles.row}>
                     <Image source={icons.calendarIcon} style={styles.icon} />
-                    <Text style={styles.subText}>{time}</Text>
+                    <Text weight="regular" style={styles.subText}>{time}</Text>
                 </View>
             </View>
         </Pressable>
@@ -46,30 +46,33 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         backgroundColor: Colors.lightBeige,
-        borderRadius: 16,
+        borderRadius: 12,
         padding: 14,
         gap: 12,
         shadowColor: "#000",
         shadowOpacity: 0.06,
-        borderColor: "#F3F4F6",
-        borderWidth: 2,
+        borderColor: Colors.homeneutral,
+        borderWidth: 1,
         // shadowRadius: 8,
         // shadowOffset: { width: 0, height: 2 },
         // elevation: 2,
     },
     avatar: {
-        width: 48,
-        height: 48,
-        borderRadius: 28,
-        alignSelf: 'flex-start'
+        width: 38,
+        height: 38,
+        borderRadius: 999,
+        alignSelf: 'flex-start',
+        resizeMode: 'cover',
     },
     info: {
         flex: 1,
-        // gap: 0,
+        gap: 6,
     },
     name: {
-        fontSize: 25,
-        color: "#111",
+        fontSize: 16,
+        lineHeight: 17.6,
+        letterSpacing: -0.8,
+        color: Colors.black100,
     },
     row: {
         flexDirection: "row",
@@ -77,11 +80,14 @@ const styles = StyleSheet.create({
         gap: 6,
     },
     icon: {
-        width: 28,
-        height: 28,
+        width: 18,
+        height: 18,
+        resizeMode: 'contain',
     },
     subText: {
         fontSize: 14,
+        lineHeight: 16.8,
+        letterSpacing: -0.5,
         color: Colors.neutral,
     },
 });
