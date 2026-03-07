@@ -3,11 +3,13 @@ import { FlatList, StyleSheet } from "react-native";
 import { appointmentAssets } from "../assets";
 import { Professional } from "../types/Professional";
 import AvailableProfessionalCard from "./AvailableProfessionalCard";
+import { useState } from "react";
 
 export default function AvailableProfessionalCardList() {
 
     const PersonnelImages = appointmentAssets.images;
     const router = useAppRouter();
+    const [selectedProfessionalId, setSelectedProfessionalId] = useState<string | null>(null);
 
 
 
@@ -73,6 +75,8 @@ export default function AvailableProfessionalCardList() {
             renderItem={({ item }) => (
                 <AvailableProfessionalCard
                     professional={item}
+                    isSelected={selectedProfessionalId === item.id}
+                    onSelect={() => setSelectedProfessionalId(item.id)}
                 />
             )}
         />

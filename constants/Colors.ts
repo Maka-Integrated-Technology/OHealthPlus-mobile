@@ -17,6 +17,7 @@ export default {
     neutral: "#4D5761",
     black100: '#161A1D',
     black200: '#1A1A1A',
+    black300: '#0F172A',
     black80: '#71717A',
     neutral50: '#F9FAFB',
     neutral200: '#E5E7EB',

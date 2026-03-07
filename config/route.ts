@@ -82,6 +82,14 @@ export const useAppRouter = () => {
         toHome: () => navigateReplace(ROUTES.HOME),
         toBookAppointments: () => navigate(ROUTES.BOOK_APPOINTMENT),
         toAvailabeleProfessionals: () => navigate(ROUTES.AVAILABLE_PROFESSIONALS),
+        toProfessionalProfile: (params?: { professionalId?: string }) => 
+            navigate(ROUTES.PROFESSIONAL_PROFILE, params),
+        toSelectDateTime: (params?: { professionalId?: string; consultationType?: string }) => 
+            navigate(ROUTES.SELECT_DATE_TIME, params),
+        toConfirmAppointment: (params?: { professionalId?: string; consultationType?: string; date?: string; time?: string }) => 
+            navigate(ROUTES.CONFIRM_APPOINTMENT, params),
+        toAppointmentConfirmed: (params?: { professionalId?: string; consultationType?: string; date?: string; time?: string }) => 
+            navigate(ROUTES.APPOINTMENT_CONFIRMED, params),
 
         toFavourites: () => navigate(ROUTES.FAVOURITES),
 
