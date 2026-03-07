@@ -39,7 +39,7 @@ export default function BookAppointmentCardList() {
 const styles = StyleSheet.create({
 
     list: {
-        gap: 12,
+        gap: 16,
         paddingBottom: "10%"
     },
 })
