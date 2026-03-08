@@ -21,12 +21,16 @@ export default {
     black80: '#71717A',
     neutral50: '#F9FAFB',
     neutral200: '#E5E7EB',
+    neutral300: '#D1D5DB',
     neutral600: '#6C737F',
     red500: '#F04438',
     homeneutral: '#F3F4F6',
     lightBeige: '#FCFCFC',
+    beige: '#FAFAFA',
     lightYellow: '#FEFCE8',
     lightBlue2: '#F5F8FF',
     lightGray2: '#384250',
     blue400: '#53B1FD',
+    blue600: '#1570EF',
+
 };

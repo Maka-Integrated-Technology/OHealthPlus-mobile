@@ -287,14 +287,14 @@ const styles = StyleSheet.create({
         fontSize: 12,
         lineHeight: 12 * 1.2,
         letterSpacing: -0.2,
-        color: '#6C737F',
+        color: Colors.neutral600,
         flex: 1,
     },
     feeAmount: {
         fontSize: 18,
         lineHeight: 18 * 1.1,
         letterSpacing: -0.8,
-        color: '#155EEF',
+        color: Colors.background,
         fontWeight: '600',
     },
     bookButton: {
