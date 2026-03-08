@@ -3,13 +3,17 @@ import Button from "@/components/Button";
 import Pressable from "@/components/Pressable";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
-import Colors from "@/constants/Colors";
 import { useAppRouter } from "@/config/route";
+import Colors from "@/constants/Colors";
+import clock_icon from "@/features/appointments/assets/icons/clock.png";
+import message_icon from "@/features/appointments/assets/icons/message_icon.png";
 import rating_icon from "@/features/appointments/assets/icons/rating_icon.png";
+import verification_icon from "@/features/appointments/assets/icons/verification_icon.png";
+import video_icon from "@/features/appointments/assets/icons/video_icon.png";
 import { Professional } from "@/features/appointments/types/Professional";
 import { useLocalSearchParams } from "expo-router";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { useState } from "react";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 
 type ConsultationType = "chat" | "video";
 
@@ -51,37 +55,56 @@ export default function ProfessionalProfile() {
 
             <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
                 {/* Doctor Details */}
-                <View style={styles.doctorSection}>
-                    <Image source={professional.image} style={styles.doctorImage} />
-                    <View style={styles.doctorInfo}>
-                        <View style={styles.availabilityBadge}>
-                            <View style={styles.availabilityDot} />
-                            <Text weight="regular" style={styles.availabilityText}>Available today</Text>
-                        </View>
-                        <Text weight="semibold" style={styles.doctorName}>{professional.name}</Text>
-                        <Text weight="regular" style={styles.doctorRole}>{professional.role}</Text>
-                        <Text weight="regular" style={styles.experience}>8 yrs experience</Text>
-                        <View style={styles.ratingContainer}>
-                            <View style={styles.ratingBox}>
-                                <Image source={rating_icon} style={{ width: 14, height: 14 }} />
-                                <Text weight="medium" style={styles.rating}>{professional.rating}</Text>
-                            </View>
-                            <Text weight="regular" style={styles.reviews}>({professional.reviews} reviews)</Text>
+                <View style={styles.doctorDetailsContainer}>
+                    <View style={styles.ProfessionalImage}>
+                        <Image
+                            source={professional.image}
+                            style={{ width: '100%', height: '100%', zIndex: -1, borderRadius: 12 }}
+                        />
+
+                        <View style={{ position: 'absolute', top: -10, zIndex: 22, right: -4, padding: 4, backgroundColor: Colors.lightBeige, borderRadius: 999 }}>
+                            <Image
+                                source={verification_icon}
+                                style={{ height: 20, width: 20, }}
+                            />
                         </View>
                     </View>
+
+
+                    <View style={{ flex: 1, gap: 12 }}>
+                        <View style={styles.availabilityBadge}>
+                            <Image source={clock_icon} style={{ width: 16, height: 16 }} />
+                            <Text weight="medium" style={styles.availabilityText}>Available today</Text>
+                        </View>
+                        <View style={{ gap: 8 }}>
+                            <View style={{ gap: 6 }}>
+                                <Text weight="semibold" style={styles.name}>{professional.name}</Text>
+                                <Text weight="regular" style={styles.role}>{professional.role}</Text>
+                                <Text weight="regular" style={styles.role}>8 yrs experience</Text>
+                            </View>
+                            <View style={styles.ratingContainer}>
+                                <View style={styles.ratingBox}>
+                                    <Image source={rating_icon} style={{ width: 14, height: 14 }} />
+                                    <Text weight="medium" style={styles.rating}>{professional.rating}</Text>
+                                </View>
+                                <Text weight="regular" style={styles.reviews}>({professional.reviews} revews)</Text>
+                            </View>
+                        </View>
+                    </View>
+
                 </View>
 
                 {/* About Section */}
-                <View style={styles.section}>
-                    <Text weight="semibold" style={styles.sectionTitle}>About</Text>
+                <View style={styles.aboutSection}>
+                    <Text weight="semibold" style={styles.name}>About</Text>
                     <Text weight="regular" style={styles.aboutText}>
                         A seasoned general practitioner dedicated to ensuring patient-centered care and promoting preventive health behaviors.
                     </Text>
                 </View>
 
                 {/* Consultation Type Selection */}
-                <View style={styles.section}>
-                    <Text weight="semibold" style={styles.sectionTitle}>Choose Consultation Type</Text>
+                <View style={styles.consultationTypeSection}>
+                    <Text weight="semibold" style={styles.name}>Choose Consultation Type</Text>
                     <View style={styles.consultationOptions}>
                         <Pressable
                             onPress={() => setConsultationType("chat")}
@@ -90,12 +113,7 @@ export default function ProfessionalProfile() {
                                 consultationType === "chat" && styles.consultationOptionSelected
                             ]}
                         >
-                            <View style={[
-                                styles.radioButton,
-                                consultationType === "chat" && styles.radioButtonSelected
-                            ]}>
-                                {consultationType === "chat" && <View style={styles.radioButtonInner} />}
-                            </View>
+                            <Image source={message_icon} style={{ width: 32, height: 32 }} />
                             <Text weight="regular" style={styles.consultationOptionText}>Chat Consultation</Text>
                         </Pressable>
 
@@ -106,12 +124,7 @@ export default function ProfessionalProfile() {
                                 consultationType === "video" && styles.consultationOptionSelected
                             ]}
                         >
-                            <View style={[
-                                styles.radioButton,
-                                consultationType === "video" && styles.radioButtonSelected
-                            ]}>
-                                {consultationType === "video" && <View style={styles.radioButtonInner} />}
-                            </View>
+                            <Image source={video_icon} style={{ width: 32, height: 32 }} />
                             <Text weight="regular" style={styles.consultationOptionText}>Video Consultation</Text>
                         </Pressable>
                     </View>
@@ -121,7 +134,10 @@ export default function ProfessionalProfile() {
             {/* Bottom Bar */}
             <View style={styles.bottomBar}>
                 <Text weight="regular" style={styles.feeText}>
-                    Consultation fee {formatNaira(professional.consultationfee)}
+                    Consultation Fee{" "}
+                    <Text weight="semibold" style={styles.feeAmount}>
+                        {formatNaira(professional.consultationfee)}
+                    </Text>
                 </Text>
                 <Button onPress={handleBookNow} style={styles.bookButton}>
                     Book Now
@@ -138,57 +154,63 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         paddingBottom: 12,
         marginTop: 12,
-        marginBottom: 16,
+        marginBottom: 4,
     },
     content: {
         flex: 1,
     },
     contentContainer: {
+        gap: 12,
         paddingBottom: 100,
     },
-    doctorSection: {
-        flexDirection: 'row',
-        gap: 16,
-        marginBottom: 24,
+    doctorDetailsContainer: {
+        flexDirection: "row",
+        gap: 12,
+        backgroundColor: Colors.lightBeige,
+        padding: 14,
+        borderRadius: 16,
     },
-    doctorImage: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+    ProfessionalImage: {
+        height: 130,
+        aspectRatio: 1 / 1,
+        borderRadius: 12,
     },
-    doctorInfo: {
-        flex: 1,
-        gap: 6,
+    name: {
+        fontSize: 16,
+        lineHeight: 17.6,
+        letterSpacing: -0.8,
+        color: Colors.black200,
+    },
+    role: {
+        fontSize: 14,
+        lineHeight: 16.8,
+        letterSpacing: -0.5,
+        color: Colors.neutral,
+    },
+    rating: {
+        fontSize: 12,
+        lineHeight: 14.4,
+        letterSpacing: 0,
+        color: Colors.black200,
+    },
+    reviews: {
+        fontSize: 12,
+        lineHeight: 14.4,
+        letterSpacing: -0.2,
+        color: Colors.neutral,
     },
     availabilityBadge: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 6,
-        marginBottom: 4,
-    },
-    availabilityDot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-        backgroundColor: '#10B981',
+        gap: 4,
+        paddingHorizontal: 14,
+        paddingVertical: 8,
     },
     availabilityText: {
-        fontSize: 12,
-        lineHeight: 14.4,
-        letterSpacing: -0.2,
-        color: '#10B981',
-    },
-    doctorName: {
-        fontSize: 16,
-        lineHeight: 17.6,
-        letterSpacing: -0.8,
-        color: '#1A1A1A',
-    },
-    doctorRole: {
         fontSize: 14,
         lineHeight: 16.8,
         letterSpacing: -0.5,
-        color: '#1570EF',
+        color: Colors.blue400,
     },
     experience: {
         fontSize: 12,
@@ -200,7 +222,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 6,
-        marginTop: 4,
     },
     ratingBox: {
         flexDirection: 'row',
@@ -211,32 +232,22 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         borderRadius: 8,
     },
-    rating: {
-        fontSize: 12,
-        lineHeight: 14.4,
-        letterSpacing: 0,
-        color: '#1A1A1A',
+    aboutSection: {
+        flexDirection: "column",
+        gap: 8,
+        backgroundColor: Colors.lightBeige,
+        padding: 14,
+        borderRadius: 16,
     },
-    reviews: {
-        fontSize: 12,
-        lineHeight: 14.4,
-        letterSpacing: -0.2,
-        color: '#4D5761',
-    },
-    section: {
-        marginBottom: 24,
-    },
-    sectionTitle: {
-        fontSize: 16,
-        lineHeight: 17.6,
-        letterSpacing: -0.8,
-        color: '#1A1A1A',
-        marginBottom: 12,
+    consultationTypeSection: {
+        flexDirection: "column",
+        gap: 14,
+        paddingTop: 8,
     },
     aboutText: {
         fontSize: 14,
-        lineHeight: 20,
-        letterSpacing: -0.3,
+        lineHeight: 16.8,
+        letterSpacing: -0.5,
         color: Colors.neutral,
     },
     consultationOptions: {
@@ -245,10 +256,10 @@ const styles = StyleSheet.create({
     consultationOption: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
-        padding: 16,
-        borderRadius: 12,
-        borderWidth: 1.5,
+        gap: 8,
+        padding: 14,
+        borderRadius: 16,
+        borderWidth: 1,
         borderColor: Colors.homeneutral,
         backgroundColor: Colors.lightBeige,
     },
@@ -256,39 +267,16 @@ const styles = StyleSheet.create({
         borderColor: Colors.primary,
         backgroundColor: Colors.transparentPrimary,
     },
-    radioButton: {
-        width: 20,
-        height: 20,
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: Colors.homeneutral,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    radioButtonSelected: {
-        borderColor: Colors.primary,
-    },
-    radioButtonInner: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: Colors.primary,
-    },
     consultationOptionText: {
-        fontSize: 14,
-        lineHeight: 20,
-        letterSpacing: -0.3,
-        color: '#1A1A1A',
+        fontSize: 16,
+        lineHeight: 19.2,
+        letterSpacing: -0.8,
+        color: Colors.black200,
     },
     bottomBar: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 16,
         paddingVertical: 16,
         backgroundColor: 'white',
         borderTopWidth: 1,
@@ -296,11 +284,18 @@ const styles = StyleSheet.create({
         gap: 12,
     },
     feeText: {
-        fontSize: 14,
-        lineHeight: 20,
-        letterSpacing: -0.3,
-        color: '#1A1A1A',
+        fontSize: 12,
+        lineHeight: 12 * 1.2,
+        letterSpacing: -0.2,
+        color: '#6C737F',
         flex: 1,
+    },
+    feeAmount: {
+        fontSize: 18,
+        lineHeight: 18 * 1.1,
+        letterSpacing: -0.8,
+        color: '#155EEF',
+        fontWeight: '600',
     },
     bookButton: {
         flex: 1,

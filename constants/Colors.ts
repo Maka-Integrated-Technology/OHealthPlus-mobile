@@ -28,4 +28,5 @@ export default {
     lightYellow: '#FEFCE8',
     lightBlue2: '#F5F8FF',
     lightGray2: '#384250',
+    blue400: '#53B1FD',
 };
