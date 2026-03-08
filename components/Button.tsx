@@ -6,26 +6,39 @@ import { Text } from "./Text";
 interface CustomButtonProps {
     children: React.ReactNode;
     onPress: () => void;
-    type?: 'primary' | 'secondary' | 'clear';
+    type?: 'primary' | 'secondary' | 'clear' | 'applePay' | 'googlePay';
     style?: StyleProp<ViewStyle>;
     icon?: ImageSourcePropType;
+    disabled?: boolean;
 }
 
-export default function Button({ children, onPress, type = "primary", style, icon }: CustomButtonProps) {
+export default function Button({ children, onPress, type = "primary", style, icon, disabled = false }: CustomButtonProps) {
+
+    const getTextStyle = () => {
+        if (type === 'applePay') return styles.applePayButtonText;
+        if (type === 'googlePay') return styles.googlePayButtonText;
+        if (type === 'clear') return styles.clearButtonText;
+        if (type === 'primary') return styles.primaryButtonText;
+        return styles.secondaryButtonText;
+    };
 
     return (
         <Pressable
             onPress={onPress}
+            disabled={disabled}
             style={({ pressed }) => [
                 styles.button,
-                styles[type],
+                type !== 'applePay' && type !== 'googlePay' && styles[type],
+                type === 'applePay' && styles.applePay,
+                type === 'googlePay' && styles.googlePay,
                 style,
-                pressed && { transform: [{ scale: 0.97 }], opacity: 0.8 }
+                pressed && !disabled && { transform: [{ scale: 0.97 }], opacity: 0.8 },
+                disabled && styles.buttonDisabled
             ]}
         >
             <View style={styles.content}>
                 {icon && <Image source={icon} style={styles.icon} />}
-                <Text weight="medium" style={[styles.text, type === 'clear' ? styles.clearButtonText : type == "primary" ? styles.primaryButtonText : styles.secondaryButtonText]}>
+                <Text weight="medium" style={[styles.text, getTextStyle()]}>
                     {children}
                 </Text>
             </View>
@@ -111,5 +124,24 @@ const styles = StyleSheet.create({
     },
     secondaryButtonText: {
         color: Colors.primary
+    },
+    applePay: {
+        backgroundColor: '#000000',
+        borderWidth: 1,
+        borderColor: '#000000',
+    },
+    googlePay: {
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: Colors.homeneutral,
+    },
+    applePayButtonText: {
+        color: 'white'
+    },
+    googlePayButtonText: {
+        color: '#1A1A1A'
+    },
+    buttonDisabled: {
+        opacity: 0.5,
     }
 });

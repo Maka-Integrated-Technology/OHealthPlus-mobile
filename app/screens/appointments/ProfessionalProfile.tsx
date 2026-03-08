@@ -31,7 +31,7 @@ export default function ProfessionalProfile() {
         reviews: 230,
         rating: 4.9,
         consultationfee: 5000,
-        image: { uri: "https://randomuser.me/api/portraits/women/44.jpg" },
+        image: { uri: "https://randomuser.me/api/portraits/men/32.jpg" },
     };
 
     const formatNaira = (amount: number) =>
@@ -56,20 +56,21 @@ export default function ProfessionalProfile() {
             <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
                 {/* Doctor Details */}
                 <View style={styles.doctorDetailsContainer}>
-                    <View style={styles.ProfessionalImage}>
-                        <Image
-                            source={professional.image}
-                            style={{ width: '100%', height: '100%', zIndex: -1, borderRadius: 12 }}
-                        />
-
-                        <View style={{ position: 'absolute', top: -10, zIndex: 22, right: -4, padding: 4, backgroundColor: Colors.lightBeige, borderRadius: 999 }}>
+                    <View style={styles.ProfessionalImageContainer}>
+                        <View style={styles.ProfessionalImage}>
+                            <Image
+                                source={professional.image}
+                                style={styles.professionalImageStyle}
+                                resizeMode="cover"
+                            />
+                        </View>
+                        <View style={styles.verificationBadge}>
                             <Image
                                 source={verification_icon}
-                                style={{ height: 20, width: 20, }}
+                                style={{ height: 20, width: 20 }}
                             />
                         </View>
                     </View>
-
 
                     <View style={{ flex: 1, gap: 12 }}>
                         <View style={styles.availabilityBadge}>
@@ -91,7 +92,6 @@ export default function ProfessionalProfile() {
                             </View>
                         </View>
                     </View>
-
                 </View>
 
                 {/* About Section */}
@@ -133,12 +133,10 @@ export default function ProfessionalProfile() {
 
             {/* Bottom Bar */}
             <View style={styles.bottomBar}>
-                <Text weight="regular" style={styles.feeText}>
-                    Consultation Fee{" "}
-                    <Text weight="semibold" style={styles.feeAmount}>
-                        {formatNaira(professional.consultationfee)}
-                    </Text>
-                </Text>
+                <View style={styles.feeContainer}>
+                    <Text weight="regular" style={styles.feeLabel}>Consultation Fee</Text>
+                    <Text weight="semibold" style={styles.feeAmount}>{formatNaira(professional.consultationfee)}</Text>
+                </View>
                 <Button onPress={handleBookNow} style={styles.bookButton}>
                     Book Now
                 </Button>
@@ -170,10 +168,29 @@ const styles = StyleSheet.create({
         padding: 14,
         borderRadius: 16,
     },
-    ProfessionalImage: {
-        height: 130,
+    ProfessionalImageContainer: {
+        height: 135,
         aspectRatio: 1 / 1,
+        position: 'relative',
+    },
+    ProfessionalImage: {
+        width: '100%',
+        height: '100%',
         borderRadius: 12,
+        overflow: 'hidden',
+    },
+    professionalImageStyle: {
+        width: '100%',
+        height: '100%',
+    },
+    verificationBadge: {
+        position: 'absolute',
+        top: -10,
+        right: -4,
+        padding: 4,
+        backgroundColor: Colors.lightBeige,
+        borderRadius: 999,
+        zIndex: 10,
     },
     name: {
         fontSize: 16,
@@ -283,19 +300,23 @@ const styles = StyleSheet.create({
         borderTopColor: Colors.homeneutral,
         gap: 12,
     },
-    feeText: {
-        fontSize: 12,
-        lineHeight: 12 * 1.2,
-        letterSpacing: -0.2,
-        color: Colors.neutral600,
-        flex: 1,
-    },
     feeAmount: {
         fontSize: 18,
         lineHeight: 18 * 1.1,
         letterSpacing: -0.8,
         color: Colors.background,
         fontWeight: '600',
+    },
+    feeContainer: {
+        flex: 1,
+        flexDirection: "column",
+        gap: 2,
+    },
+    feeLabel: {
+        fontSize: 12,
+        lineHeight: 14.4,
+        letterSpacing: -0.2,
+        color: Colors.neutral600,
     },
     bookButton: {
         flex: 1,

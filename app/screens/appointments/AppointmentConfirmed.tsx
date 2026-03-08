@@ -1,9 +1,12 @@
 import Button from "@/components/Button";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
-import Colors from "@/constants/Colors";
 import { useAppRouter } from "@/config/route";
+import Colors from "@/constants/Colors";
 import { appointmentAssets } from "@/features/appointments/assets";
+import success_icon from "@/features/appointments/assets/icons/Illustration.png";
+import message_icon from "@/features/appointments/assets/icons/message_icon.png";
+import video_icon from "@/features/appointments/assets/icons/video_icon_2.png";
 import { useLocalSearchParams } from "expo-router";
 import { Image, StyleSheet, View } from "react-native";
 
@@ -25,53 +28,60 @@ export default function AppointmentConfirmed() {
     return (
         <Screen>
             <View style={styles.container}>
-                {/* Success Icon */}
-                <View style={styles.iconContainer}>
-                    <View style={styles.successCircle}>
-                        <Text style={styles.checkmark}>✓</Text>
-                    </View>
-                </View>
-
-                {/* Confirmation Message */}
-                <Text weight="semibold" style={styles.title}>Appointment Confirmed</Text>
-                <Text weight="regular" style={styles.subtitle}>
-                    Your consultation with {professional.name} is scheduled.
-                </Text>
-
-                {/* Appointment Details */}
-                <View style={styles.detailsContainer}>
-                    <View style={styles.detailRow}>
-                        <Text weight="regular" style={styles.detailLabel}>Consultation type</Text>
-                        <Text weight="medium" style={styles.detailValue}>
-                            {consultationType === "video" ? "Video" : "Chat"} Consultation
-                        </Text>
-                    </View>
-                    <View style={styles.detailRow}>
-                        <Text weight="regular" style={styles.detailLabel}>Date</Text>
-                        <View style={styles.detailValueRow}>
-                            <Image source={appointmentAssets.icons.calendarIcon} style={styles.detailIcon} />
-                            <Text weight="medium" style={styles.detailValue}>{date || "Wed, 14"}</Text>
+                <View style={styles.contentContainer}>
+                    <View>
+                        {/* Success Icon */}
+                        <View style={styles.iconContainer}>
+                            <Image source={success_icon} style={{ width: 100, height: 100, objectFit: 'contain' }} />
+                        </View>
+                        {/* Confirmation Message */}
+                        <View style={styles.textContainer}>
+                            <Text weight="semibold" style={styles.title}>Appointment Confirmed</Text>
+                            <Text weight="regular" style={styles.subtitle}>
+                                Your consultation with {professional.name} is scheduled.
+                            </Text>
                         </View>
                     </View>
-                    <View style={styles.detailRow}>
-                        <Text weight="regular" style={styles.detailLabel}>Time</Text>
-                        <View style={styles.detailValueRow}>
-                            <Image source={appointmentAssets.icons.calendarIcon} style={styles.detailIcon} />
-                            <Text weight="medium" style={styles.detailValue}>{time || "10:30 AM"}</Text>
+                    {/* Appointment Details */}
+                    <View style={styles.appointmentDetailsSection}>
+                        <View style={styles.consultationTypeDetailRow}>
+                            <Text weight="regular" style={styles.detailLabel}>Consultation type</Text>
+                            <View style={styles.detailValueRow}>
+                                <Image source={consultationType === "video" ? video_icon : message_icon} style={styles.detailIcon} />
+                                <Text weight="regular" style={styles.detailValue}>
+                                    {consultationType === "video" ? "Video" : "Chat"} Consultation
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={styles.dateTimeDetailRow}>
+                            <View style={styles.detailRow}>
+                                <Text weight="regular" style={styles.detailLabel}>Date</Text>
+                                <View style={styles.detailValueRow}>
+                                    <Image source={appointmentAssets.icons.calendarIcon} style={styles.detailIcon} />
+                                    <Text weight="medium" style={styles.detailValue}>{date || "Wed, 14"}</Text>
+                                </View>
+                            </View>
+                            <View style={styles.detailRow}>
+                                <Text weight="regular" style={styles.detailLabel}>Time</Text>
+                                <View style={styles.detailValueRow}>
+                                    <Image source={appointmentAssets.icons.calendarIcon} style={styles.detailIcon} />
+                                    <Text weight="medium" style={styles.detailValue}>{time || "10:30 AM"}</Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
                 </View>
 
                 {/* Action Buttons */}
                 <View style={styles.buttonContainer}>
-                    <Button 
-                        onPress={() => router.toHome()} 
+                    <Button
+                        onPress={() => router.toHome()}
                         style={styles.primaryButton}
                     >
                         View Appointment
                     </Button>
-                    <Button 
-                        onPress={() => router.toHome()} 
+                    <Button
+                        onPress={() => router.toHome()}
                         type="secondary"
                         style={styles.secondaryButton}
                     >
@@ -91,73 +101,79 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
         paddingVertical: 40,
     },
-    iconContainer: {
-        marginBottom: 32,
+    contentContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    successCircle: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
-        backgroundColor: Colors.primary,
+    iconContainer: {
         alignItems: 'center',
         justifyContent: 'center',
+        marginBottom: 32,
     },
-    checkmark: {
-        fontSize: 60,
-        color: 'white',
-        fontWeight: 'bold',
+    textContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        gap: 12,
+        marginBottom: 16,
     },
     title: {
-        fontSize: 24,
-        lineHeight: 28.8,
+        fontSize: 26,
+        lineHeight: 28.6,
         letterSpacing: -0.8,
-        color: '#1A1A1A',
+        color: Colors.black100,
         textAlign: 'center',
-        marginBottom: 8,
     },
     subtitle: {
         fontSize: 16,
-        lineHeight: 22,
+        lineHeight: 19.2,
         letterSpacing: -0.3,
         color: Colors.neutral,
         textAlign: 'center',
-        marginBottom: 40,
     },
-    detailsContainer: {
-        width: '100%',
+    appointmentDetailsSection: {
         backgroundColor: Colors.lightBeige,
-        borderRadius: 16,
-        padding: 20,
-        marginBottom: 40,
+        padding: 16,
+        borderRadius: 8,
         gap: 16,
+        alignSelf: 'stretch',
+    },
+    consultationTypeDetailRow: {
+        flexDirection: 'column',
+        gap: 12,
+    },
+    dateTimeDetailRow: {
+        flexDirection: 'row',
+        gap: 12,
     },
     detailRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        gap: 12,
+        flex: 1,
     },
     detailLabel: {
-        fontSize: 14,
-        lineHeight: 20,
-        letterSpacing: -0.3,
+        fontSize: 16,
+        lineHeight: 19.2,
+        letterSpacing: -0.8,
         color: Colors.neutral,
     },
     detailValue: {
-        fontSize: 14,
-        lineHeight: 20,
-        letterSpacing: -0.3,
-        color: '#1A1A1A',
+        fontSize: 16,
+        lineHeight: 19.2,
+        letterSpacing: -0.8,
+        color: Colors.black200,
     },
     detailValueRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 6,
+        gap: 8,
     },
     detailIcon: {
-        width: 16,
-        height: 16,
+        width: 20,
+        height: 20,
     },
     buttonContainer: {
+        marginTop: 'auto',
         width: '100%',
         gap: 12,
     },
