@@ -1,12 +1,17 @@
 import { BackButton } from "@/components/BackButton";
-import Pressable from "@/components/Pressable";
+import Button from "@/components/Button";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
-import Colors from "@/constants/Colors";
 import { useAppRouter } from "@/config/route";
+import Colors from "@/constants/Colors";
 import { appointmentAssets } from "@/features/appointments/assets";
+import apple_icon from "@/features/appointments/assets/icons/apple.png";
+import google_icon from "@/features/appointments/assets/icons/google.png";
+import message_icon from "@/features/appointments/assets/icons/message_icon.png";
+import verification_icon from "@/features/appointments/assets/icons/verification_icon.png";
+import video_icon from "@/features/appointments/assets/icons/video_icon_2.png";
 import { useLocalSearchParams } from "expo-router";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
+import { Image, Platform, ScrollView, StyleSheet, View } from "react-native";
 
 export default function ConfirmAppointment() {
     const router = useAppRouter();
@@ -53,79 +58,104 @@ export default function ConfirmAppointment() {
             </View>
 
             <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
-                {/* Doctor Details */}
-                <View style={styles.doctorSection}>
-                    <Image source={professional.image} style={styles.doctorImage} />
-                    <View style={styles.doctorInfo}>
-                        <Text weight="semibold" style={styles.doctorName}>{professional.name}</Text>
-                        <Text weight="regular" style={styles.doctorRole}>{professional.role}</Text>
-                    </View>
-                </View>
-
-                {/* Appointment Details */}
-                <View style={styles.section}>
-                    <View style={styles.detailRow}>
-                        <Text weight="regular" style={styles.detailLabel}>Consultation type</Text>
-                        <Text weight="medium" style={styles.detailValue}>
-                            {consultationType === "video" ? "Video" : "Chat"} Consultation
-                        </Text>
-                    </View>
-                    <View style={styles.detailRow}>
-                        <Text weight="regular" style={styles.detailLabel}>Date</Text>
-                        <View style={styles.detailValueRow}>
-                            <Image source={appointmentAssets.icons.calendarIcon} style={styles.detailIcon} />
-                            <Text weight="medium" style={styles.detailValue}>{date || "Wed, 14"}</Text>
+                <View style={styles.detailsContainer}>
+                    {/* Doctor Details */}
+                    <View style={styles.doctorDetailsContainer}>
+                        <View style={styles.ProfessionalImageContainer}>
+                            <View style={styles.ProfessionalImage}>
+                                <Image
+                                    source={professional.image}
+                                    style={styles.professionalImageStyle}
+                                    resizeMode="cover"
+                                />
+                            </View>
+                            <View style={styles.verificationBadge}>
+                                <Image
+                                    source={verification_icon}
+                                    style={styles.verificationIcon}
+                                />
+                            </View>
+                        </View>
+                        <View style={{ gap: 6 }}>
+                            <Text weight="semibold" style={styles.name}>{professional.name}</Text>
+                            <Text weight="regular" style={styles.role}>{professional.role}</Text>
                         </View>
                     </View>
-                    <View style={styles.detailRow}>
-                        <Text weight="regular" style={styles.detailLabel}>Time</Text>
-                        <View style={styles.detailValueRow}>
-                            <Image source={appointmentAssets.icons.calendarIcon} style={styles.detailIcon} />
-                            <Text weight="medium" style={styles.detailValue}>{time || "10:30 AM"}</Text>
+                    {/* Appointment Details */}
+                    <View style={styles.appointmentDetailsSection}>
+                        <View style={styles.consultationTypeDetailRow}>
+                            <Text weight="regular" style={styles.detailLabel}>Consultation type</Text>
+                            <View style={styles.detailValueRow}>
+                                <Image source={consultationType === "video" ? video_icon : message_icon} style={styles.detailIcon} />
+                                <Text weight="regular" style={styles.detailValue}>
+                                    {consultationType === "video" ? "Video" : "Chat"} Consultation
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={styles.dateTimeDetailRow}>
+                            <View style={styles.detailRow}>
+                                <Text weight="regular" style={styles.detailLabel}>Date</Text>
+                                <View style={styles.detailValueRow}>
+                                    <Image source={appointmentAssets.icons.calendarIcon} style={styles.detailIcon} />
+                                    <Text weight="medium" style={styles.detailValue}>{date || "Wed, 14"}</Text>
+                                </View>
+                            </View>
+                            <View style={styles.detailRow}>
+                                <Text weight="regular" style={styles.detailLabel}>Time</Text>
+                                <View style={styles.detailValueRow}>
+                                    <Image source={appointmentAssets.icons.calendarIcon} style={styles.detailIcon} />
+                                    <Text weight="medium" style={styles.detailValue}>{time || "10:30 AM"}</Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
                 </View>
 
                 {/* Payment Summary */}
-                <View style={styles.section}>
+                <View style={styles.paymentSummarySection}>
                     <Text weight="semibold" style={styles.sectionTitle}>Payment Summary</Text>
-                    <View style={styles.paymentRow}>
-                        <Text weight="regular" style={styles.paymentLabel}>Consultation fee</Text>
-                        <Text weight="medium" style={styles.paymentValue}>{formatNaira(consultationFee)}</Text>
+                    <View style={styles.paymentSummaryContent}>
+                        <View style={styles.paymentRow}>
+                            <Text weight="regular" style={styles.paymentLabel}>Consultation fee</Text>
+                            <Text weight="semibold" style={styles.paymentValue}>{formatNaira(consultationFee)}</Text>
+                        </View>
+                        <View style={styles.paymentRow}>
+                            <Text weight="regular" style={styles.paymentLabel}>Discount</Text>
+                            <Text weight="semibold" style={styles.paymentValue}>{formatNaira(discount)}</Text>
+                        </View>
+                        <View style={[styles.paymentRow, styles.totalRow]}>
+                            <Text weight="medium" style={styles.totalLabel}>Total</Text>
+                            <Text weight="semibold" style={styles.totalValue}>{formatNaira(total)}</Text>
+                        </View>
                     </View>
-                    <View style={styles.paymentRow}>
-                        <Text weight="regular" style={styles.paymentLabel}>Discount</Text>
-                        <Text weight="medium" style={styles.paymentValue}>{formatNaira(discount)}</Text>
-                    </View>
-                    <View style={[styles.paymentRow, styles.totalRow]}>
-                        <Text weight="semibold" style={styles.totalLabel}>Total</Text>
-                        <Text weight="semibold" style={styles.totalValue}>{formatNaira(total)}</Text>
-                    </View>
-                    <Text weight="regular" style={styles.noteText}>
-                        You'll receive a reminder before your appointment. You can cancel or reschedule if needed.
-                    </Text>
                 </View>
+                <Text weight="regular" style={styles.noteText}>
+                    You'll receive a reminder before your appointment. You can cancel or reschedule if needed.
+                </Text>
             </ScrollView>
 
             {/* Payment Options */}
             <View style={styles.paymentSection}>
-                <Pressable
-                    onPress={() => handlePayment('apple')}
-                    style={styles.applePayButton}
-                >
-                    <Text style={styles.applePayIcon}>🍎</Text>
-                    <Text weight="medium" style={styles.applePayText}>Pay with Apple Pay</Text>
-                </Pressable>
-                <Pressable
-                    onPress={() => handlePayment('google')}
-                    style={styles.googlePayButton}
-                >
-                    <Image 
-                        source={{ uri: 'https://www.gstatic.com/images/branding/product/1x/google_g_64dp.png' }} 
-                        style={styles.googlePayIcon}
-                    />
-                    <Text weight="medium" style={styles.googlePayText}>Pay with Google Pay</Text>
-                </Pressable>
+                {Platform.OS === 'ios' && (
+                    <Button
+                        type="applePay"
+                        onPress={() => handlePayment('apple')}
+                        icon={apple_icon}
+                        style={styles.paymentButton}
+                    >
+                        Pay with Apple Pay
+                    </Button>
+                )}
+                {(Platform.OS === 'android' || Platform.OS === 'web') && (
+                    <Button
+                        type="googlePay"
+                        onPress={() => handlePayment('google')}
+                        icon={google_icon}
+                        style={styles.paymentButton}
+                    >
+                        Pay with Google Pay
+                    </Button>
+                )}
             </View>
         </Screen>
     );
@@ -139,8 +169,8 @@ const styles = StyleSheet.create({
         paddingBottom: 12,
         marginTop: 12,
         marginBottom: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         gap: 12,
     },
     headerTitle: {
@@ -153,77 +183,120 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     contentContainer: {
+        // gap: 8,
         paddingBottom: 20,
-    },
-    doctorSection: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-        marginBottom: 24,
-    },
-    doctorImage: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-    },
-    doctorInfo: {
-        flex: 1,
-    },
-    doctorName: {
-        fontSize: 16,
-        lineHeight: 17.6,
-        letterSpacing: -0.8,
-        color: '#1A1A1A',
-        marginBottom: 4,
-    },
-    doctorRole: {
-        fontSize: 14,
-        lineHeight: 16.8,
-        letterSpacing: -0.5,
-        color: '#1570EF',
-    },
-    section: {
-        marginBottom: 24,
     },
     sectionTitle: {
         fontSize: 16,
         lineHeight: 17.6,
         letterSpacing: -0.8,
-        color: '#1A1A1A',
-        marginBottom: 16,
+        color: Colors.black300,
+    },
+    detailsContainer: {
+        gap: 8,
+    },
+    doctorDetailsContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+        backgroundColor: Colors.lightBeige,
+        padding: 14,
+        borderRadius: 8,
+    },
+    ProfessionalImageContainer: {
+        height: 56,
+        aspectRatio: 1 / 1,
+        position: 'relative',
+    },
+    ProfessionalImage: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 8,
+        overflow: 'hidden',
+    },
+    professionalImageStyle: {
+        width: '100%',
+        height: '100%',
+    },
+    verificationBadge: {
+        position: 'absolute',
+        top: -4,
+        right: -3,
+        padding: 2,
+        backgroundColor: Colors.lightBeige,
+        borderRadius: 999,
+        zIndex: 10,
+    },
+    verificationIcon: {
+        height: 14,
+        width: 14,
+    },
+    name: {
+        fontSize: 16,
+        lineHeight: 17.6,
+        letterSpacing: -0.8,
+        color: Colors.black200,
+    },
+    role: {
+        fontSize: 14,
+        lineHeight: 16.8,
+        letterSpacing: -0.5,
+        color: Colors.neutral,
+    },
+    appointmentDetailsSection: {
+        backgroundColor: Colors.lightBeige,
+        padding: 16,
+        borderRadius: 8,
+        gap: 16,
+    },
+    consultationTypeDetailRow: {
+        flexDirection: 'column',
+        gap: 12,
+    },
+    dateTimeDetailRow: {
+        flexDirection: 'row',
+        gap: 12,
     },
     detailRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 16,
+        gap: 12,
+        flex: 1,
     },
     detailLabel: {
-        fontSize: 14,
-        lineHeight: 20,
-        letterSpacing: -0.3,
+        fontSize: 16,
+        lineHeight: 19.2,
+        letterSpacing: -0.8,
         color: Colors.neutral,
     },
     detailValue: {
-        fontSize: 14,
-        lineHeight: 20,
-        letterSpacing: -0.3,
-        color: '#1A1A1A',
+        fontSize: 16,
+        lineHeight: 19.2,
+        letterSpacing: -0.8,
+        color: Colors.black200,
     },
     detailValueRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 6,
+        gap: 8,
     },
     detailIcon: {
-        width: 16,
-        height: 16,
+        width: 20,
+        height: 20,
+    },
+    paymentSummarySection: {
+        backgroundColor: Colors.lightBeige,
+        borderRadius: 8,
+        gap: 8,
+        padding: 14,
+        marginTop: 16,
+    },
+    paymentSummaryContent: {
+        gap: 12,
     },
     paymentRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 12,
+        // marginBottom: 12,
     },
     paymentLabel: {
         fontSize: 14,
@@ -232,82 +305,45 @@ const styles = StyleSheet.create({
         color: Colors.neutral,
     },
     paymentValue: {
-        fontSize: 14,
+        fontSize: 18,
         lineHeight: 20,
-        letterSpacing: -0.3,
+        letterSpacing: -0.8,
         color: Colors.primary,
     },
     totalRow: {
-        marginTop: 8,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         paddingTop: 16,
+        marginTop: 8,
         borderTopWidth: 1,
         borderTopColor: Colors.homeneutral,
     },
     totalLabel: {
         fontSize: 16,
-        lineHeight: 22,
+        // lineHeight: 16 * 1.1,
         letterSpacing: -0.5,
-        color: '#1A1A1A',
+        color: Colors.black200,
     },
     totalValue: {
-        fontSize: 16,
-        lineHeight: 22,
-        letterSpacing: -0.5,
+        fontSize: 18,
+        lineHeight: 19.2,
+        letterSpacing: -0.8,
         color: Colors.primary,
     },
     noteText: {
-        fontSize: 12,
-        lineHeight: 16,
-        letterSpacing: -0.2,
-        color: Colors.neutral,
-        marginTop: 12,
+        fontSize: 14,
+        lineHeight: 16.8,
+        letterSpacing: -0.5,
+        color: Colors.neutral500,
+        marginTop: 16,
     },
     paymentSection: {
-        paddingHorizontal: 16,
+        marginTop: 'auto',
         paddingVertical: 16,
-        borderTopWidth: 1,
-        borderTopColor: Colors.homeneutral,
         gap: 12,
     },
-    applePayButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#000',
-        paddingVertical: 14,
-        paddingHorizontal: 16,
-        borderRadius: 16,
-        gap: 10,
-    },
-    applePayIcon: {
-        fontSize: 20,
-    },
-    applePayText: {
-        fontSize: 16,
-        lineHeight: 20,
-        letterSpacing: -0.3,
-        color: 'white',
-    },
-    googlePayButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: Colors.homeneutral,
-        paddingVertical: 14,
-        paddingHorizontal: 16,
-        borderRadius: 16,
-        gap: 10,
-    },
-    googlePayIcon: {
-        width: 20,
-        height: 20,
-    },
-    googlePayText: {
-        fontSize: 16,
-        lineHeight: 20,
-        letterSpacing: -0.3,
-        color: '#1A1A1A',
+    paymentButton: {
+        width: '100%',
     },
 });
