@@ -5,6 +5,7 @@ import { useFonts } from 'expo-font';
 import * as NavigationBar from 'expo-navigation-bar';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { Platform } from 'react-native';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
@@ -33,8 +34,10 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync('#ffffff');
-    NavigationBar.setButtonStyleAsync('dark');
+    if (Platform.OS === 'android') {
+      NavigationBar.setBackgroundColorAsync('#ffffff');
+      NavigationBar.setButtonStyleAsync('dark');
+    }
   }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.

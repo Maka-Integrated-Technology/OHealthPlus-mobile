@@ -11,7 +11,7 @@ export default function AuthLayout() {
       <Stack.Screen name="onboarding" />
       <Stack.Screen name="signin" />
       <Stack.Screen name="signup" />
-      <Stack.Screen name="otp" />
+      <Stack.Screen name="OTP" />
       <Stack.Screen name="forgetpassword" />
       <Stack.Screen name="legalTerm" />
     </Stack>
