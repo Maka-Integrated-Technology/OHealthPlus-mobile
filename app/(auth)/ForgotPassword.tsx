@@ -41,7 +41,7 @@ export default function ForgotPasswordScreen() {
 
         <View style={styles.form}>
           <InputField
-            icon="mail-outline"
+            icon="email"
             placeholder="Email"
             keyboardType="email-address"
             autoCapitalize="none"

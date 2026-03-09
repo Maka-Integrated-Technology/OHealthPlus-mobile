@@ -17,14 +17,22 @@ export default {
     neutral: "#4D5761",
     black100: '#161A1D',
     black200: '#1A1A1A',
+    black300: '#0F172A',
     black80: '#71717A',
     neutral50: '#F9FAFB',
     neutral200: '#E5E7EB',
+    neutral300: '#D1D5DB',
+    neutral400: '#64748B',
+    neutral500: '#404040',
     neutral600: '#6C737F',
     red500: '#F04438',
     homeneutral: '#F3F4F6',
     lightBeige: '#FCFCFC',
-    lightYellow: '#FEFCE8'
-
+    beige: '#FAFAFA',
+    lightYellow: '#FEFCE8',
+    lightBlue2: '#F5F8FF',
+    lightGray2: '#384250',
+    blue400: '#53B1FD',
+    blue600: '#1570EF',
 
 };

@@ -49,7 +49,7 @@ export default function NewPasswordScreen() {
         <View style={styles.form}>
           <View style={styles.fieldGroup}>
             <InputField
-              icon="lock-closed-outline"
+              icon="password"
               placeholder="Enter password"
               secureTextEntry={!showPassword}
               value={password}
@@ -65,7 +65,7 @@ export default function NewPasswordScreen() {
 
           <View style={styles.fieldGroup}>
             <InputField
-              icon="lock-closed-outline"
+              icon="password"
               placeholder="Re-enter password"
               secureTextEntry={!showConfirm}
               value={confirmPassword}
