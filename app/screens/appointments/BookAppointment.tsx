@@ -9,17 +9,12 @@ export default function BookAppointment() {
 
     return (
         <Screen>
-            <View style={{ borderBottomWidth: 1, borderColor: Colors.homeneutral, paddingBottom: 12, marginBottom: 20 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, }}>
+            <View style={styles.header}>
+                <View style={styles.headerTitle}>
                     <BackButton style={{ marginBottom: 0 }} />
-                    <View >
-                        <Text weight="semibold" style={{ fontSize: 20, alignItems: 'center' }}>Choose a specialty</Text>
-                    </View>
+                    <Text weight="semibold" style={styles.headerTitleText}>Choose a specialty</Text>
                 </View>
-                <View>
-                    <Text style={{ fontSize: 18, color: Colors.neutral }}>Select the type of care you need</Text>
-                </View>
-
+                <Text weight="regular" style={styles.headerDescription}>Select the type of care you need</Text>
             </View>
 
             <BookAppointmentCardList />
@@ -31,6 +26,31 @@ export default function BookAppointment() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    }
-
+    },
+    header: {
+        borderBottomWidth: 1,
+        borderColor: Colors.homeneutral,
+        paddingTop: 8,
+        paddingBottom: 12,
+        marginTop: 12,
+        marginBottom: 16,
+    },
+    headerTitle: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+    },
+    headerTitleText: {
+        fontSize: 18,
+        lineHeight: 19.8,
+        letterSpacing: -0.8,
+        color: Colors.black100,
+    },
+    headerDescription: {
+        fontSize: 16,
+        lineHeight: 19.2,
+        letterSpacing: -0.8,
+        color: Colors.neutral,
+        marginTop: 8,
+    },
 })

@@ -41,7 +41,7 @@ export function BookAppointmentCard({ personnel }: { personnel: Personnel }) {
                 </MaskedView>
 
                 <View style={styles.textContainer}>
-                    <Text weight="bold" style={styles.personnelText}>{personnel.text}</Text>
+                    <Text weight="semibold" style={styles.personnelText}>{personnel.text}</Text>
                 </View>
             </ImageBackground>
         </Pressable>
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     container: {
         aspectRatio: 16 / 7,
         width: "100%",
-        borderRadius: 24,
+        borderRadius: 16,
         overflow: "hidden",
     },
     image: {
@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
         height: "130%",
     },
     personnelText: {
-        // position: "absolute",
-        // width: "50%",
         padding: 12,
         color: "white",
         textAlign: "left",
-        fontSize: 24,
+        fontSize: 20,
+        lineHeight: 20,
+        letterSpacing: -0.8,
     },
     textContainer: {
         position: "absolute",

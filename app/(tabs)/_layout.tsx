@@ -25,11 +25,6 @@ export default function TabLayout() {
             <Tabs.Screen name="messages" options={{ headerShown: false }} />
             <Tabs.Screen name="tests" options={{ headerShown: false }} />
             <Tabs.Screen name="profile" options={{ headerShown: false }} />
-
-            <Tabs.Screen
-                name="screens"
-                options={{ href: null }} // Hide from tabs
-            />
         </Tabs>
     );
 }

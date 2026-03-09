@@ -21,22 +21,18 @@ export default function AvailableProfessionals() {
 
     return (
         <Screen>
-            <View style={{ borderBottomWidth: 1, borderColor: Colors.homeneutral, paddingBottom: 12, marginBottom: 12 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <BackButton style={{ marginBottom: 0 }} />
-                    <View>
-                        <Text weight="semibold" style={{ fontSize: 20 }}>Available Professionals</Text>
-                    </View>
-                </View>
+            <View style={styles.header}>
+                <BackButton style={{ marginBottom: 0 }} />
+                <Text weight="semibold" style={styles.headerTitleText}>Available Professionals</Text>
             </View>
 
             <View style={{ flexDirection: 'row', gap: 4 }}>
-                <Text style={{ fontSize: 18, color: "black", marginBottom: 20 }}>
+                <Text weight="regular" style={styles.availableText}>
                     {isLoading ? 'Looking for doctors available near you' : 'Doctors available near you'}
                 </Text>
 
                 {isLoading && (
-                    <View style={{ flexDirection: 'row', gap: 4, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={styles.loadingContainer}>
                         {[1, 2, 3].map((item, index) => (
                             <AnimatedBalls key={item} delay={index * 150} />
                         ))}
@@ -64,5 +60,35 @@ export default function AvailableProfessionals() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    }
+    },
+    header: {
+        borderBottomWidth: 1,
+        borderColor: Colors.homeneutral,
+        paddingTop: 8,
+        paddingBottom: 12,
+        marginTop: 12,
+        marginBottom: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+    },
+    headerTitleText: {
+        fontSize: 18,
+        lineHeight: 19.8,
+        letterSpacing: -0.8,
+        color: Colors.black100,
+    },
+    availableText: {
+        fontSize: 12,
+        lineHeight: 14.4,
+        letterSpacing: -0.2,
+        color: Colors.black200,
+        marginBottom: 16,
+    },
+    loadingContainer: {
+        flexDirection: 'row',
+        gap: 4,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
