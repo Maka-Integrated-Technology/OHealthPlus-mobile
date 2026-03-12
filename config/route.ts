@@ -90,6 +90,16 @@ export const useAppRouter = () => {
             navigate(ROUTES.CONFIRM_APPOINTMENT, params),
         toAppointmentConfirmed: (params?: { professionalId?: string; consultationType?: string; date?: string; time?: string }) => 
             navigate(ROUTES.APPOINTMENT_CONFIRMED, params),
+        toAppointmentDetails: (params?: { id?: string }) =>
+            navigate(ROUTES.APPOINTMENT_DETAILS, params),
+        toVideoConsultationSetup: (params?: { appointmentId?: string; doctorName?: string }) =>
+            navigate(ROUTES.VIDEO_CONSULTATION_SETUP, params),
+        toVideoCall: (params?: { appointmentId?: string; doctorName?: string }) =>
+            navigate(ROUTES.VIDEO_CALL, params),
+        toConsultationCompleted: (params?: { doctorName?: string }) =>
+            navigate(ROUTES.CONSULTATION_COMPLETED, params),
+        toAppointmentSummary: (params?: { appointmentId?: string }) =>
+            navigate(ROUTES.APPOINTMENT_SUMMARY, params),
 
         toFavourites: () => navigate(ROUTES.FAVOURITES),
 
