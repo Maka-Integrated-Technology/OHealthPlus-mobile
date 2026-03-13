@@ -3,13 +3,19 @@ import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
 import AppointmentListCard from "@/features/appointments/components/AppointmentListCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FlatList,
+  LayoutChangeEvent,
   Pressable,
   StyleSheet,
   View,
 } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 
 type TabType = "upcoming" | "past";
 
@@ -77,11 +83,38 @@ const PAST_APPOINTMENTS: AppointmentItem[] = [
   },
 ];
 
+const SPRING_CONFIG = { damping: 28, stiffness: 300, overshootClamping: true };
+
 export default function AppointmentsScreen() {
   const router = useAppRouter();
   const [activeTab, setActiveTab] = useState<TabType>("upcoming");
+  const [expandedCardId, setExpandedCardId] = useState<string | undefined>();
+
+  useEffect(() => {
+    setExpandedCardId(undefined);
+  }, [activeTab]);
+
+  const pillOffset = useSharedValue(0);
+  const tabWidth = useSharedValue(0);
 
   const data = activeTab === "upcoming" ? UPCOMING_APPOINTMENTS : PAST_APPOINTMENTS;
+
+  useEffect(() => {
+    pillOffset.value = withSpring(
+      activeTab === "upcoming" ? 0 : tabWidth.value + 4,
+      SPRING_CONFIG
+    );
+  }, [activeTab, tabWidth]);
+
+  const handleTabsLayout = (e: LayoutChangeEvent) => {
+    const { width } = e.nativeEvent.layout;
+    tabWidth.value = (width - 4 - 8) / 2;
+  };
+
+  const pillAnimatedStyle = useAnimatedStyle(() => ({
+    width: tabWidth.value,
+    transform: [{ translateX: pillOffset.value }],
+  }));
 
   const handleAppointmentPress = (id: string) => {
     router.toAppointmentDetails({ id });
@@ -94,34 +127,33 @@ export default function AppointmentsScreen() {
   return (
     <Screen style={styles.screen}>
       <View style={styles.header}>
-        <Text weight="bold" style={styles.title}>
+        <Text weight="semibold" style={styles.title}>
           Appointments
         </Text>
 
-        <View style={styles.tabs}>
+        <View style={styles.tabs} onLayout={handleTabsLayout}>
+          <Animated.View style={[styles.tabPill, pillAnimatedStyle]} />
           <Pressable
-            style={[styles.tab, activeTab === "upcoming" && styles.tabActive]}
+            style={styles.tab}
             onPress={() => setActiveTab("upcoming")}
           >
             <Text
-              weight="medium"
+              weight="regular"
               style={[styles.tabText, activeTab === "upcoming" && styles.tabTextActive]}
             >
               Upcoming
             </Text>
-            {activeTab === "upcoming" && <View style={styles.tabIndicator} />}
           </Pressable>
           <Pressable
-            style={[styles.tab, activeTab === "past" && styles.tabActive]}
+            style={styles.tab}
             onPress={() => setActiveTab("past")}
           >
             <Text
-              weight="medium"
+              weight="regular"
               style={[styles.tabText, activeTab === "past" && styles.tabTextActive]}
             >
               Past
             </Text>
-            {activeTab === "past" && <View style={styles.tabIndicator} />}
           </Pressable>
         </View>
       </View>
@@ -138,10 +170,17 @@ export default function AppointmentsScreen() {
             consultationType={item.consultationType}
             dateTime={item.dateTime}
             status={item.status}
-            canJoin={item.canJoin}
-            onPress={() => handleAppointmentPress(item.id)}
+            canJoin={item.status === "upcoming"}
+            isExpanded={expandedCardId === item.id}
+            onPress={() =>
+              setExpandedCardId((prev) =>
+                prev === item.id ? undefined : item.id
+              )
+            }
             onJoinPress={
-              item.canJoin ? () => handleJoinPress(item.id) : undefined
+              item.status === "upcoming"
+                ? () => handleJoinPress(item.id)
+                : undefined
             }
           />
         )}
@@ -155,49 +194,56 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   header: {
-    paddingTop: 16,
-    paddingBottom: 8,
+    // paddingTop: 16,
+    // paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: Colors.homeneutral,
   },
   title: {
-    fontSize: 24,
-    lineHeight: 30,
+    fontSize: 18,
+    lineHeight: 19.8,
     letterSpacing: -0.8,
     color: Colors.black100,
-    marginBottom: 16,
+    paddingVertical: 10,
     textAlign: "center",
   },
   tabs: {
     flexDirection: "row",
-    gap: 24,
-    alignItems: "center",
+    backgroundColor: Colors.beige,
+    borderRadius: 999,
+    marginVertical: 12,
+    padding: 4,
+    gap: 8,
+  },
+  tabPill: {
+    position: "absolute",
+    left: 4,
+    top: 4,
+    bottom: 4,
+    backgroundColor: Colors.white,
+    borderRadius: 999,
   },
   tab: {
-    paddingBottom: 12,
-    position: "relative",
+    flex: 1,
+    paddingVertical: 10.5,
+    paddingHorizontal: 16,
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
   },
-  tabActive: {},
   tabText: {
     fontSize: 16,
-    lineHeight: 20,
-    letterSpacing: -0.3,
-    color: Colors.neutral,
+    lineHeight: 19.2,
+    letterSpacing: -0.8,
+    color: Colors.black400,
+    textAlign: "center",
   },
   tabTextActive: {
-    color: Colors.primary,
-  },
-  tabIndicator: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 2,
-    backgroundColor: Colors.primary,
-    borderRadius: 1,
+    color: Colors.black200,
   },
   list: {
-    paddingTop: 20,
+    paddingTop: 16,
     paddingBottom: 120,
     gap: 12,
   },
