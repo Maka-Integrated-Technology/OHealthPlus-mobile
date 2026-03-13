@@ -5,6 +5,7 @@ export const appointmentAssets = {
         cameraIcon: require("./icons/camera-icon.png"),
         chatIcon: require("./icons/chat-icon.png"),
         calendarIcon: require("./icons/calendar-icon.png"),
+        infoIcon: require("./icons/clock.png"),
     },
     images: {
         doctor: require("./images/doctor.png"),

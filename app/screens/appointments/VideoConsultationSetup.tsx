@@ -4,15 +4,29 @@ import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
-import { useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
 const CHECKS = [
-  { label: "System check", status: "All checks", icon: "checkmark-circle" as const },
-  { label: "Speaker", status: "Last tested", icon: "volume-high" as const },
-  { label: "Camera", status: "Ready", icon: "videocam" as const },
-  { label: "Microphone", status: "Ready", icon: "mic" as const },
+  {
+    label: "Internet",
+    status: "Stable",
+    icon: "cellular" as const,
+    statusColor: "#22C55E",
+  },
+  {
+    label: "Camera",
+    status: "Ready",
+    icon: "videocam" as const,
+    statusColor: "#F97316",
+  },
+  {
+    label: "Microphone",
+    status: "Ready",
+    icon: "mic" as const,
+    statusColor: Colors.primary,
+  },
 ];
 
 export default function VideoConsultationSetupScreen() {
@@ -29,23 +43,29 @@ export default function VideoConsultationSetupScreen() {
       </View>
 
       <View style={styles.content}>
+        <Text weight="semibold" style={styles.sectionTitle}>
+          System check
+        </Text>
         <View style={styles.checksList}>
           {CHECKS.map((check) => (
             <View key={check.label} style={styles.checkRow}>
-              <View style={styles.checkLeft}>
+              <Text weight="medium" style={styles.checkLabel}>
+                {check.label}
+              </Text>
+              <View style={styles.checkRight}>
                 <Ionicons
                   name={check.icon}
-                  size={22}
-                  color={Colors.primary}
+                  size={20}
+                  color={check.statusColor}
                   style={styles.checkIcon}
                 />
-                <Text weight="medium" style={styles.checkLabel}>
-                  {check.label}
+                <Text
+                  weight="regular"
+                  style={[styles.checkStatus, { color: check.statusColor }]}
+                >
+                  {check.status}
                 </Text>
               </View>
-              <Text weight="regular" style={styles.checkStatus}>
-                {check.status}
-              </Text>
             </View>
           ))}
         </View>
@@ -89,27 +109,29 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: "space-between",
+    gap: 16,
+    // justifyContent: "space-between",
+  },
+  sectionTitle: {
+    fontSize: 16,
+    lineHeight: 20,
+    letterSpacing: -0.5,
+    color: Colors.black100,
+    marginBottom: 16,
   },
   checksList: {
-    gap: 16,
+    gap: 12,
   },
   checkRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.neutral200,
-  },
-  checkLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  checkIcon: {
-    width: 24,
-    height: 24,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    backgroundColor: Colors.lightBeige,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.homeneutral,
   },
   checkLabel: {
     fontSize: 16,
@@ -117,11 +139,19 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
     color: Colors.black100,
   },
+  checkRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  checkIcon: {
+    width: 20,
+    height: 20,
+  },
   checkStatus: {
     fontSize: 14,
     lineHeight: 18,
     letterSpacing: -0.2,
-    color: Colors.neutral,
   },
   actions: {
     paddingBottom: 40,
