@@ -122,7 +122,7 @@ export default function TabOneScreen() {
         <View style={styles.upcomingAppointmnts}>
           <View style={styles.upcomingAppointmntsHeader}>
             <Text weight="regular" style={styles.quickActionHeader}>Upcoming Appointments</Text>
-            <Pressable>
+            <Pressable onPress={() => router.replace("/(tabs)/appointments" as any)}>
               <Text weight="medium" style={styles.viewAllText}>View All</Text>
             </Pressable>
           </View>
@@ -138,6 +138,7 @@ export default function TabOneScreen() {
                 name={item.name}
                 type={item.type}
                 time={item.time}
+                onPress={() => router.toAppointmentDetails({ id: item.id })}
               />
             )}
           />

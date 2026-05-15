@@ -40,6 +40,11 @@ export const ROUTES = {
     SELECT_DATE_TIME: "/screens/appointments/SelectDateTime",
     CONFIRM_APPOINTMENT: "/screens/appointments/ConfirmAppointment",
     APPOINTMENT_CONFIRMED: "/screens/appointments/AppointmentConfirmed",
+    APPOINTMENT_DETAILS: "/screens/appointments/AppointmentDetails",
+    VIDEO_CONSULTATION_SETUP: "/screens/appointments/VideoConsultationSetup",
+    VIDEO_CALL: "/screens/appointments/VideoCall",
+    CONSULTATION_COMPLETED: "/screens/appointments/ConsultationCompleted",
+    APPOINTMENT_SUMMARY: "/screens/appointments/AppointmentSummary",
 
 
 
