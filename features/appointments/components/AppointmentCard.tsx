@@ -10,13 +10,14 @@ interface Props {
     name: string;
     type: "video" | "chat";
     time: string;
+    onPress?: () => void;
 }
 
-export default function AppointmentCard({ image, name, type, time }: Props) {
+export default function AppointmentCard({ image, name, type, time, onPress }: Props) {
     const icons = appointmentAssets.icons;
 
     return (
-        <Pressable style={styles.card}>
+        <Pressable style={styles.card} onPress={onPress}>
             <Image source={image} style={styles.avatar} />
 
             <View style={styles.info}>
