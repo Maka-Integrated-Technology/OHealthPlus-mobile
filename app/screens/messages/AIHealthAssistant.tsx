@@ -1,6 +1,7 @@
 import AIHealthAssistantIcon from "@/assets/icons/ai-assistant-icon.svg";
 import AIHealthAssistant from "@/assets/images/ai-assistant.png";
-import { BackButton } from "@/components/BackButton";
+import DetailHeader from "@/components/DetailHeader";
+import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,7 +17,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 type Message = {
   id: string;
@@ -125,16 +125,9 @@ export default function AIHealthAssistantScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+    <Screen>
       {/* Header */}
-      <View style={styles.header}>
-        <BackButton />
-        <Text weight="semibold" style={styles.headerTitle}>
-          {viewState === "intro" ? "AI Health Assistant" : "Health Assistant"}
-        </Text>
-        <View style={styles.headerSpacer} />
-      </View>
-      <View style={styles.headerDivider} />
+      <DetailHeader title="AI Health Assistant" />
 
       <KeyboardAvoidingView
         style={styles.flex}
@@ -304,7 +297,7 @@ export default function AIHealthAssistantScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </Screen>
   );
 }
 
@@ -315,29 +308,6 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 4,
-    paddingBottom: 8,
-    gap: 8,
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: 16,
-    lineHeight: 19.2,
-    letterSpacing: -0.5,
-    color: Colors.black100,
-  },
-  headerSpacer: {
-    width: 40,
-  },
-  headerDivider: {
-    height: 1,
-    backgroundColor: Colors.homeneutral,
   },
 
   // Intro

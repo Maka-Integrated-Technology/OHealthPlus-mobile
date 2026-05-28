@@ -97,12 +97,13 @@ export default function AppointmentsScreen() {
   const pillOffset = useSharedValue(0);
   const tabWidth = useSharedValue(0);
 
-  const data = activeTab === "upcoming" ? UPCOMING_APPOINTMENTS : PAST_APPOINTMENTS;
+  const data =
+    activeTab === "upcoming" ? UPCOMING_APPOINTMENTS : PAST_APPOINTMENTS;
 
   useEffect(() => {
     pillOffset.value = withSpring(
       activeTab === "upcoming" ? 0 : tabWidth.value + 4,
-      SPRING_CONFIG
+      SPRING_CONFIG,
     );
   }, [activeTab, tabWidth]);
 
@@ -139,18 +140,21 @@ export default function AppointmentsScreen() {
           >
             <Text
               weight="regular"
-              style={[styles.tabText, activeTab === "upcoming" && styles.tabTextActive]}
+              style={[
+                styles.tabText,
+                activeTab === "upcoming" && styles.tabTextActive,
+              ]}
             >
               Upcoming
             </Text>
           </Pressable>
-          <Pressable
-            style={styles.tab}
-            onPress={() => setActiveTab("past")}
-          >
+          <Pressable style={styles.tab} onPress={() => setActiveTab("past")}>
             <Text
               weight="regular"
-              style={[styles.tabText, activeTab === "past" && styles.tabTextActive]}
+              style={[
+                styles.tabText,
+                activeTab === "past" && styles.tabTextActive,
+              ]}
             >
               Past
             </Text>
@@ -174,7 +178,7 @@ export default function AppointmentsScreen() {
             isExpanded={expandedCardId === item.id}
             onPress={() =>
               setExpandedCardId((prev) =>
-                prev === item.id ? undefined : item.id
+                prev === item.id ? undefined : item.id,
               )
             }
             onJoinPress={
