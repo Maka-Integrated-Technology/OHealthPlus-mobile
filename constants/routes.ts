@@ -46,10 +46,7 @@ export const ROUTES = {
     CONSULTATION_COMPLETED: "/screens/appointments/ConsultationCompleted",
     APPOINTMENT_SUMMARY: "/screens/appointments/AppointmentSummary",
 
-    // ============================================
-    // Messages Routes
-    // ============================================
-    AI_HEALTH_ASSISTANT: "/screens/messages/AIHealthAssistant",
+
 
     // ============================================
     // Paywall Routes

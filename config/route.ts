@@ -101,8 +101,6 @@ export const useAppRouter = () => {
         toAppointmentSummary: (params?: { appointmentId?: string }) =>
             navigate(ROUTES.APPOINTMENT_SUMMARY, params),
 
-        toAIHealthAssistant: () => navigate(ROUTES.AI_HEALTH_ASSISTANT),
-
         toFavourites: () => navigate(ROUTES.FAVOURITES),
 
         toProfile: () => navigate(ROUTES.PROFILE),
