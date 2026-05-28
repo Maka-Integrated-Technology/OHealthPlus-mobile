@@ -103,6 +103,15 @@ export const useAppRouter = () => {
 
         toAIHealthAssistant: () => navigate(ROUTES.AI_HEALTH_ASSISTANT),
 
+        // ============================================
+        // Profile Navigation
+        // ============================================
+        toPersonalInformation: () => navigate(ROUTES.PERSONAL_INFORMATION),
+        toChangePassword: () => navigate(ROUTES.CHANGE_PASSWORD),
+        toNotifications: () => navigate(ROUTES.NOTIFICATIONS),
+        toTermsAndConditions: () => navigate(ROUTES.TERMS_AND_CONDITIONS),
+        toPrivacyPolicy: () => navigate(ROUTES.PRIVACY_POLICY),
+
         toFavourites: () => navigate(ROUTES.FAVOURITES),
 
         toProfile: () => navigate(ROUTES.PROFILE),
