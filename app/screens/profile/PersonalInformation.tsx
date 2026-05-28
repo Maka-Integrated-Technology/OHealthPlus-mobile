@@ -1,25 +1,34 @@
 import Button from "@/components/Button";
 import DetailHeader from "@/components/DetailHeader";
-import { InputField } from "@/components/InputField";
+import { FormInputField } from "@/components/forms";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
-import { useState } from "react";
+import {
+  PersonalInfoValues,
+  personalInfoSchema,
+} from "@/features/profile/validationSchema";
+import { toFormikValidate } from "@/utils/formikZod";
+import { Ionicons } from "@expo/vector-icons";
+import { Formik } from "formik";
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from "react-native";
 
+const initialValues: PersonalInfoValues = {
+  name: "Olivia Jane",
+  email: "janebetty@gmail.com",
+  phone: "+234 801 234 5678",
+};
+
 export default function PersonalInformationScreen() {
   const router = useAppRouter();
-
-  const [name, setName] = useState("Olivia Jane");
-  const [email, setEmail] = useState("janebetty@gmail.com");
-  const [phone, setPhone] = useState("+234 801 234 5678");
 
   return (
     <Screen>
@@ -29,57 +38,86 @@ export default function PersonalInformationScreen() {
       >
         <DetailHeader title="Personal Information" />
 
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
+        <Formik
+          initialValues={initialValues}
+          validate={toFormikValidate(personalInfoSchema)}
+          onSubmit={(values) => {
+            // TODO: call API to save personal information
+            console.log("Save personal info:", values);
+          }}
         >
-          {/* Form */}
-          <View style={styles.form}>
-            <View style={styles.fieldGroup}>
-              <Text weight="medium" style={styles.fieldLabel}>
-                Full Name
-              </Text>
-              <InputField
-                icon="name"
-                value={name}
-                onChangeText={setName}
-                placeholder="Full Name"
-              />
-            </View>
+          {({ handleSubmit, isSubmitting }) => (
+            <ScrollView
+              contentContainerStyle={styles.scrollContent}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+            >
+              {/* Form */}
+              <View style={styles.form}>
+                <FormInputField
+                  name="name"
+                  label="Full Name"
+                  icon="name"
+                  placeholder="Full Name"
+                  placeholderTextColor="#9CA3AF"
+                />
 
-            <View style={styles.fieldGroup}>
-              <Text weight="medium" style={styles.fieldLabel}>
-                Email Address
-              </Text>
-              <InputField
-                icon="email"
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Email Address"
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-            </View>
+                <FormInputField
+                  name="email"
+                  label="Email Address"
+                  icon="email"
+                  placeholder="Email Address"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  placeholderTextColor="#9CA3AF"
+                />
 
-            <View style={styles.fieldGroup}>
-              <Text weight="medium" style={styles.fieldLabel}>
-                Phone Number
-              </Text>
-              <InputField
-                value={phone}
-                onChangeText={setPhone}
-                placeholder="Phone Number"
-                keyboardType="phone-pad"
-              />
-            </View>
-          </View>
+                <FormInputField
+                  name="phone"
+                  label="Phone Number"
+                  placeholder="Phone Number"
+                  keyboardType="phone-pad"
+                  placeholderTextColor="#9CA3AF"
+                />
+              </View>
 
-          {/* Save button */}
-          <View style={styles.buttonWrapper}>
-            <Button onPress={() => {}}>Save Changes</Button>
-          </View>
-        </ScrollView>
+              {/* Divider */}
+              <View style={styles.sectionDivider} />
+
+              {/* Change Password row */}
+              <TouchableOpacity
+                style={styles.changePasswordRow}
+                onPress={() => router.toChangePassword()}
+                activeOpacity={0.7}
+              >
+                <View style={styles.changePasswordLeft}>
+                  <View style={styles.lockIconWrapper}>
+                    <Ionicons
+                      name="lock-closed-outline"
+                      size={20}
+                      color={Colors.primary}
+                    />
+                  </View>
+                  <Text weight="medium" style={styles.changePasswordLabel}>
+                    Change Password
+                  </Text>
+                </View>
+                <Ionicons
+                  name="chevron-forward"
+                  size={18}
+                  color={Colors.neutral300}
+                />
+              </TouchableOpacity>
+
+              {/* Save button */}
+              <View style={styles.buttonWrapper}>
+                <Button onPress={() => handleSubmit()} disabled={isSubmitting}>
+                  Save Changes
+                </Button>
+              </View>
+            </ScrollView>
+          )}
+        </Formik>
       </KeyboardAvoidingView>
     </Screen>
   );
@@ -96,15 +134,6 @@ const styles = StyleSheet.create({
   },
   form: {
     gap: 16,
-  },
-  fieldGroup: {
-    gap: 6,
-  },
-  fieldLabel: {
-    fontSize: 13,
-    lineHeight: 15.6,
-    letterSpacing: -0.3,
-    color: Colors.black100,
   },
   sectionDivider: {
     height: 1,
