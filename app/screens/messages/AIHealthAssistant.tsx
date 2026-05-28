@@ -1,5 +1,5 @@
-// import AIHealthAssistantIcon from "@/assets/icons/AI-Health-Assistant.png";
-import AIHealthAssistantIcon from "@/assets/images/ai-assistant.png";
+import AIHealthAssistantIcon from "@/assets/icons/ai-assistant-icon.svg";
+import AIHealthAssistant from "@/assets/images/ai-assistant.png";
 import { BackButton } from "@/components/BackButton";
 import { Text } from "@/components/Text";
 import Colors from "@/constants/Colors";
@@ -148,14 +148,7 @@ export default function AIHealthAssistantScreen() {
           >
             {/* Hero */}
             <View style={styles.heroWrapper}>
-              <View style={styles.heroOuter}>
-                <View style={styles.heroInner}>
-                  <Image
-                    source={AIHealthAssistantIcon}
-                    style={styles.heroIcon}
-                  />
-                </View>
-              </View>
+              <Image source={AIHealthAssistant} style={styles.heroIcon} />
             </View>
 
             <Text weight="bold" style={styles.introHeading}>
@@ -205,12 +198,9 @@ export default function AIHealthAssistantScreen() {
                 ]}
               >
                 {msg.role === "assistant" && (
-                  <View style={styles.avatarBubble}>
-                    <Image
-                      source={AIHealthAssistantIcon}
-                      style={styles.avatarIcon}
-                    />
-                  </View>
+                  // <View style={styles.avatarBubble}>
+                  <AIHealthAssistantIcon width={25} height={25} />
+                  // </View>
                 )}
                 <View style={styles.bubbleWrapper}>
                   <View
@@ -360,28 +350,12 @@ const styles = StyleSheet.create({
   },
   heroWrapper: {
     marginBottom: 8,
-  },
-  heroOuter: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: Colors.lightBlue2,
     alignItems: "center",
-    justifyContent: "center",
-  },
-  heroInner: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    backgroundColor: Colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
   },
   heroIcon: {
-    width: 48,
-    height: 48,
+    width: 180,
+    height: 180,
     resizeMode: "contain",
-    tintColor: "white",
   },
   introHeading: {
     fontSize: 22,
@@ -455,12 +429,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 18,
-  },
-  avatarIcon: {
-    width: 18,
-    height: 18,
-    resizeMode: "contain",
-    tintColor: "white",
   },
   bubbleWrapper: {
     maxWidth: "72%",

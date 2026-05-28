@@ -1,5 +1,4 @@
-// import AIHealthAssistantIcon from "@/assets/icons/AI-Health-Assistant.png";
-import AIHealthAssistantIcon from "@/assets/images/ai-assistant.png";
+import AIHealthAssistant from "@/assets/images/ai-assistant.png";
 import Pressable from "@/components/Pressable";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
@@ -73,9 +72,9 @@ export default function MessagesScreen() {
           style={styles.aiCard}
         >
           <View style={styles.aiCardLeft}>
-            <View style={styles.aiIconWrapper}>
-              <Image source={AIHealthAssistantIcon} style={styles.aiIcon} />
-            </View>
+            {/* <View style={styles.aiIconWrapper}> */}
+            <Image source={AIHealthAssistant} style={styles.aiIcon} />
+            {/* </View> */}
             <View style={styles.aiCardText}>
               <Text weight="semibold" style={styles.aiCardTitle}>
                 AI Health Assistant
@@ -212,10 +211,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   aiIcon: {
-    width: 26,
-    height: 26,
-    resizeMode: "contain",
-    tintColor: "white",
+    width: 50,
+    height: 50,
   },
   aiCardText: {
     flex: 1,
