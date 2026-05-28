@@ -98,7 +98,7 @@ export default function TabOneScreen() {
               </Text>
             </View>
           </View>
-          <Button onPress={() => router.toHome()} >Start Conversation →</Button>
+          <Button onPress={() => router.toAIHealthAssistant()} >Start Conversation →</Button>
         </View>
 
         <View style={styles.quickActions}>
