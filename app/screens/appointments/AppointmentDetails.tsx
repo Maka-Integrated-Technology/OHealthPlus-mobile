@@ -1,5 +1,5 @@
-import { BackButton } from "@/components/BackButton";
 import Button from "@/components/Button";
+import DetailHeader from "@/components/DetailHeader";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
@@ -9,12 +9,7 @@ import message_icon from "@/features/appointments/assets/icons/message_icon.png"
 import verification_icon from "@/features/appointments/assets/icons/verification_icon.png";
 import video_icon from "@/features/appointments/assets/icons/video_icon_2.png";
 import { useLocalSearchParams } from "expo-router";
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Mock data - replace with API fetch
@@ -91,13 +86,13 @@ export default function AppointmentDetailsScreen() {
     }).format(amount);
 
   return (
-    <Screen style={styles.screen}>
-      <View style={styles.header}>
-        <BackButton style={{ marginBottom: 0 }} />
-        <Text weight="semibold" style={styles.headerTitle}>Appointment Details</Text>
-      </View>
+    <Screen>
+      <DetailHeader title="Appointment Details" />
 
-      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+      <ScrollView
+        style={styles.content}
+        contentContainerStyle={styles.contentContainer}
+      >
         <View style={styles.detailsContainer}>
           {/* Doctor Details */}
           <View style={styles.doctorDetailsContainer}>
@@ -117,16 +112,27 @@ export default function AppointmentDetailsScreen() {
               </View>
             </View>
             <View style={{ gap: 6 }}>
-              <Text weight="semibold" style={styles.name}>{professional.name}</Text>
-              <Text weight="regular" style={styles.role}>{professional.role}</Text>
+              <Text weight="semibold" style={styles.name}>
+                {professional.name}
+              </Text>
+              <Text weight="regular" style={styles.role}>
+                {professional.role}
+              </Text>
             </View>
           </View>
           {/* Appointment Details */}
           <View style={styles.appointmentDetailsSection}>
             <View style={styles.consultationTypeDetailRow}>
-              <Text weight="regular" style={styles.detailLabel}>Consultation type</Text>
+              <Text weight="regular" style={styles.detailLabel}>
+                Consultation type
+              </Text>
               <View style={styles.detailValueRow}>
-                <Image source={consultationType === "video" ? video_icon : message_icon} style={styles.detailIcon} />
+                <Image
+                  source={
+                    consultationType === "video" ? video_icon : message_icon
+                  }
+                  style={styles.detailIcon}
+                />
                 <Text weight="regular" style={styles.detailValue}>
                   {consultationType === "video" ? "Video" : "Chat"} Consultation
                 </Text>
@@ -134,17 +140,31 @@ export default function AppointmentDetailsScreen() {
             </View>
             <View style={styles.dateTimeDetailRow}>
               <View style={styles.detailRow}>
-                <Text weight="regular" style={styles.detailLabel}>Date</Text>
+                <Text weight="regular" style={styles.detailLabel}>
+                  Date
+                </Text>
                 <View style={styles.detailValueRow}>
-                  <Image source={appointmentAssets.icons.calendarIcon} style={styles.detailIcon} />
-                  <Text weight="medium" style={styles.detailValue}>{date || "Wed, 14"}</Text>
+                  <Image
+                    source={appointmentAssets.icons.calendarIcon}
+                    style={styles.detailIcon}
+                  />
+                  <Text weight="medium" style={styles.detailValue}>
+                    {date || "Wed, 14"}
+                  </Text>
                 </View>
               </View>
               <View style={styles.detailRow}>
-                <Text weight="regular" style={styles.detailLabel}>Time</Text>
+                <Text weight="regular" style={styles.detailLabel}>
+                  Time
+                </Text>
                 <View style={styles.detailValueRow}>
-                  <Image source={appointmentAssets.icons.calendarIcon} style={styles.detailIcon} />
-                  <Text weight="medium" style={styles.detailValue}>{time || "10:30 AM"}</Text>
+                  <Image
+                    source={appointmentAssets.icons.calendarIcon}
+                    style={styles.detailIcon}
+                  />
+                  <Text weight="medium" style={styles.detailValue}>
+                    {time || "10:30 AM"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -152,12 +172,18 @@ export default function AppointmentDetailsScreen() {
         </View>
 
         <View style={styles.noteContainer}>
-          <Image source={appointmentAssets.icons.infoIcon} style={styles.infoIcon} />
-          <Text weight="regular" style={styles.noteText}>Starts in 25 hours</Text>
+          <Image
+            source={appointmentAssets.icons.infoIcon}
+            style={styles.infoIcon}
+          />
+          <Text weight="regular" style={styles.noteText}>
+            Starts in 25 hours
+          </Text>
         </View>
 
         <Text weight="regular" style={styles.noteText}>
-          Ensure you have a stable internet connection. Find a quiet place before your consultation.
+          Ensure you have a stable internet connection. Find a quiet place
+          before your consultation.
         </Text>
       </ScrollView>
 
@@ -189,9 +215,9 @@ export default function AppointmentDetailsScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    paddingHorizontal: 20,
-  },
+  // screen: {
+  //   paddingHorizontal: 20,
+  // },
   menuButton: {
     width: 40,
     height: 40,
@@ -291,8 +317,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.homeneutral,
     paddingTop: 8,
     paddingBottom: 12,
-    marginTop: 12,
-    marginBottom: 16,
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
@@ -308,7 +332,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     gap: 16,
-    paddingBottom: 24,
+    padding: 24,
   },
   sectionTitle: {
     fontSize: 16,
@@ -330,20 +354,20 @@ const styles = StyleSheet.create({
   ProfessionalImageContainer: {
     height: 56,
     aspectRatio: 1 / 1,
-    position: 'relative',
+    position: "relative",
   },
   ProfessionalImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   professionalImageStyle: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   verificationBadge: {
-    position: 'absolute',
+    position: "absolute",
     top: -4,
     right: -3,
     padding: 2,
@@ -374,11 +398,11 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   consultationTypeDetailRow: {
-    flexDirection: 'column',
+    flexDirection: "column",
     gap: 12,
   },
   dateTimeDetailRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
   },
   detailRow: {
@@ -398,8 +422,8 @@ const styles = StyleSheet.create({
     color: Colors.black200,
   },
   detailValueRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   detailIcon: {
@@ -417,9 +441,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   paymentRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     // marginBottom: 12,
   },
   paymentLabel: {
@@ -435,9 +459,9 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   totalRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingTop: 16,
     marginTop: 8,
     borderTopWidth: 1,
@@ -462,19 +486,19 @@ const styles = StyleSheet.create({
     color: Colors.neutral500,
   },
   paymentSection: {
-    marginTop: 'auto',
+    marginTop: "auto",
     paddingVertical: 16,
     gap: 12,
   },
   paymentButton: {
-    width: '100%',
+    width: "100%",
   },
   noteContainer: {
     backgroundColor: Colors.lightBlue2,
     padding: 16,
     borderRadius: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
   },
   infoIcon: {

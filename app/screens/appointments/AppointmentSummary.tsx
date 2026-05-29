@@ -1,25 +1,18 @@
-import { BackButton } from "@/components/BackButton";
 import Button from "@/components/Button";
+import DetailHeader from "@/components/DetailHeader";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
 import { appointmentAssets } from "@/features/appointments/assets";
-import { useLocalSearchParams } from "expo-router";
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 
 const MOCK_SUMMARY = {
   doctorName: "Dr. Chidi Okoro",
   specialization: "General Doctor",
   image: { uri: "https://randomuser.me/api/portraits/men/11.jpg" },
   dateTime: "Mon 10 • 9:00 AM",
-  notes:
-    "Follow up in 2 weeks. Ordinary procedure medication.",
+  notes: "Follow up in 2 weeks. Ordinary procedure medication.",
 };
 
 export default function AppointmentSummaryScreen() {
@@ -27,13 +20,8 @@ export default function AppointmentSummaryScreen() {
   const summary = MOCK_SUMMARY;
 
   return (
-    <Screen style={styles.screen}>
-      <View style={styles.header}>
-        <BackButton />
-        <Text weight="semibold" style={styles.headerTitle}>
-          Appointment Summary
-        </Text>
-      </View>
+    <Screen>
+      <DetailHeader title="Appointment Summary" />
 
       <ScrollView
         style={styles.scroll}
@@ -80,10 +68,18 @@ export default function AppointmentSummaryScreen() {
           <Button onPress={() => {}} style={styles.primaryButton}>
             Leave a review
           </Button>
-          <Button type="secondary" onPress={() => {}} style={styles.secondaryButton}>
+          <Button
+            type="secondary"
+            onPress={() => {}}
+            style={styles.secondaryButton}
+          >
             Send follow-up
           </Button>
-          <Button type="secondary" onPress={() => {}} style={styles.secondaryButton}>
+          <Button
+            type="secondary"
+            onPress={() => {}}
+            style={styles.secondaryButton}
+          >
             Message provider
           </Button>
         </View>
@@ -101,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
     paddingTop: 8,
-    paddingBottom: 16,
+    paddingBottom: 12,
   },
   headerTitle: {
     fontSize: 18,
