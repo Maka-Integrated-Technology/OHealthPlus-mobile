@@ -1,11 +1,9 @@
-import { useAppRouter } from '@/config/route';
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { Pressable, StyleSheet, TouchableOpacityProps } from 'react-native';
+import { useAppRouter } from "@/config/route";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { Pressable, StyleSheet, TouchableOpacityProps } from "react-native";
 
 interface BackButtonProps extends TouchableOpacityProps {}
-
-
 
 export function BackButton({ style, ...props }: BackButtonProps) {
   const router = useAppRouter();
@@ -19,7 +17,11 @@ export function BackButton({ style, ...props }: BackButtonProps) {
   };
 
   return (
-    <Pressable style={[styles.backButton, style]} {...props} onPress={handleBack}>
+    <Pressable
+      style={[styles.backButton, style]}
+      {...props}
+      onPress={handleBack}
+    >
       <Ionicons name="chevron-back" size={20} color="black" />
     </Pressable>
   );
@@ -31,10 +33,10 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#155EEF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 8,
-    backgroundColor: '#FAFAFA',
+    borderColor: "#155EEF",
+    alignItems: "center",
+    justifyContent: "center",
+    // marginBottom: 8,
+    backgroundColor: "#FAFAFA",
   },
 });
