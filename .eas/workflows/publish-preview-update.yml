@@ -1,12 +1,16 @@
 name: Deploy to preview
 on:
   push:
-    branches: ['preview']
+    branches: ["preview"]
 jobs:
+  # Fingerprint runs for both platforms. Kept active because Android jobs consume
+  # its android_fingerprint_hash output. The ios_fingerprint_hash output is
+  # unused while iOS jobs are disabled below.
   fingerprint:
     name: Fingerprint
     type: fingerprint
     environment: preview
+
   get_android_build:
     name: Check for existing android build
     needs: [fingerprint]
@@ -14,13 +18,18 @@ jobs:
     params:
       fingerprint_hash: ${{ needs.fingerprint.outputs.android_fingerprint_hash }}
       profile: preview
-  get_ios_build:
-    name: Check for existing ios build
-    needs: [fingerprint]
-    type: get-build
-    params:
-      fingerprint_hash: ${{ needs.fingerprint.outputs.ios_fingerprint_hash }}
-      profile: preview
+
+  # iOS: get_ios_build — disabled until iOS signing credentials are configured
+  # for com.ohealth.healthbridge.preview under the ohealth Apple Developer account.
+  # Restore by uncommenting this block and the two iOS jobs below.
+  # get_ios_build:
+  #   name: Check for existing ios build
+  #   needs: [fingerprint]
+  #   type: get-build
+  #   params:
+  #     fingerprint_hash: ${{ needs.fingerprint.outputs.ios_fingerprint_hash }}
+  #     profile: preview
+
   build_android:
     name: Build Android
     needs: [get_android_build]
@@ -29,14 +38,17 @@ jobs:
     params:
       platform: android
       profile: preview
-  build_ios:
-    name: Build iOS
-    needs: [get_ios_build]
-    if: ${{ !needs.get_ios_build.outputs.build_id }}
-    type: build
-    params:
-      platform: ios
-      profile: preview
+
+  # iOS: build_ios — disabled until iOS credentials are configured.
+  # build_ios:
+  #   name: Build iOS
+  #   needs: [get_ios_build]
+  #   if: ${{ !needs.get_ios_build.outputs.build_id }}
+  #   type: build
+  #   params:
+  #     platform: ios
+  #     profile: preview
+
   publish_android_update:
     name: Publish Android update
     needs: [get_android_build]
@@ -45,11 +57,13 @@ jobs:
     params:
       branch: preview
       platform: android
-  publish_ios_update:
-    name: Publish iOS update
-    needs: [get_ios_build]
-    if: ${{ needs.get_ios_build.outputs.build_id }}
-    type: update
-    params:
-      branch: preview
-      platform: ios
+
+  # iOS: publish_ios_update — disabled until iOS credentials are configured.
+  # publish_ios_update:
+  #   name: Publish iOS update
+  #   needs: [get_ios_build]
+  #   if: ${{ needs.get_ios_build.outputs.build_id }}
+  #   type: update
+  #   params:
+  #     branch: preview
+  #     platform: ios
