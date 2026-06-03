@@ -1,31 +1,272 @@
-import { StyleSheet } from 'react-native';
+import avatar from "@/assets/images/avatar-full.jpg";
+import Screen from "@/components/Screen";
+import { Text } from "@/components/Text";
+import { useAppRouter } from "@/config/route";
+import Colors from "@/constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+type MenuItem = {
+  id: string;
+  label: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  onPress?: () => void;
+  disabled?: boolean;
+  badge?: string;
+  destructive?: boolean;
+};
 
-export default function TabTwoScreen() {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Tab Two</Text>
-            <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-            <EditScreenInfo path="app/(tabs)/two.tsx" />
+export default function ProfileScreen() {
+  const router = useAppRouter();
+
+  const menuItems: MenuItem[] = [
+    {
+      id: "personal",
+      label: "Personal Information",
+      icon: "person-outline",
+      onPress: () => router.toPersonalInformation(),
+    },
+    {
+      id: "subscriptions",
+      label: "Subscriptions",
+      icon: "star-outline",
+      onPress: () => router.toSubscription(),
+    },
+    {
+      id: "medical",
+      label: "Medical Information",
+      icon: "fitness-outline",
+      disabled: true,
+      badge: "Coming soon",
+    },
+    {
+      id: "notifications",
+      label: "Notifications",
+      icon: "notifications-outline",
+      onPress: () => router.toNotifications(),
+    },
+    {
+      id: "change-password",
+      label: "Change Password",
+      icon: "lock-closed-outline",
+      onPress: () => router.toChangePassword(),
+    },
+    {
+      id: "language",
+      label: "Language",
+      icon: "language-outline",
+    },
+    {
+      id: "privacy",
+      label: "Privacy Policy",
+      icon: "lock-closed-outline",
+      onPress: () => router.toPrivacyPolicy(),
+    },
+    {
+      id: "terms",
+      label: "Terms & Conditions",
+      icon: "document-text-outline",
+      onPress: () => router.toTermsAndConditions(),
+    },
+    {
+      id: "help",
+      label: "Help & Support",
+      icon: "help-circle-outline",
+    },
+  ];
+
+  const destructiveItems: MenuItem[] = [
+    {
+      id: "logout",
+      label: "Log out",
+      icon: "log-out-outline",
+      destructive: true,
+    },
+    {
+      id: "delete",
+      label: "Delete Account",
+      icon: "trash-outline",
+      destructive: true,
+    },
+  ];
+
+  const renderMenuItem = (item: MenuItem) => (
+    <TouchableOpacity
+      key={item.id}
+      style={[
+        styles.menuRow,
+        item.disabled && styles.menuRowDisabled,
+        item.destructive && styles.menuRowDestructive,
+      ]}
+      onPress={item.onPress}
+      activeOpacity={item.disabled ? 1 : 0.7}
+      disabled={!item.onPress && !item.destructive}
+    >
+      <Ionicons
+        name={item.icon}
+        size={22}
+        color={
+          item.disabled
+            ? Colors.neutral300
+            : item.destructive
+              ? Colors.red500
+              : Colors.black300
+        }
+        style={styles.menuIcon}
+      />
+      <Text
+        weight="regular"
+        style={[
+          styles.menuLabel,
+          item.disabled && styles.menuLabelDisabled,
+          item.destructive && styles.menuLabelDestructive,
+        ]}
+      >
+        {item.label}
+      </Text>
+      <View style={styles.menuRight}>
+        {item.badge ? (
+          <Text weight="regular" style={styles.comingSoon}>
+            {item.badge}
+          </Text>
+        ) : (
+          <Ionicons
+            name="chevron-forward"
+            size={18}
+            color={item.destructive ? Colors.red500 : Colors.neutral300}
+          />
+        )}
+      </View>
+    </TouchableOpacity>
+  );
+
+  return (
+    <Screen style={{ paddingHorizontal: 0 }}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Blue header */}
+        <View style={styles.blueHeader} />
+
+        {/* Avatar overlapping header */}
+        <View style={styles.avatarWrapper}>
+          <Image source={avatar} style={styles.avatar} />
         </View>
-    );
+
+        <View style={{ paddingHorizontal: 16, gap: 20 }}>
+          {/* Name + email */}
+          <View style={styles.userInfo}>
+            <Text weight="semibold" style={styles.userName}>
+              Olivia Jane
+            </Text>
+            <Text weight="regular" style={styles.userEmail}>
+              janebetty@gmail.com
+            </Text>
+          </View>
+
+          {/* Main menu */}
+          <View style={styles.menuGroup}>{menuItems.map(renderMenuItem)}</View>
+
+          {/* Destructive actions */}
+          <View style={styles.menuGroup}>
+            {destructiveItems.map(renderMenuItem)}
+          </View>
+
+          <View style={{ height: 100 }} />
+        </View>
+      </ScrollView>
+    </Screen>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
-    },
+  blueHeader: {
+    height: 120,
+    backgroundColor: Colors.primary,
+    width: "100%",
+  },
+  avatarWrapper: {
+    alignItems: "center",
+    marginTop: -52,
+    zIndex: 10,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 30,
+  },
+  scroll: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingTop: 12,
+    gap: 20,
+  },
+  userInfo: {
+    alignItems: "center",
+    gap: 4,
+  },
+  userName: {
+    fontSize: 18,
+    lineHeight: 21.6,
+    letterSpacing: -0.5,
+    color: Colors.black100,
+  },
+  userEmail: {
+    fontSize: 14,
+    lineHeight: 16.8,
+    color: Colors.neutral,
+  },
+  menuGroup: {
+    gap: 8,
+  },
+  menuRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.lightBeige,
+    borderWidth: 1,
+    borderColor: Colors.homeneutral,
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    gap: 12,
+  },
+  menuRowDisabled: {
+    opacity: 0.6,
+  },
+  menuRowDestructive: {
+    backgroundColor: "#FFF1F0",
+    borderColor: "#FECACA",
+  },
+  menuIcon: {},
+  menuLabel: {
+    flex: 1,
+    fontSize: 15,
+    lineHeight: 18,
+    letterSpacing: -0.3,
+    color: Colors.black300,
+  },
+  menuLabelDisabled: {
+    color: Colors.neutral300,
+  },
+  menuLabelDestructive: {
+    color: Colors.red500,
+  },
+  menuRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  comingSoon: {
+    fontSize: 13,
+    color: Colors.neutral400,
+  },
 });
