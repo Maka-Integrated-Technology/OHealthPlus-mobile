@@ -52,6 +52,15 @@ export const ROUTES = {
     AI_HEALTH_ASSISTANT: "/screens/messages/AIHealthAssistant",
 
     // ============================================
+    // Profile Routes
+    // ============================================
+    PERSONAL_INFORMATION: "/screens/profile/PersonalInformation",
+    CHANGE_PASSWORD: "/screens/profile/ChangePassword",
+    NOTIFICATIONS: "/screens/profile/Notifications",
+    TERMS_AND_CONDITIONS: "/screens/profile/TermsAndConditions",
+    PRIVACY_POLICY: "/screens/profile/PrivacyPolicy",
+
+    // ============================================
     // Paywall Routes
     // ============================================
     PAYWALL: "/(paywall)",
