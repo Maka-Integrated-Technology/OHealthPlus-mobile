@@ -72,8 +72,10 @@ export const useAppRouter = () => {
         toSignUp: () => navigate(ROUTES.SIGN_UP),
         toSignIn: () => navigateReplace(ROUTES.SIGN_IN),
         toForgotPassword: () => navigate(ROUTES.FORGOT_PASSWORD),
-        toEmailVerification: (params?: { email?: string }) =>
+        toEmailVerification: (params?: { email?: string; mode?: "signup" | "reset" }) =>
             navigate(ROUTES.EMAIL_VERIFICATION, params),
+        toNewPassword: (params: { token: string; email: string }) =>
+            navigate(ROUTES.NEW_PASSWORD, params),
         toPasswordSuccess: () => navigate(ROUTES.PASSWORD_SUCCESS),
 
         // ============================================

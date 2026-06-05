@@ -4,7 +4,10 @@ import { FormInputField } from "@/components/forms";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
+import { ROUTES } from "@/constants/routes";
+import { useLogin } from "@/features/auth/hooks/useAuth";
 import { SignInValues, signInSchema } from "@/features/auth/validationSchema";
+import { getApiErrorMessage } from "@/utils/apiError";
 import { toFormikValidate } from "@/utils/formikZod";
 import { Formik } from "formik";
 import React, { useState } from "react";
@@ -23,8 +26,8 @@ const initialValues: SignInValues = { email: "", password: "" };
 export default function SignInScreen() {
   const router = useAppRouter();
   const [showPassword, setShowPassword] = useState(false);
-  // Placeholder for future API-level errors (e.g. wrong credentials)
   const [serverError, setServerError] = useState<string | null>(null);
+  const { mutateAsync: login } = useLogin();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,10 +50,16 @@ export default function SignInScreen() {
           <Formik
             initialValues={initialValues}
             validate={toFormikValidate(signInSchema)}
-            onSubmit={() => {
+            onSubmit={async (values, { setSubmitting }) => {
               setServerError(null);
-              // TODO: call sign-in API, set serverError on failure
-              router.toHome();
+              try {
+                await login(values);
+                router.toHome();
+              } catch (err) {
+                setServerError(getApiErrorMessage(err, "Invalid email or password."));
+              } finally {
+                setSubmitting(false);
+              }
             }}
           >
             {({ handleSubmit, isSubmitting }) => (
@@ -79,7 +88,6 @@ export default function SignInScreen() {
                     />
                   </View>
 
-                  {/* Server-level error (e.g. wrong credentials) */}
                   {serverError ? (
                     <Text style={styles.serverErrorText}>{serverError}</Text>
                   ) : null}
@@ -97,7 +105,7 @@ export default function SignInScreen() {
                   disabled={isSubmitting}
                   style={styles.submitBtn}
                 >
-                  Sign In →
+                  {isSubmitting ? "Signing In…" : "Sign In →"}
                 </Button>
 
                 <View style={styles.dividerRow}>
