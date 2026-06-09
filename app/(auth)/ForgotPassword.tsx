@@ -2,16 +2,17 @@ import { BackButton } from "@/components/BackButton";
 import Button from "@/components/Button";
 import { FormInputField } from "@/components/forms";
 import { Text } from "@/components/Text";
+import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
-import { ROUTES } from "@/constants/routes";
+import { useForgotPassword } from "@/features/auth/hooks/useAuth";
 import {
   ForgotPasswordValues,
   forgotPasswordSchema,
 } from "@/features/auth/validationSchema";
+import { getApiErrorMessage } from "@/utils/apiError";
 import { toFormikValidate } from "@/utils/formikZod";
-import { useRouter } from "expo-router";
 import { Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -23,7 +24,9 @@ import {
 const initialValues: ForgotPasswordValues = { email: "" };
 
 export default function ForgotPasswordScreen() {
-  const router = useRouter();
+  const router = useAppRouter();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const { mutateAsync: forgotPassword } = useForgotPassword();
 
   return (
     <KeyboardAvoidingView
@@ -48,12 +51,16 @@ export default function ForgotPasswordScreen() {
         <Formik
           initialValues={initialValues}
           validate={toFormikValidate(forgotPasswordSchema)}
-          onSubmit={(values) => {
-            // TODO: call API to send verification code
-            router.push({
-              pathname: ROUTES.EMAIL_VERIFICATION,
-              params: { email: values.email },
-            });
+          onSubmit={async (values, { setSubmitting }) => {
+            setServerError(null);
+            try {
+              await forgotPassword({ email: values.email });
+              router.toEmailVerification({ email: values.email, mode: "reset" });
+            } catch (err) {
+              setServerError(getApiErrorMessage(err));
+            } finally {
+              setSubmitting(false);
+            }
           }}
         >
           {({ handleSubmit, isSubmitting }) => (
@@ -68,8 +75,12 @@ export default function ForgotPasswordScreen() {
                 placeholderTextColor="#9CA3AF"
               />
 
+              {serverError ? (
+                <Text style={styles.errorText}>{serverError}</Text>
+              ) : null}
+
               <Button onPress={() => handleSubmit()} disabled={isSubmitting}>
-                Send Code
+                {isSubmitting ? "Sending Code…" : "Send Code"}
               </Button>
             </View>
           )}
@@ -104,4 +115,5 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
   form: { gap: 16, marginTop: 11 },
+  errorText: { fontSize: 13, color: Colors.red500, marginTop: -4 },
 });
