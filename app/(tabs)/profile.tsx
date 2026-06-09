@@ -3,8 +3,10 @@ import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
+import { useLogout } from "@/features/auth/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -24,6 +26,27 @@ type MenuItem = {
 
 export default function ProfileScreen() {
   const router = useAppRouter();
+  const { mutateAsync: logout, isPending: isLoggingOut } = useLogout();
+
+  const handleLogout = () => {
+    Alert.alert("Log out", "Are you sure you want to log out?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Log out",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await logout();
+          } catch {
+            // Even if the server call fails, local storage is cleared by
+            // useLogout's onSettled — so navigation is always safe.
+          } finally {
+            router.toSignIn();
+          }
+        },
+      },
+    ]);
+  };
 
   const menuItems: MenuItem[] = [
     {
@@ -84,8 +107,9 @@ export default function ProfileScreen() {
   const destructiveItems: MenuItem[] = [
     {
       id: "logout",
-      label: "Log out",
+      label: isLoggingOut ? "Logging out…" : "Log out",
       icon: "log-out-outline",
+      onPress: handleLogout,
       destructive: true,
     },
     {

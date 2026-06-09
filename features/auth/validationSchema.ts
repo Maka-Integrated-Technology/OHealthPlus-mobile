@@ -2,7 +2,10 @@ import { z } from "zod";
 
 export const signUpSchema = z
   .object({
-    name: z.string().trim().min(2, "Name must be at least 2 characters"),
+    /** "PATIENT" or "DOCTOR" — sent to the backend as role: [value] */
+    role: z.enum(["PATIENT", "DOCTOR"]).default("PATIENT"),
+    first_name: z.string().trim().min(2, "First name must be at least 2 characters"),
+    last_name: z.string().trim().min(2, "Last name must be at least 2 characters"),
     email: z.string().trim().email("Please enter a valid email address"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
@@ -42,8 +45,9 @@ export const newPasswordSchema = z
 
 export type NewPasswordValues = z.infer<typeof newPasswordSchema>;
 
+/** Exactly 6 numeric digits — must match CODE_LENGTH in EmailVerification.tsx */
 export const otpCodeSchema = z.object({
-  code: z.string().regex(/^\d{5}$/, "Please enter the complete 5-digit code"),
+  code: z.string().regex(/^\d{6}$/, "Please enter the complete 6-digit code"),
 });
 
 export type OtpCodeValues = z.infer<typeof otpCodeSchema>;

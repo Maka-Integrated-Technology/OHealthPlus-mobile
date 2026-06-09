@@ -297,6 +297,51 @@ npm test -- --coverage
 npm test -- LoginForm.test.tsx
 ```
 
+## 🚢 Deployment Status (EAS)
+
+Health Bridge Mobile uses [Expo EAS](https://expo.dev/eas) for builds, OTA updates, and store submission. The project is linked to **@ohealth/health-bridge** on expo.dev.
+
+| Platform | Preview builds | Preview OTA updates | Production builds | Production submission |
+|----------|:--------------:|:-------------------:|:-----------------:|:---------------------:|
+| Android  | ✅ Active      | ✅ Active           | ⏸ Disabled        | ⏸ Disabled            |
+| iOS      | ⏸ Disabled    | ⏸ Disabled          | ⏸ Disabled        | ⏸ Disabled            |
+
+**Why iOS is disabled:** iOS signing credentials (distribution certificate and provisioning profile) have not been configured yet for `com.ohealth.healthbridge.preview`. See the activation checklist below.
+
+**Why production is disabled:** Both Android and iOS production builds require store records, signing credentials, and (for iOS) an App Store Connect `ascAppId` in `eas.json`. The production workflow is preserved in `.eas/workflows/deploy-to-production.yml` but commented out.
+
+### Current automated behavior
+
+- Push to `preview` branch → fingerprint Android → publish Android OTA update if a matching build exists, or trigger a new Android build if the native code changed.
+- Push to `main` branch → **no action** (production workflow is commented out).
+
+### Activation checklist
+
+**To enable iOS preview builds:**
+1. Run `npx eas credentials --platform ios` and provision a certificate + profile for `com.ohealth.healthbridge.preview`
+2. Uncomment `get_ios_build`, `build_ios`, and `publish_ios_update` in `.eas/workflows/publish-preview-update.yml`
+
+**To enable production deployment (both platforms):**
+1. Create the app in **App Store Connect** for `com.ohealth.healthbridge` and add its numeric ID to `eas.json` → `submit.production.ios.ascAppId`
+2. Create the app in **Google Play Console** for `com.ohealth.healthbridge` and configure a service account via `npx eas credentials --platform android`
+3. Provision iOS production signing via `npx eas credentials --platform ios`
+4. Uncomment the `on:` block and `jobs:` block in `.eas/workflows/deploy-to-production.yml`
+
+### Manual build commands (do not run in CI until fully configured)
+
+```bash
+# Android preview build (active profile)
+npm run build:android
+
+# iOS preview build (requires credentials first)
+npm run build:ios
+
+# Production builds (disabled until store records exist)
+npm run build:prod:android
+npm run build:prod:ios
+npm run build:prod:all
+```
+
 ## 📦 Building for Production
 
 ### Android
