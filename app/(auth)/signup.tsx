@@ -5,7 +5,10 @@ import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
 import { ROUTES } from "@/constants/routes";
+import { useSignup } from "@/features/auth/hooks/useAuth";
+import type { UserRole } from "@/features/auth/types/auth";
 import { SignUpValues, signUpSchema } from "@/features/auth/validationSchema";
+import { getApiErrorMessage } from "@/utils/apiError";
 import { toFormikValidate } from "@/utils/formikZod";
 import { Formik } from "formik";
 import React, { useState } from "react";
@@ -20,7 +23,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const initialValues: SignUpValues = {
-  name: "",
+  role: "PATIENT",
+  first_name: "",
+  last_name: "",
   email: "",
   password: "",
   confirmPassword: "",
@@ -31,6 +36,8 @@ export default function SignUpScreen() {
   const router = useAppRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const { mutateAsync: signUp } = useSignup();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -56,17 +63,64 @@ export default function SignUpScreen() {
           <Formik
             initialValues={initialValues}
             validate={toFormikValidate(signUpSchema)}
-            onSubmit={() => {
-              router.toOtp();
+            onSubmit={async (values, { setSubmitting }) => {
+              setServerError(null);
+              try {
+                const {
+                  confirmPassword: _c,
+                  agreetoTerms: _a,
+                  role,
+                  ...rest
+                } = values;
+                await signUp({ ...rest, role: [role as UserRole] });
+                router.toEmailVerification({
+                  email: values.email,
+                  mode: "signup",
+                });
+              } catch (err) {
+                setServerError(getApiErrorMessage(err));
+              } finally {
+                setSubmitting(false);
+              }
             }}
           >
-            {({ handleSubmit, isSubmitting }) => (
+            {({ handleSubmit, isSubmitting, values, setFieldValue }) => (
               <View style={styles.form}>
+                {/* Role selector: This is commented out because I am not sure if we will need it for the onboarding */}
+                {/* <View style={styles.roleSelector}>
+                  {(["PATIENT", "DOCTOR"] as const).map((r) => (
+                    <Pressable
+                      key={r}
+                      style={[
+                        styles.roleBtn,
+                        values.role === r && styles.roleBtnActive,
+                      ]}
+                      onPress={() => setFieldValue("role", r)}
+                    >
+                      <Text
+                        style={[
+                          styles.roleBtnText,
+                          values.role === r && styles.roleBtnTextActive,
+                        ]}
+                      >
+                        {r === "PATIENT" ? "Patient" : "Healthcare Professional"}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </View> */}
+
                 <View style={styles.inputGroup}>
                   <FormInputField
-                    name="name"
+                    name="first_name"
                     icon="name"
-                    placeholder="Name"
+                    placeholder="First Name"
+                    placeholderTextColor="#9CA3AF"
+                  />
+
+                  <FormInputField
+                    name="last_name"
+                    icon="name"
+                    placeholder="Last Name"
                     placeholderTextColor="#9CA3AF"
                   />
 
@@ -122,12 +176,16 @@ export default function SignUpScreen() {
                   </Text>
                 </FormCheckboxField>
 
+                {serverError ? (
+                  <Text style={styles.serverErrorText}>{serverError}</Text>
+                ) : null}
+
                 <Button
                   onPress={() => handleSubmit()}
                   disabled={isSubmitting}
                   style={styles.submitBtn}
                 >
-                  Sign Up →
+                  {isSubmitting ? "Creating Account…" : "Sign Up →"}
                 </Button>
 
                 <View style={styles.dividerRow}>
@@ -178,6 +236,37 @@ const styles = StyleSheet.create({
     letterSpacing: -0.2,
   },
   form: { width: "100%", marginTop: 11, gap: 16 },
+  // Role segmented control
+  roleSelector: {
+    flexDirection: "row",
+    gap: 6,
+    backgroundColor: "#F3F4F6",
+    padding: 4,
+    borderRadius: 12,
+  },
+  roleBtn: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: "center",
+    borderRadius: 10,
+  },
+  roleBtnActive: {
+    backgroundColor: "white",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  roleBtnText: {
+    fontSize: 13,
+    color: "#6B7280",
+    fontWeight: "500",
+  },
+  roleBtnTextActive: {
+    color: Colors.primary,
+    fontWeight: "600",
+  },
   inputGroup: { gap: 12 },
   termsText: {
     fontSize: 14,
@@ -192,6 +281,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     lineHeight: 16.8,
     letterSpacing: -0.5,
+  },
+  serverErrorText: {
+    color: Colors.red500,
+    fontSize: 13,
+    marginTop: -4,
   },
   submitBtn: { marginVertical: 0 },
   dividerRow: {

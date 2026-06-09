@@ -1,10 +1,17 @@
 import { BackButton } from "@/components/BackButton";
 import Button from "@/components/Button";
 import { Text } from "@/components/Text";
+import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
 import { ROUTES } from "@/constants/routes";
+import {
+  useForgotPassword,
+  useResendVerification,
+  useVerifySignup,
+} from "@/features/auth/hooks/useAuth";
 import { otpCodeSchema } from "@/features/auth/validationSchema";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { getApiErrorMessage } from "@/utils/apiError";
+import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -15,16 +22,34 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const CODE_LENGTH = 5;
+/**
+ * CODE_LENGTH must match the regex in otpCodeSchema: /^\d{6}$/
+ */
+const CODE_LENGTH = 6;
+
+type Mode = "signup" | "reset";
 
 export default function VerificationScreen() {
-  const router = useRouter();
-  const { email } = useLocalSearchParams<{ email: string }>();
+  const router = useAppRouter();
+  const { email, mode: rawMode } = useLocalSearchParams<{
+    email: string;
+    mode?: string;
+  }>();
+
+  // Default to "signup" if the mode param is missing/invalid
+  const mode: Mode = rawMode === "reset" ? "reset" : "signup";
+
   const [code, setCode] = useState<string[]>(Array(CODE_LENGTH).fill(""));
   const [error, setError] = useState("");
   const [resendTimer, setResendTimer] = useState(30);
   const inputs = useRef<(TextInput | null)[]>([]);
+
+  const { mutateAsync: verifySignup, isPending: isVerifying } =
+    useVerifySignup();
+  const { mutateAsync: resendVerification } = useResendVerification();
+  const { mutateAsync: forgotPassword } = useForgotPassword();
 
   // Countdown timer for resend
   useEffect(() => {
@@ -53,45 +78,69 @@ export default function VerificationScreen() {
     }
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     const fullCode = code.join("");
     const result = otpCodeSchema.safeParse({ code: fullCode });
     if (!result.success) {
       setError(
-        result.error.issues[0]?.message ??
-          "Please enter the complete 5-digit code",
+        result.error.issues[0]?.message ?? "Please enter the complete 6-digit code"
       );
       return;
     }
     setError("");
-    // TODO: verify code with API
-    router.push(ROUTES.NEW_PASSWORD);
+
+    try {
+      if (mode === "reset") {
+        // For password reset: the OTP is the reset token.
+        // Pass it directly to the NewPassword screen.
+        router.toNewPassword({ token: fullCode, email: email ?? "" });
+      } else {
+        // For signup: verify email ownership then go to the app.
+        await verifySignup({ email: email ?? "", code: fullCode });
+        router.toHome();
+      }
+    } catch (err) {
+      setError(getApiErrorMessage(err));
+    }
   };
 
-  const handleResend = () => {
+  const handleResend = async () => {
     if (resendTimer > 0) return;
-    // TODO: resend code
-    setResendTimer(30);
-    setCode(Array(CODE_LENGTH).fill(""));
-    inputs.current[0]?.focus();
+    setError("");
+    try {
+      if (mode === "reset") {
+        // Re-trigger the forgot-password email
+        await forgotPassword({ email: email ?? "" });
+      } else {
+        // Re-send the signup verification email
+        await resendVerification(email ?? "");
+      }
+      setResendTimer(30);
+      setCode(Array(CODE_LENGTH).fill(""));
+      inputs.current[0]?.focus();
+    } catch (err) {
+      setError(getApiErrorMessage(err));
+    }
   };
 
   const maskedEmail = email
     ? email.replace(
         /(.{2})(.*)(@.*)/,
-        (_, a, b, c) => a + "*".repeat(Math.min(b.length, 4)) + c,
+        (_, a, b, c) => a + "*".repeat(Math.min(b.length, 4)) + c
       )
     : "";
 
   return (
-    <KeyboardAvoidingView
-      style={styles.flex}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
+    <SafeAreaView style={styles.flex}>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
         <BackButton onPress={() => router.back()} />
 
         <View style={styles.header}>
@@ -99,8 +148,9 @@ export default function VerificationScreen() {
             Enter Verification Code
           </Text>
           <Text style={styles.subtitle}>
-            Enter the verification code sent to your email
-            {maskedEmail ? ` ${maskedEmail}` : ""}.
+            Enter the{" "}
+            {mode === "reset" ? "password reset" : "verification"} code sent to
+            your email{maskedEmail ? ` ${maskedEmail}` : ""}.
           </Text>
         </View>
 
@@ -128,8 +178,12 @@ export default function VerificationScreen() {
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-        <Button onPress={handleVerify} style={styles.button}>
-          Verify
+        <Button
+          onPress={handleVerify}
+          disabled={isVerifying}
+          style={styles.button}
+        >
+          {isVerifying ? "Verifying…" : "Verify"}
         </Button>
 
         <View style={styles.resendRow}>
@@ -145,8 +199,9 @@ export default function VerificationScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -176,7 +231,7 @@ const styles = StyleSheet.create({
   },
   codeRow: {
     flexDirection: "row",
-    gap: 12,
+    gap: 10,
     justifyContent: "center",
     marginBottom: 16,
     marginTop: 11,
@@ -184,8 +239,8 @@ const styles = StyleSheet.create({
   codeBox: {
     flex: 1,
     aspectRatio: 1,
-    maxWidth: 59,
-    height: 59,
+    maxWidth: 52,
+    height: 52,
     borderRadius: 16,
     borderWidth: 0.5,
     borderColor: Colors.neutral200,
@@ -199,7 +254,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     letterSpacing: -0.8,
     paddingVertical: 14,
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
   },
   codeBoxFilled: {
     borderColor: Colors.primary,

@@ -15,7 +15,7 @@ export function FormCheckboxField({ name, children }: FormCheckboxFieldProps) {
 
   const handleToggle = () => {
     helpers.setValue(!field.value);
-    helpers.setTouched(true);
+    helpers.setTouched(true, false); // false = skip re-validation; setValue already ran it with the correct new value
   };
 
   const showError = meta.touched && !!meta.error;
@@ -32,7 +32,9 @@ export function FormCheckboxField({ name, children }: FormCheckboxFieldProps) {
             />
           ) : null}
         </Pressable>
-        <View style={styles.labelWrapper}>{children}</View>
+        <Pressable style={styles.labelWrapper} onPress={handleToggle}>
+          {children}
+        </Pressable>
       </View>
       {showError ? (
         <Text style={styles.errorText}>{meta.error}</Text>
