@@ -4,12 +4,14 @@ import { FormInputField } from "@/components/forms";
 import { Text } from "@/components/Text";
 import Colors from "@/constants/Colors";
 import { ROUTES } from "@/constants/routes";
+import { useResetPassword } from "@/features/auth/hooks/useAuth";
 import {
   NewPasswordValues,
   newPasswordSchema,
 } from "@/features/auth/validationSchema";
+import { getApiErrorMessage } from "@/utils/apiError";
 import { toFormikValidate } from "@/utils/formikZod";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import {
@@ -24,8 +26,14 @@ const initialValues: NewPasswordValues = { password: "", confirmPassword: "" };
 
 export default function NewPasswordScreen() {
   const router = useRouter();
+  const { token, email: _email } = useLocalSearchParams<{
+    token: string;
+    email?: string;
+  }>();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const { mutateAsync: resetPassword } = useResetPassword();
 
   return (
     <KeyboardAvoidingView
@@ -50,9 +58,19 @@ export default function NewPasswordScreen() {
         <Formik
           initialValues={initialValues}
           validate={toFormikValidate(newPasswordSchema)}
-          onSubmit={() => {
-            // TODO: call API to reset password
-            router.push(ROUTES.PASSWORD_SUCCESS);
+          onSubmit={async (values, { setSubmitting }) => {
+            setServerError(null);
+            try {
+              await resetPassword({
+                token: token ?? "",
+                newPassword: values.password,
+              });
+              router.push(ROUTES.PASSWORD_SUCCESS);
+            } catch (err) {
+              setServerError(getApiErrorMessage(err));
+            } finally {
+              setSubmitting(false);
+            }
           }}
         >
           {({ handleSubmit, isSubmitting }) => (
@@ -77,8 +95,12 @@ export default function NewPasswordScreen() {
                 onRightIconPress={() => setShowConfirm((v) => !v)}
               />
 
+              {serverError ? (
+                <Text style={styles.errorText}>{serverError}</Text>
+              ) : null}
+
               <Button onPress={() => handleSubmit()} disabled={isSubmitting}>
-                Reset Password
+                {isSubmitting ? "Resetting…" : "Reset Password"}
               </Button>
             </View>
           )}
@@ -113,4 +135,5 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
   form: { gap: 12, marginTop: 11 },
+  errorText: { fontSize: 13, color: Colors.red500, marginTop: -4 },
 });
