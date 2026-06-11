@@ -56,7 +56,7 @@ class AuthService {
   };
 
   static resendVerification = async (data: { email: string }): Promise<void> => {
-    await axiosPublic.post("/auth/resend-verification", data);
+    await axiosPublic.post("/auth/verify/resend", data);
   };
 
   static activateAccount = async (userId: string): Promise<void> => {
