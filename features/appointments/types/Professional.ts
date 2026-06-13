@@ -1,12 +1,4 @@
-import { ImageSourcePropType } from "react-native";
-
-export interface Professional {
-    id: string,
-    image: ImageSourcePropType,
-    name: string,
-    role: string,
-    reviews: number;
-    consultationfee: number
-    rating: number
-
-}
+// Legacy type kept for backward compatibility.
+// New code should import ApiProfessional from
+// features/appointments/types/index.ts instead.
+export type { ApiProfessional as Professional } from "./index";

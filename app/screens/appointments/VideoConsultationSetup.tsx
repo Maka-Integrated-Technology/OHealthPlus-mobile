@@ -31,7 +31,10 @@ const CHECKS = [
 
 export default function VideoConsultationSetupScreen() {
   const router = useAppRouter();
-  const { doctorName } = useLocalSearchParams<{ doctorName?: string }>();
+  const { doctorName, appointmentId } = useLocalSearchParams<{
+    doctorName?: string;
+    appointmentId?: string;
+  }>();
 
   return (
     <Screen style={styles.screen}>
@@ -75,6 +78,7 @@ export default function VideoConsultationSetupScreen() {
             onPress={() =>
               router.toVideoCall({
                 doctorName: doctorName || "Dr. Tabitha Baker",
+                appointmentId,
               })
             }
             style={styles.joinButton}
