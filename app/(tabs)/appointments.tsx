@@ -2,9 +2,18 @@ import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
+import { useBookings } from "@/features/appointments/hooks/useAppointments";
+import type { AppointmentStatus } from "@/features/appointments/components/AppointmentListCard";
 import AppointmentListCard from "@/features/appointments/components/AppointmentListCard";
+import {
+  formatBookingDateTime,
+  getImageSource,
+  isUpcomingBooking,
+} from "@/features/appointments/utils/formatters";
+import type { ApiBooking, BookingConsultationType } from "@/features/appointments/types";
 import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   LayoutChangeEvent,
   Pressable,
@@ -19,76 +28,20 @@ import Animated, {
 
 type TabType = "upcoming" | "past";
 
-type AppointmentItem = {
-  id: string;
-  image: { uri: string };
-  doctorName: string;
-  specialization: string;
-  consultationType: "video";
-  dateTime: string;
-  status: "upcoming" | "completed";
-  canJoin?: boolean;
-};
-
-const UPCOMING_APPOINTMENTS: AppointmentItem[] = [
-  {
-    id: "1",
-    image: { uri: "https://randomuser.me/api/portraits/women/44.jpg" },
-    doctorName: "Dr. Aisha Bello",
-    specialization: "General Doctor",
-    consultationType: "video" as const,
-    dateTime: "Wed 14 • 10:30 AM",
-    status: "upcoming" as const,
-    canJoin: true,
-  },
-  {
-    id: "2",
-    image: { uri: "https://randomuser.me/api/portraits/men/32.jpg" },
-    doctorName: "Dr. Felix Adeyemi",
-    specialization: "General Doctor",
-    consultationType: "video" as const,
-    dateTime: "Thu 15 • 7:00 PM",
-    status: "upcoming" as const,
-    canJoin: false,
-  },
-];
-
-const PAST_APPOINTMENTS: AppointmentItem[] = [
-  {
-    id: "3",
-    image: { uri: "https://randomuser.me/api/portraits/women/68.jpg" },
-    doctorName: "Dr. Ngozi Adeyemi",
-    specialization: "General Doctor",
-    consultationType: "video" as const,
-    dateTime: "Mon 10 • 9:00 AM",
-    status: "completed" as const,
-  },
-  {
-    id: "4",
-    image: { uri: "https://randomuser.me/api/portraits/men/11.jpg" },
-    doctorName: "Dr. Chidi Okoro",
-    specialization: "General Doctor",
-    consultationType: "video" as const,
-    dateTime: "Fri 7 • 2:00 PM",
-    status: "completed" as const,
-  },
-  {
-    id: "5",
-    image: { uri: "https://randomuser.me/api/portraits/women/33.jpg" },
-    doctorName: "Dr. Tabitha Baker",
-    specialization: "General Doctor",
-    consultationType: "video" as const,
-    dateTime: "Wed 5 • 11:00 AM",
-    status: "completed" as const,
-  },
-];
-
 const SPRING_CONFIG = { damping: 28, stiffness: 300, overshootClamping: true };
+
+function bookingToListStatus(booking: ApiBooking): AppointmentStatus {
+  if (isUpcomingBooking(booking)) return "upcoming";
+  if (booking.status === "cancelled") return "cancelled";
+  return "completed";
+}
 
 export default function AppointmentsScreen() {
   const router = useAppRouter();
   const [activeTab, setActiveTab] = useState<TabType>("upcoming");
   const [expandedCardId, setExpandedCardId] = useState<string | undefined>();
+
+  const { data: bookings, isLoading, isError, refetch } = useBookings();
 
   useEffect(() => {
     setExpandedCardId(undefined);
@@ -97,13 +50,26 @@ export default function AppointmentsScreen() {
   const pillOffset = useSharedValue(0);
   const tabWidth = useSharedValue(0);
 
-  const data =
-    activeTab === "upcoming" ? UPCOMING_APPOINTMENTS : PAST_APPOINTMENTS;
+  const allBookings = bookings ?? [];
+  const upcomingBookings = allBookings
+    .filter(isUpcomingBooking)
+    .sort(
+      (a, b) =>
+        new Date(a.booking_date).getTime() - new Date(b.booking_date).getTime()
+    );
+  const pastBookings = allBookings
+    .filter((b) => !isUpcomingBooking(b))
+    .sort(
+      (a, b) =>
+        new Date(b.booking_date).getTime() - new Date(a.booking_date).getTime()
+    );
+
+  const data = activeTab === "upcoming" ? upcomingBookings : pastBookings;
 
   useEffect(() => {
     pillOffset.value = withSpring(
       activeTab === "upcoming" ? 0 : tabWidth.value + 4,
-      SPRING_CONFIG,
+      SPRING_CONFIG
     );
   }, [activeTab, tabWidth]);
 
@@ -118,10 +84,6 @@ export default function AppointmentsScreen() {
   }));
 
   const handleAppointmentPress = (id: string) => {
-    router.toAppointmentDetails({ id });
-  };
-
-  const handleJoinPress = (id: string) => {
     router.toAppointmentDetails({ id });
   };
 
@@ -162,33 +124,63 @@ export default function AppointmentsScreen() {
         </View>
       </View>
 
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
-        renderItem={({ item }) => (
-          <AppointmentListCard
-            image={item.image}
-            doctorName={item.doctorName}
-            specialization={item.specialization}
-            consultationType={item.consultationType}
-            dateTime={item.dateTime}
-            status={item.status}
-            canJoin={item.status === "upcoming"}
-            isExpanded={expandedCardId === item.id}
-            onPress={() =>
-              setExpandedCardId((prev) =>
-                prev === item.id ? undefined : item.id,
-              )
-            }
-            onJoinPress={
-              item.status === "upcoming"
-                ? () => handleJoinPress(item.id)
-                : undefined
-            }
-          />
-        )}
-      />
+      {isLoading ? (
+        <View style={styles.center}>
+          <ActivityIndicator color={Colors.primary} />
+        </View>
+      ) : isError ? (
+        <View style={styles.center}>
+          <Text weight="regular" style={styles.errorText}>
+            Failed to load appointments.
+          </Text>
+          <Text weight="medium" style={styles.retryText} onPress={() => refetch()}>
+            Tap to retry
+          </Text>
+        </View>
+      ) : data.length === 0 ? (
+        <View style={styles.center}>
+          <Text weight="regular" style={styles.errorText}>
+            {activeTab === "upcoming"
+              ? "No upcoming appointments."
+              : "No past appointments."}
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.list}
+          renderItem={({ item }) => {
+            const status = bookingToListStatus(item);
+            const canJoin = isUpcomingBooking(item);
+            return (
+              <AppointmentListCard
+                image={getImageSource(item.professional_image)}
+                doctorName={item.professional_name}
+                specialization={item.speciality_name}
+                consultationType={
+                  item.consultation_type as BookingConsultationType
+                }
+                dateTime={formatBookingDateTime(
+                  item.booking_date,
+                  item.booking_time
+                )}
+                status={status}
+                canJoin={canJoin}
+                isExpanded={expandedCardId === item.id}
+                onPress={() =>
+                  setExpandedCardId((prev) =>
+                    prev === item.id ? undefined : item.id
+                  )
+                }
+                onJoinPress={
+                  canJoin ? () => handleAppointmentPress(item.id) : undefined
+                }
+              />
+            );
+          }}
+        />
+      )}
     </Screen>
   );
 }
@@ -198,8 +190,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   header: {
-    // paddingTop: 16,
-    // paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: Colors.homeneutral,
   },
@@ -250,5 +240,20 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 120,
     gap: 12,
+  },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+  },
+  errorText: {
+    fontSize: 14,
+    color: Colors.neutral,
+    textAlign: "center",
+  },
+  retryText: {
+    fontSize: 14,
+    color: Colors.primary,
   },
 });
