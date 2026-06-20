@@ -9,7 +9,10 @@ import { StyleSheet, View } from "react-native";
 
 export default function ConsultationCompletedScreen() {
   const router = useAppRouter();
-  const { doctorName } = useLocalSearchParams<{ doctorName?: string }>();
+  const { doctorName, appointmentId } = useLocalSearchParams<{
+    doctorName?: string;
+    appointmentId?: string;
+  }>();
   const name = doctorName || "Dr. Tabitha Baker";
 
   return (
@@ -37,7 +40,7 @@ export default function ConsultationCompletedScreen() {
         <Button
           onPress={() =>
             router.toAppointmentSummary({
-              appointmentId: "1",
+              appointmentId: appointmentId ?? "1",
             })
           }
           style={styles.primaryButton}

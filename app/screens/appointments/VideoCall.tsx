@@ -17,7 +17,10 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 export default function VideoCallScreen() {
   const router = useAppRouter();
   const insets = useSafeAreaInsets();
-  const { doctorName } = useLocalSearchParams<{ doctorName?: string }>();
+  const { doctorName, appointmentId } = useLocalSearchParams<{
+    doctorName?: string;
+    appointmentId?: string;
+  }>();
   const name = doctorName || "Dr. Tabitha Baker";
   const initials = name
     .split(" ")
@@ -107,7 +110,7 @@ export default function VideoCallScreen() {
             <Button
               type="destructive"
               onPress={() =>
-                router.toConsultationCompleted({ doctorName: name })
+                router.toConsultationCompleted({ doctorName: name, appointmentId })
               }
               style={styles.modalEndButton}
             >

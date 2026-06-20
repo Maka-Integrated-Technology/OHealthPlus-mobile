@@ -7,30 +7,50 @@ import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
+import { useBookings } from "@/features/appointments/hooks/useAppointments";
 import { appointmentAssets } from "@/features/appointments/assets";
 import AppointmentCard from "@/features/appointments/components/AppointmentCard";
+import {
+  formatBookingDateTime,
+  getImageSource,
+  isUpcomingBooking,
+} from "@/features/appointments/utils/formatters";
 import PremiumUpgradeModal from "@/features/premium/components/PremiumUpgradeModal";
+import { useGetMe } from "@/features/auth/hooks/useAuth";
 import { useEffect, useState } from "react";
-import { FlatList, Image, ScrollView, StyleSheet, View } from 'react-native';
-
+import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, View } from "react-native";
 
 export default function TabOneScreen() {
   const router = useAppRouter();
   const [showPremiumModal, setShowPremiumModal] = useState(false);
-  
+
   // TODO: Replace with actual API call to check premium status
   const hasPremium = false;
 
   useEffect(() => {
-    // Show modal when user enters home page and doesn't have premium
     if (!hasPremium) {
       setShowPremiumModal(true);
     }
   }, [hasPremium]);
 
+  const { data: user } = useGetMe();
+  const { data: bookings, isLoading: bookingsLoading } = useBookings();
+
+  const displayName = user
+    ? `${user.first_name} ${user.last_name}`
+    : "there";
+
+  // Show only upcoming (pending/confirmed) bookings, newest first, max 3
+  const upcomingBookings = (bookings ?? [])
+    .filter(isUpcomingBooking)
+    .sort(
+      (a, b) =>
+        new Date(a.booking_date).getTime() - new Date(b.booking_date).getTime()
+    )
+    .slice(0, 3);
+
   const handleViewPlans = () => {
     // TODO: Navigate to plans page when implemented
-    console.log("Navigate to plans page");
     setShowPremiumModal(false);
   };
 
@@ -39,109 +59,143 @@ export default function TabOneScreen() {
   };
 
   const QuickAction = [
-    { icon: appointmentAssets.icons.bookconsultation, onPress: () => { router.toBookAppointments() }, description: `Book a\nconsultation` },
-    { icon: appointmentAssets.icons.bookappointment, onPress: () => { }, description: `Book a\nlab-test` },
-  ];
-
-  const appointments = [
     {
-      id: "1",
-      image: { uri: "https://randomuser.me/api/portraits/women/44.jpg" },
-      name: "Dr. Aisha Bello",
-      type: "video" as const,
-      time: "Wed, 14 • 10:30 AM",
+      icon: appointmentAssets.icons.bookconsultation,
+      onPress: () => router.toBookAppointments(),
+      description: `Book a\nconsultation`,
     },
     {
-      id: "2",
-      image: { uri: "https://randomuser.me/api/portraits/men/32.jpg" },
-      name: "Dr. Emeka Okafor",
-      type: "chat" as const,
-      time: "Thu, 15 • 2:00 PM",
-    },
-    {
-      id: "3",
-      image: { uri: "https://randomuser.me/api/portraits/women/68.jpg" },
-      name: "Dr. Ngozi Adeyemi",
-      type: "video" as const,
-      time: "Fri, 16 • 9:00 AM",
+      icon: appointmentAssets.icons.bookappointment,
+      onPress: () => {},
+      description: `Book a\nlab-test`,
     },
   ];
-
 
   return (
     <Screen>
       <View style={styles.homeHeader}>
-        <Pressable onPress={() => router.toProfile()} >
-          <Image source={avatar} style={{ height: 48, width: 48, resizeMode: 'contain' }} />
+        <Pressable onPress={() => router.toProfile()}>
+          <Image
+            source={avatar}
+            style={{ height: 48, width: 48, resizeMode: "contain" }}
+          />
         </Pressable>
         <View style={{ flex: 1 }}>
           <Text weight="semibold" style={styles.greetingText}>
-            Hello, Olivia Jane
+            Hello, {displayName}
           </Text>
-          <Text weight="regular" style={styles.welcomeText}>Welcome back</Text>
+          <Text weight="regular" style={styles.welcomeText}>
+            Welcome back
+          </Text>
         </View>
         <Pressable style={styles.notificationButton}>
-          <Image style={{ height: 24, resizeMode: 'contain' }} source={notificationIcon} />
+          <Image
+            style={{ height: 24, resizeMode: "contain" }}
+            source={notificationIcon}
+          />
         </Pressable>
       </View>
 
-      <ScrollView style={styles.mainContent} contentContainerStyle={styles.mainContentContainer}>
+      <ScrollView
+        style={styles.mainContent}
+        contentContainerStyle={styles.mainContentContainer}
+      >
+        {/* AI Health Assistant CTA — left as-is, not wired in this task */}
         <View style={styles.homeCTA}>
           <View style={styles.homeCTAContent}>
-            <Image style={{ height: 30, width: 30, resizeMode: 'contain' }} source={AIHealthAssistantIcon} />
-            <View style={{ justifyContent: 'flex-start' }}>
+            <Image
+              style={{ height: 30, width: 30, resizeMode: "contain" }}
+              source={AIHealthAssistantIcon}
+            />
+            <View style={{ justifyContent: "flex-start" }}>
               <Text weight="semibold" style={styles.healthAssistantTitle}>
                 Ask Health Assistant
               </Text>
-              <Text weight="regular" style={styles.healthAssistantDescription}>
+              <Text
+                weight="regular"
+                style={styles.healthAssistantDescription}
+              >
                 {`Get guidance, understand symptoms, and \nfind the right care.`}
               </Text>
             </View>
           </View>
-          <Button onPress={() => router.toAIHealthAssistant()} >Start Conversation →</Button>
+          <Button onPress={() => router.toAIHealthAssistant()}>
+            Start Conversation →
+          </Button>
         </View>
 
         <View style={styles.quickActions}>
-          <Text weight="regular" style={styles.quickActionHeader}>Quick Actions</Text>
+          <Text weight="regular" style={styles.quickActionHeader}>
+            Quick Actions
+          </Text>
           <View style={styles.quickActionButtons}>
-            {
-              QuickAction.map((action, idx) => (
-                <View key={idx} style={{ flex: 1 }}>
-                  <Pressable onPress={action.onPress} style={styles.quickActionButton}>
-                    <Image style={{ height: 40, width: 40, resizeMode: 'cover', }} source={action.icon} />
-                    <View style={styles.quickActionButtonDescription}>
-                      <Text weight="regular" style={styles.quickActionDescription}>{action.description}</Text>
-                    </View>
-                  </Pressable>
-                </View>
-              ))
-            }
+            {QuickAction.map((action, idx) => (
+              <View key={idx} style={{ flex: 1 }}>
+                <Pressable
+                  onPress={action.onPress}
+                  style={styles.quickActionButton}
+                >
+                  <Image
+                    style={{ height: 40, width: 40, resizeMode: "cover" }}
+                    source={action.icon}
+                  />
+                  <View style={styles.quickActionButtonDescription}>
+                    <Text
+                      weight="regular"
+                      style={styles.quickActionDescription}
+                    >
+                      {action.description}
+                    </Text>
+                  </View>
+                </Pressable>
+              </View>
+            ))}
           </View>
         </View>
 
         <View style={styles.upcomingAppointmnts}>
           <View style={styles.upcomingAppointmntsHeader}>
-            <Text weight="regular" style={styles.quickActionHeader}>Upcoming Appointments</Text>
-            <Pressable onPress={() => router.replace("/(tabs)/appointments" as any)}>
-              <Text weight="medium" style={styles.viewAllText}>View All</Text>
+            <Text weight="regular" style={styles.quickActionHeader}>
+              Upcoming Appointments
+            </Text>
+            <Pressable
+              onPress={() => router.replace("/(tabs)/appointments" as any)}
+            >
+              <Text weight="medium" style={styles.viewAllText}>
+                View All
+              </Text>
             </Pressable>
           </View>
-          <FlatList
-            data={appointments}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.list}
-            scrollEnabled={false}
-            renderItem={({ item }) => (
-              <AppointmentCard
-                image={item.image}
-                name={item.name}
-                type={item.type}
-                time={item.time}
-                onPress={() => router.toAppointmentDetails({ id: item.id })}
-              />
-            )}
-          />
+
+          {bookingsLoading ? (
+            <ActivityIndicator color={Colors.primary} style={{ marginTop: 8 }} />
+          ) : upcomingBookings.length === 0 ? (
+            <Text weight="regular" style={styles.emptyText}>
+              No upcoming appointments.
+            </Text>
+          ) : (
+            <FlatList
+              data={upcomingBookings}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.list}
+              scrollEnabled={false}
+              renderItem={({ item }) => (
+                <AppointmentCard
+                  image={getImageSource(item.professional_image)}
+                  name={item.professional_name}
+                  type={item.consultation_type}
+                  time={formatBookingDateTime(
+                    item.booking_date,
+                    item.booking_time
+                  )}
+                  onPress={() =>
+                    router.toAppointmentDetails({ id: item.id })
+                  }
+                />
+              )}
+            />
+          )}
         </View>
       </ScrollView>
 
@@ -150,29 +204,15 @@ export default function TabOneScreen() {
         onClose={handleCloseModal}
         onViewPlans={handleViewPlans}
       />
-    </Screen >
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    padding: 12,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
   homeHeader: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
     paddingTop: 8,
     paddingBottom: 12,
     borderColor: Colors.homeneutral,
@@ -188,20 +228,20 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   homeCTAContent: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     gap: 6,
   },
   homeCTA: {
     backgroundColor: Colors.transparentPrimary,
     padding: 14,
     borderRadius: 16,
-    flexDirection: 'column',
+    flexDirection: "column",
     gap: 24,
   },
   quickActions: {
-    flexDirection: 'column',
+    flexDirection: "column",
     gap: 14,
   },
   quickActionHeader: {
@@ -211,33 +251,33 @@ const styles = StyleSheet.create({
     color: Colors.black100,
   },
   quickActionButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     gap: 13,
   },
   quickActionButton: {
-    width: '100%',
+    width: "100%",
     backgroundColor: Colors.lightBeige,
     borderColor: Colors.homeneutral,
     borderWidth: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     padding: 12,
     borderRadius: 12,
     gap: 12,
   },
   quickActionButtonDescription: {
-    alignItems: 'center',
-    width: '100%',
+    alignItems: "center",
+    width: "100%",
   },
   quickActionDescription: {
     fontSize: 14,
     lineHeight: 16.8,
     letterSpacing: -0.5,
-    textAlign: 'center',
-    color: '#161A1D',
+    textAlign: "center",
+    color: "#161A1D",
   },
   greetingText: {
     fontSize: 16,
@@ -263,7 +303,7 @@ const styles = StyleSheet.create({
     lineHeight: 16.8,
     letterSpacing: -0.5,
     color: Colors.lightGray2,
-    width: '100%',
+    width: "100%",
     marginTop: 4,
   },
   notificationButton: {
@@ -271,18 +311,17 @@ const styles = StyleSheet.create({
     height: 38,
     borderRadius: 80,
     backgroundColor: Colors.lightBlue2,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   upcomingAppointmnts: {
     gap: 14,
   },
   upcomingAppointmntsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
-
   list: {
     gap: 8,
   },
@@ -291,5 +330,11 @@ const styles = StyleSheet.create({
     lineHeight: 16.8,
     letterSpacing: -0.5,
     color: Colors.primary,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: Colors.neutral,
+    textAlign: "center",
+    paddingVertical: 16,
   },
 });

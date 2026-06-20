@@ -83,14 +83,21 @@ export const useAppRouter = () => {
         // ============================================
         toHome: () => navigateReplace(ROUTES.HOME),
         toBookAppointments: () => navigate(ROUTES.BOOK_APPOINTMENT),
-        toAvailabeleProfessionals: () => navigate(ROUTES.AVAILABLE_PROFESSIONALS),
-        toProfessionalProfile: (params?: { professionalId?: string }) => 
+        /** Kept original (misspelled) name for call-site compatibility. */
+        toAvailabeleProfessionals: (params?: { specialityId?: string; specialityName?: string }) =>
+            navigate(ROUTES.AVAILABLE_PROFESSIONALS, params),
+        toProfessionalProfile: (params?: { professionalId?: string }) =>
             navigate(ROUTES.PROFESSIONAL_PROFILE, params),
-        toSelectDateTime: (params?: { professionalId?: string; consultationType?: string }) => 
+        toSelectDateTime: (params?: { professionalId?: string; consultationType?: string }) =>
             navigate(ROUTES.SELECT_DATE_TIME, params),
-        toConfirmAppointment: (params?: { professionalId?: string; consultationType?: string; date?: string; time?: string }) => 
-            navigate(ROUTES.CONFIRM_APPOINTMENT, params),
-        toAppointmentConfirmed: (params?: { professionalId?: string; consultationType?: string; date?: string; time?: string }) => 
+        toConfirmAppointment: (params?: {
+            professionalId?: string;
+            consultationType?: string;
+            bookingDate?: string;
+            bookingTime?: string;
+            slotId?: string;
+        }) => navigate(ROUTES.CONFIRM_APPOINTMENT, params),
+        toAppointmentConfirmed: (params?: { bookingId?: string }) =>
             navigate(ROUTES.APPOINTMENT_CONFIRMED, params),
         toAppointmentDetails: (params?: { id?: string }) =>
             navigate(ROUTES.APPOINTMENT_DETAILS, params),
@@ -98,7 +105,7 @@ export const useAppRouter = () => {
             navigate(ROUTES.VIDEO_CONSULTATION_SETUP, params),
         toVideoCall: (params?: { appointmentId?: string; doctorName?: string }) =>
             navigate(ROUTES.VIDEO_CALL, params),
-        toConsultationCompleted: (params?: { doctorName?: string }) =>
+        toConsultationCompleted: (params?: { doctorName?: string; appointmentId?: string }) =>
             navigate(ROUTES.CONSULTATION_COMPLETED, params),
         toAppointmentSummary: (params?: { appointmentId?: string }) =>
             navigate(ROUTES.APPOINTMENT_SUMMARY, params),
