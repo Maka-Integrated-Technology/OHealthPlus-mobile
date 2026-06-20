@@ -1,5 +1,6 @@
 import { axiosPublic, axiosPrivate } from "@/config/axios";
 import type {
+  ApiResponse,
   AuthSession,
   AuthUser,
   Enable2faResponse,
@@ -13,34 +14,41 @@ import type {
   SignupRequest,
   VerifySignupRequest,
 } from "@/features/auth/types/auth";
+import { unwrapApiData } from "@/utils/apiResponse";
 
 class AuthService {
   static signup = async (data: SignupRequest): Promise<AuthSession> => {
-    const response = await axiosPublic.post<AuthSession>("/auth/signup", data);
-    return response.data;
+    const response = await axiosPublic.post<ApiResponse<AuthSession>>(
+      "/auth/signup",
+      data
+    );
+    return unwrapApiData(response.data);
   };
 
   static login = async (data: LoginRequest): Promise<AuthSession> => {
-    const response = await axiosPublic.post<AuthSession>("/auth/login", data);
-    return response.data;
+    const response = await axiosPublic.post<ApiResponse<AuthSession>>(
+      "/auth/login",
+      data
+    );
+    return unwrapApiData(response.data);
   };
 
   static googleLogin = async (data: GoogleLoginRequest): Promise<AuthSession> => {
-    const response = await axiosPublic.post<AuthSession>(
+    const response = await axiosPublic.post<ApiResponse<AuthSession>>(
       "/auth/google-login",
       data
     );
-    return response.data;
+    return unwrapApiData(response.data);
   };
 
   static refreshToken = async (
     data: RefreshTokenRequest
   ): Promise<RefreshTokenResponse> => {
-    const response = await axiosPublic.post<RefreshTokenResponse>(
+    const response = await axiosPublic.post<ApiResponse<RefreshTokenResponse>>(
       "/auth/refresh",
       data
     );
-    return response.data;
+    return unwrapApiData(response.data);
   };
 
   static forgotPassword = async (data: ForgotPasswordRequest): Promise<void> => {
@@ -56,7 +64,7 @@ class AuthService {
   };
 
   static resendVerification = async (data: { email: string }): Promise<void> => {
-    await axiosPublic.post("/auth/resend-verification", data);
+    await axiosPublic.post("/auth/verify/resend", data);
   };
 
   static activateAccount = async (userId: string): Promise<void> => {
@@ -66,10 +74,10 @@ class AuthService {
   static getMe = async (options?: {
     signal?: AbortSignal;
   }): Promise<AuthUser> => {
-    const response = await axiosPrivate.get<AuthUser>("/auth/me", {
+    const response = await axiosPrivate.get<ApiResponse<AuthUser>>("/auth/me", {
       signal: options?.signal,
     });
-    return response.data;
+    return unwrapApiData(response.data);
   };
 
   static logout = async (data: LogoutRequest): Promise<void> => {

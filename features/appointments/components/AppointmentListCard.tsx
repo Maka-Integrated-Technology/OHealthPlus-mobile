@@ -5,7 +5,7 @@ import Colors from "@/constants/Colors";
 import { Image, ImageSourcePropType, StyleSheet, View } from "react-native";
 import { appointmentAssets } from "../assets";
 
-export type AppointmentStatus = "upcoming" | "completed";
+export type AppointmentStatus = "upcoming" | "completed" | "cancelled";
 
 interface AppointmentListCardProps {
   image: ImageSourcePropType | { uri: string };
@@ -48,12 +48,26 @@ export default function AppointmentListCard({
                 {specialization}
               </Text>
             </View>
-            <View style={[styles.tag, status === "completed" && styles.tagCompleted]}>
+            <View
+              style={[
+                styles.tag,
+                status === "completed" && styles.tagCompleted,
+                status === "cancelled" && styles.tagCancelled,
+              ]}
+            >
               <Text
                 weight="regular"
-                style={[styles.tagText, status === "completed" && styles.tagTextCompleted]}
+                style={[
+                  styles.tagText,
+                  status === "completed" && styles.tagTextCompleted,
+                  status === "cancelled" && styles.tagTextCancelled,
+                ]}
               >
-                {status === "upcoming" ? "Upcoming" : "Completed"}
+                {status === "upcoming"
+                  ? "Upcoming"
+                  : status === "cancelled"
+                  ? "Cancelled"
+                  : "Completed"}
               </Text>
             </View>
           </View>
@@ -137,6 +151,9 @@ const styles = StyleSheet.create({
   tagCompleted: {
     backgroundColor: Colors.homeneutral,
   },
+  tagCancelled: {
+    backgroundColor: "#FEF2F2",
+  },
   tagText: {
     fontSize: 14,
     lineHeight: 16.8,
@@ -145,6 +162,9 @@ const styles = StyleSheet.create({
   },
   tagTextCompleted: {
     color: Colors.black200,
+  },
+  tagTextCancelled: {
+    color: "#DC2626",
   },
   row: {
     flexDirection: "row",
