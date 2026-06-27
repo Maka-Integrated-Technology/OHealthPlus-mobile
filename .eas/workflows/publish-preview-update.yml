@@ -1,7 +1,7 @@
 name: Deploy to preview
 on:
   push:
-    branches: ["preview"]
+    branches: ["dev"]
 jobs:
   # Fingerprint runs for both platforms. Kept active because Android jobs consume
   # its android_fingerprint_hash output. The ios_fingerprint_hash output is
