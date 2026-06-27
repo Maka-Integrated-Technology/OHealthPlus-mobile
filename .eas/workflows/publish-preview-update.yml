@@ -20,7 +20,7 @@ jobs:
       profile: preview
 
   # iOS: get_ios_build — disabled until iOS signing credentials are configured
-  # for com.ohealth.healthbridge.preview under the ohealth Apple Developer account.
+  # for com.ohealth.patientapp.preview under the ohealth Apple Developer account.
   # Restore by uncommenting this block and the two iOS jobs below.
   # get_ios_build:
   #   name: Check for existing ios build
