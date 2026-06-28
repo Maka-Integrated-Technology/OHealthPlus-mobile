@@ -14,7 +14,7 @@ export default function ForgetPasswordScreen() {
             <BackButton />
             <Text weight="bold" style={styles.title}>Forgot Password?</Text>
 
-            <Text style={styles.description}>Enter the email address linked to your HealthBridge account. </Text>
+            <Text style={styles.description}>Enter the email address linked to your OHealth account. </Text>
 
             <InputField
                 icon="email"
