@@ -63,10 +63,9 @@ export default function ProfileScreen() {
     },
     {
       id: "medical",
-      label: "Medical Information",
+      label: "Medical Records",
       icon: "fitness-outline",
-      disabled: true,
-      badge: "Coming soon",
+      onPress: () => router.toMedicalRecords(),
     },
     {
       id: "notifications",
