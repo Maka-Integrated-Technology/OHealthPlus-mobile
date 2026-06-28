@@ -22,7 +22,7 @@ export default function PasswordResetSuccessScreen() {
         <View style={styles.textWrapper}>
           <Text weight="bold" style={styles.title}>Password Reset</Text>
           <Text style={styles.subtitle}>
-            You can now go ahead and sign in to your HealthBridge account.
+            You can now go ahead and sign in to your OHealth account.
           </Text>
         </View>
       </View>

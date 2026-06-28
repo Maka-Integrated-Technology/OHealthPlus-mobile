@@ -121,6 +121,22 @@ export const useAppRouter = () => {
         toTermsAndConditions: () => navigate(ROUTES.TERMS_AND_CONDITIONS),
         toPrivacyPolicy: () => navigate(ROUTES.PRIVACY_POLICY),
 
+        // ============================================
+        // Medical Records Navigation
+        // ============================================
+        toMedicalRecords: () => navigate(ROUTES.MEDICAL_RECORDS),
+        toGeneralInformation: () => navigate(ROUTES.GENERAL_INFORMATION),
+        toUpdateGeneralInformation: () =>
+            navigate(ROUTES.UPDATE_GENERAL_INFORMATION),
+        toAllergies: () => navigate(ROUTES.ALLERGIES),
+        toAddAllergy: () => navigate(ROUTES.ADD_ALLERGY),
+        toLabResults: () => navigate(ROUTES.LAB_RESULTS),
+        toLabResultDetail: (params: { id: string }) =>
+            navigate(ROUTES.LAB_RESULT_DETAIL, params),
+        toHealthConditions: () => navigate(ROUTES.HEALTH_CONDITIONS),
+        toAddHealthCondition: () => navigate(ROUTES.ADD_HEALTH_CONDITION),
+        toAddOtherCondition: () => navigate(ROUTES.ADD_OTHER_CONDITION),
+
         toFavourites: () => navigate(ROUTES.FAVOURITES),
 
         toProfile: () => navigate(ROUTES.PROFILE),

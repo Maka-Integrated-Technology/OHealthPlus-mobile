@@ -56,7 +56,7 @@ export default function SignUpScreen() {
               Create Your Account
             </Text>
             <Text style={styles.subtitle}>
-              Enter your info to create your HealthBridge account today.
+              Enter your info to create your OHealth account today.
             </Text>
           </View>
 
