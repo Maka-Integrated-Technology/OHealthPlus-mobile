@@ -19,4 +19,12 @@ export const QUERY_KEYS = {
     bookings: ["appointments", "bookings"] as const,
     booking: (id: string) => ["appointments", "bookings", id] as const,
   },
+
+  medical: {
+    generalInfo: ["medical", "general-info"] as const,
+    allergies: ["medical", "allergies"] as const,
+    labResults: ["medical", "lab-results"] as const,
+    labResult: (id: string) => ["medical", "lab-results", id] as const,
+    healthConditions: ["medical", "health-conditions"] as const,
+  },
 } as const;

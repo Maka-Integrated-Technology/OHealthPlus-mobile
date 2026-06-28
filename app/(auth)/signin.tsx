@@ -43,7 +43,7 @@ export default function SignInScreen() {
               Welcome Back!
             </Text>
             <Text style={styles.subtitle}>
-              Great to see you again, sign in to your HealthBridge account.
+              Great to see you again, sign in to your OHealth account.
             </Text>
           </View>
 

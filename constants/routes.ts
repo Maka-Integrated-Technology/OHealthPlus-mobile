@@ -61,6 +61,20 @@ export const ROUTES = {
     PRIVACY_POLICY: "/screens/profile/PrivacyPolicy",
 
     // ============================================
+    // Medical Records Routes
+    // ============================================
+    MEDICAL_RECORDS: "/screens/medical/MedicalRecords",
+    GENERAL_INFORMATION: "/screens/medical/GeneralInformation",
+    UPDATE_GENERAL_INFORMATION: "/screens/medical/UpdateGeneralInformation",
+    ALLERGIES: "/screens/medical/Allergies",
+    ADD_ALLERGY: "/screens/medical/AddAllergy",
+    LAB_RESULTS: "/screens/medical/LabResults",
+    LAB_RESULT_DETAIL: "/screens/medical/LabResultDetail",
+    HEALTH_CONDITIONS: "/screens/medical/HealthConditions",
+    ADD_HEALTH_CONDITION: "/screens/medical/AddHealthCondition",
+    ADD_OTHER_CONDITION: "/screens/medical/AddOtherCondition",
+
+    // ============================================
     // Paywall Routes
     // ============================================
     PAYWALL: "/(paywall)",
