@@ -10,13 +10,17 @@ import message_icon from "@/features/appointments/assets/icons/message_icon.png"
 import rating_icon from "@/features/appointments/assets/icons/rating_icon.png";
 import verification_icon from "@/features/appointments/assets/icons/verification_icon.png";
 import video_icon from "@/features/appointments/assets/icons/video_icon.png";
-import { useProfessional } from "@/features/appointments/hooks/useAppointments";
+import {
+  useProfessional,
+  useProfessionalReviews,
+} from "@/features/appointments/hooks/useAppointments";
 import {
   formatNaira,
   getImageSource,
   getSupportedConsultationTypes,
 } from "@/features/appointments/utils/formatters";
 import { useLocalSearchParams } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from "react-native";
 
@@ -34,6 +38,10 @@ export default function ProfessionalProfile() {
     isError,
     refetch,
   } = useProfessional(professionalId ?? "");
+
+  const { data: reviews, isLoading: reviewsLoading } = useProfessionalReviews(
+    professionalId ?? "",
+  );
 
   const supportedTypes = professional
     ? getSupportedConsultationTypes(professional.consultation_type)
@@ -170,6 +178,47 @@ export default function ProfessionalProfile() {
             </Text>
           </View>
         ) : null}
+
+        {/* Reviews */}
+        <View style={styles.reviewsSection}>
+          <Text weight="semibold" style={styles.name}>
+            Reviews
+          </Text>
+          {reviewsLoading ? (
+            <ActivityIndicator
+              color={Colors.primary}
+              style={styles.reviewsLoader}
+            />
+          ) : reviews && reviews.length > 0 ? (
+            <View style={styles.reviewsList}>
+              {reviews.slice(0, 5).map((review) => (
+                <View key={review.id} style={styles.reviewItem}>
+                  <View style={styles.reviewHeader}>
+                    <View style={styles.reviewStarsRow}>
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Ionicons
+                          key={i}
+                          name={i < review.rating ? "star" : "star-outline"}
+                          size={14}
+                          color={i < review.rating ? "#FACC15" : Colors.neutral300}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                  {review.comment ? (
+                    <Text weight="regular" style={styles.reviewComment}>
+                      {review.comment}
+                    </Text>
+                  ) : null}
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Text weight="regular" style={styles.noReviewsText}>
+              No reviews yet.
+            </Text>
+          )}
+        </View>
 
         {/* Consultation type selection */}
         <View style={styles.consultationTypeSection}>
@@ -368,6 +417,44 @@ const styles = StyleSheet.create({
     lineHeight: 16.8,
     letterSpacing: -0.5,
     color: Colors.neutral,
+  },
+  reviewsSection: {
+    flexDirection: "column",
+    gap: 12,
+    backgroundColor: Colors.lightBeige,
+    padding: 14,
+    borderRadius: 16,
+  },
+  reviewsLoader: {
+    marginTop: 8,
+  },
+  reviewsList: {
+    gap: 12,
+  },
+  reviewItem: {
+    gap: 6,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.homeneutral,
+  },
+  reviewHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  reviewStarsRow: {
+    flexDirection: "row",
+    gap: 2,
+  },
+  reviewComment: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: Colors.neutral,
+  },
+  noReviewsText: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: Colors.neutral400,
   },
   consultationOptions: {
     gap: 12,
