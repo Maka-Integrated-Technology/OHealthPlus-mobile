@@ -8,47 +8,38 @@ import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
 import { appointmentAssets } from "@/features/appointments/assets";
 import AppointmentCard from "@/features/appointments/components/AppointmentCard";
+import { useBookings } from "@/features/appointments/hooks/useAppointments";
+import {
+  formatBookingDateTime,
+  getImageSource,
+  isUpcomingBooking,
+} from "@/features/appointments/utils/formatters";
+import { useGetMe } from "@/features/auth/hooks/useAuth";
 import { messagesAssets } from "@/features/messages/assets";
-import { FlatList, Image, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, StyleSheet, View } from 'react-native';
 
 
 export default function Tests() {
     const router = useAppRouter();
+    const { data: user } = useGetMe();
+    const { data: bookings, isLoading: bookingsLoading } = useBookings();
+
+    const displayName = user
+      ? `${user.first_name} ${user.last_name}`
+      : "there";
+
+    const upcomingBookings = (bookings ?? [])
+      .filter(isUpcomingBooking)
+      .sort(
+        (a, b) =>
+          new Date(a.booking_date).getTime() -
+          new Date(b.booking_date).getTime()
+      )
+      .slice(0, 4);
 
     const QuickAction = [
         { icon: appointmentAssets.icons.bookappointment, onPress: () => { router.toBookAppointments() }, description: `Book a \n consultation` },
         { icon: appointmentAssets.icons.bookconsultation, onPress: () => { }, description: `View your \n appointments` },
-    ];
-
-    const appointments = [
-        {
-            id: "1",
-            image: { uri: "https://randomuser.me/api/portraits/women/44.jpg" },
-            name: "Dr. Aisha Bello",
-            type: "video" as const,
-            time: "Wed, 14 • 10:30 AM",
-        },
-        {
-            id: "2",
-            image: { uri: "https://randomuser.me/api/portraits/men/32.jpg" },
-            name: "Dr. Emeka Okafor",
-            type: "chat" as const,
-            time: "Thu, 15 • 2:00 PM",
-        },
-        {
-            id: "3",
-            image: { uri: "https://randomuser.me/api/portraits/women/68.jpg" },
-            name: "Dr. Ngozi Adeyemi",
-            type: "video" as const,
-            time: "Fri, 16 • 9:00 AM",
-        },
-        {
-            id: "4",
-            image: { uri: "https://randomuser.me/api/portraits/men/76.jpg" },
-            name: "Dr. Chidi Nwosu",
-            type: "chat" as const,
-            time: "Mon, 19 • 11:15 AM",
-        },
     ];
 
 
@@ -56,11 +47,12 @@ export default function Tests() {
         <Screen>
             <View style={styles.homeHeader}>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', gap: 6 }}>
+                    {/* TODO: backend does not currently return a user avatar/profile image. */}
                     <Pressable onPress={() => router.toProfile()} >
                         <Image source={avatar} style={{ height: 48, width: 48, resizeMode: 'contain' }} />
                     </Pressable>
                     <View>
-                        <Text weight="bold">Hello, Olivia Jane</Text>
+                        <Text weight="bold">Hello, {displayName}</Text>
                         <Text style={{ color: Colors.neutral }}>Welcome back</Text>
                     </View>
                 </View>
@@ -86,7 +78,7 @@ export default function Tests() {
                     </View>
                 </View>
 
-                <Button onPress={() => router.toHome()} >Start Conversation →</Button>
+                <Button onPress={() => router.toAIHealthAssistant()} >Start Conversation →</Button>
             </View>
 
             <View style={styles.quickActions}>
@@ -114,26 +106,34 @@ export default function Tests() {
             <View style={styles.upcomingAppointmnts}>
                 <View style={styles.upcomingAppointmntsHeader}>
                     <Text style={styles.quickActionHeader}>Upcoming Appointments</Text>
-                    <Pressable>
+                    <Pressable onPress={() => router.replace("/(tabs)/appointments" as any)}>
                         <Text weight="semibold" style={{ color: Colors.primary, fontSize: 18 }}>View All</Text>
                     </Pressable>
                 </View>
 
-
-                <FlatList
-                    data={appointments}
-                    showsVerticalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    contentContainerStyle={styles.list}
-                    renderItem={({ item }) => (
-                        <AppointmentCard
-                            image={item.image}
-                            name={item.name}
-                            type={item.type}
-                            time={item.time}
-                        />
-                    )}
-                />
+                {bookingsLoading ? (
+                  <ActivityIndicator color={Colors.primary} style={{ marginTop: 8 }} />
+                ) : upcomingBookings.length === 0 ? (
+                  <Text style={{ color: Colors.neutral, textAlign: "center", paddingVertical: 16 }}>
+                    No upcoming appointments.
+                  </Text>
+                ) : (
+                  <FlatList
+                      data={upcomingBookings}
+                      showsVerticalScrollIndicator={false}
+                      keyExtractor={(item) => item.id}
+                      contentContainerStyle={styles.list}
+                      renderItem={({ item }) => (
+                          <AppointmentCard
+                              image={getImageSource(item.professional_image)}
+                              name={item.professional_name}
+                              type={item.consultation_type}
+                              time={formatBookingDateTime(item.booking_date, item.booking_time)}
+                              onPress={() => router.toAppointmentDetails({ id: item.id })}
+                          />
+                      )}
+                  />
+                )}
 
 
             </View>

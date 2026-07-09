@@ -4,9 +4,10 @@ import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
+import { useBooking } from "@/features/appointments/hooks/useAppointments";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 const CHECKS = [
   {
@@ -31,10 +32,56 @@ const CHECKS = [
 
 export default function VideoConsultationSetupScreen() {
   const router = useAppRouter();
-  const { doctorName, appointmentId } = useLocalSearchParams<{
-    doctorName?: string;
+  const { appointmentId } = useLocalSearchParams<{
     appointmentId?: string;
   }>();
+
+  const { data: booking, isLoading, isError, refetch } = useBooking(
+    appointmentId ?? "",
+  );
+
+  const doctorName = booking?.professional_name ?? "Doctor";
+
+  if (isLoading) {
+    return (
+      <Screen style={styles.screen}>
+        <View style={styles.header}>
+          <BackButton />
+          <Text weight="semibold" style={styles.headerTitle}>
+            Video consultation
+          </Text>
+        </View>
+        <View style={styles.center}>
+          <ActivityIndicator color={Colors.primary} />
+        </View>
+      </Screen>
+    );
+  }
+
+  if (isError || !booking) {
+    return (
+      <Screen style={styles.screen}>
+        <View style={styles.header}>
+          <BackButton />
+          <Text weight="semibold" style={styles.headerTitle}>
+            Video consultation
+          </Text>
+        </View>
+        <View style={styles.center}>
+          <Text weight="regular" style={styles.errorText}>
+            Failed to load appointment.
+          </Text>
+          <Text
+            weight="medium"
+            style={styles.retryText}
+            onPress={() => refetch()}
+          >
+            Tap to retry
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
 
   return (
     <Screen style={styles.screen}>
@@ -77,8 +124,8 @@ export default function VideoConsultationSetupScreen() {
           <Button
             onPress={() =>
               router.toVideoCall({
-                doctorName: doctorName || "Dr. Tabitha Baker",
-                appointmentId,
+                doctorName,
+                appointmentId: booking.id,
               })
             }
             style={styles.joinButton}
@@ -111,10 +158,24 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
     color: Colors.black100,
   },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+  },
+  errorText: {
+    fontSize: 14,
+    color: Colors.neutral,
+    textAlign: "center",
+  },
+  retryText: {
+    fontSize: 14,
+    color: Colors.primary,
+  },
   content: {
     flex: 1,
     gap: 16,
-    // justifyContent: "space-between",
   },
   sectionTitle: {
     fontSize: 16,
