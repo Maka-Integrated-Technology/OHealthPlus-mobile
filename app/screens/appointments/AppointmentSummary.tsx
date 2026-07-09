@@ -5,19 +5,88 @@ import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
 import { appointmentAssets } from "@/features/appointments/assets";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
-
-const MOCK_SUMMARY = {
-  doctorName: "Dr. Chidi Okoro",
-  specialization: "General Doctor",
-  image: { uri: "https://randomuser.me/api/portraits/men/11.jpg" },
-  dateTime: "Mon 10 • 9:00 AM",
-  notes: "Follow up in 2 weeks. Ordinary procedure medication.",
-};
+import ReviewModal from "@/features/appointments/components/ReviewModal";
+import {
+  useBooking,
+  useCreateProfessionalReview,
+} from "@/features/appointments/hooks/useAppointments";
+import {
+  formatBookingDateTime,
+  getImageSource,
+} from "@/features/appointments/utils/formatters";
+import { useLocalSearchParams } from "expo-router";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
+import { useState } from "react";
 
 export default function AppointmentSummaryScreen() {
   const router = useAppRouter();
-  const summary = MOCK_SUMMARY;
+  const { appointmentId } = useLocalSearchParams<{ appointmentId?: string }>();
+
+  const {
+    data: booking,
+    isLoading,
+    isError,
+    refetch,
+  } = useBooking(appointmentId ?? "");
+
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const { mutateAsync: createReview, isPending: isReviewing } =
+    useCreateProfessionalReview(booking?.professional_id ?? "");
+
+  const handleReview = async (data: { rating: number; comment?: string }) => {
+    await createReview({
+      rating: data.rating,
+      comment: data.comment,
+      booking_id: appointmentId,
+    });
+    Alert.alert("Thank you!", "Your review has been submitted.");
+  };
+
+  if (isLoading) {
+    return (
+      <Screen>
+        <DetailHeader title="Appointment Summary" />
+        <View style={styles.center}>
+          <ActivityIndicator color={Colors.primary} />
+        </View>
+      </Screen>
+    );
+  }
+
+  if (isError || !booking) {
+    return (
+      <Screen>
+        <DetailHeader title="Appointment Summary" />
+        <View style={styles.center}>
+          <Text weight="regular" style={styles.errorText}>
+            Failed to load appointment summary.
+          </Text>
+          <Text
+            weight="medium"
+            style={styles.retryText}
+            onPress={() => refetch()}
+          >
+            Tap to retry
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
+
+  const displayDateTime = formatBookingDateTime(
+    booking.booking_date,
+    booking.booking_time,
+  );
+  const notes = booking.notes?.trim()
+    ? booking.notes
+    : "No notes available.";
 
   return (
     <Screen>
@@ -29,20 +98,25 @@ export default function AppointmentSummaryScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.doctorCard}>
-          <Image source={summary.image} style={styles.avatar} />
+          <Image
+            source={getImageSource(booking.professional_image)}
+            style={styles.avatar}
+          />
           <View style={styles.doctorInfo}>
             <Text weight="semibold" style={styles.doctorName}>
-              {summary.doctorName}
+              {booking.professional_name}
             </Text>
             <Text weight="regular" style={styles.specialization}>
-              {summary.specialization}
+              {booking.speciality_name}
             </Text>
           </View>
         </View>
 
         <View style={styles.section}>
           <Text weight="medium" style={styles.sectionLabel}>
-            Video Consultation
+            {booking.consultation_type === "video"
+              ? "Video Consultation"
+              : "Chat Consultation"}
           </Text>
           <View style={styles.detailRow}>
             <Image
@@ -50,7 +124,7 @@ export default function AppointmentSummaryScreen() {
               style={styles.detailIcon}
             />
             <Text weight="regular" style={styles.detailValue}>
-              {summary.dateTime}
+              {displayDateTime}
             </Text>
           </View>
         </View>
@@ -60,12 +134,15 @@ export default function AppointmentSummaryScreen() {
             Notes
           </Text>
           <Text weight="regular" style={styles.notesText}>
-            {summary.notes}
+            {notes}
           </Text>
         </View>
 
         <View style={styles.actions}>
-          <Button onPress={() => {}} style={styles.primaryButton}>
+          <Button
+            onPress={() => setShowReviewModal(true)}
+            style={styles.primaryButton}
+          >
             Leave a review
           </Button>
           <Button
@@ -77,39 +154,45 @@ export default function AppointmentSummaryScreen() {
           </Button>
           <Button
             type="secondary"
-            onPress={() => {}}
+            onPress={() => router.toAIHealthAssistant()}
             style={styles.secondaryButton}
           >
-            Message provider
+            Message assistant
           </Button>
         </View>
       </ScrollView>
+
+      <ReviewModal
+        visible={showReviewModal}
+        onClose={() => setShowReviewModal(false)}
+        onSubmit={handleReview}
+      />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    paddingHorizontal: 20,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    paddingTop: 8,
-    paddingBottom: 12,
-  },
-  headerTitle: {
-    fontSize: 18,
-    lineHeight: 22,
-    letterSpacing: -0.5,
-    color: Colors.black100,
-  },
   scroll: {
     flex: 1,
   },
   scrollContent: {
+    paddingHorizontal: 20,
     paddingBottom: 40,
+  },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+  },
+  errorText: {
+    fontSize: 14,
+    color: Colors.neutral,
+    textAlign: "center",
+  },
+  retryText: {
+    fontSize: 14,
+    color: Colors.primary,
   },
   doctorCard: {
     flexDirection: "row",

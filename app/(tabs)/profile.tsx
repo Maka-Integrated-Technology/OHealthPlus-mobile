@@ -3,9 +3,10 @@ import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
-import { useLogout } from "@/features/auth/hooks/useAuth";
+import { useGetMe, useLogout } from "@/features/auth/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import {
+  ActivityIndicator,
   Alert,
   Image,
   ScrollView,
@@ -27,6 +28,7 @@ type MenuItem = {
 export default function ProfileScreen() {
   const router = useAppRouter();
   const { mutateAsync: logout, isPending: isLoggingOut } = useLogout();
+  const { data: user, isLoading, isError, refetch } = useGetMe();
 
   const handleLogout = () => {
     Alert.alert("Log out", "Are you sure you want to log out?", [
@@ -179,7 +181,9 @@ export default function ProfileScreen() {
         {/* Blue header */}
         <View style={styles.blueHeader} />
 
-        {/* Avatar overlapping header */}
+        {/* Avatar overlapping header.
+            TODO: backend does not currently return a user avatar/profile image.
+            Keeping local fallback asset until such a field exists. */}
         <View style={styles.avatarWrapper}>
           <Image source={avatar} style={styles.avatar} />
         </View>
@@ -187,12 +191,33 @@ export default function ProfileScreen() {
         <View style={{ paddingHorizontal: 16, gap: 20 }}>
           {/* Name + email */}
           <View style={styles.userInfo}>
-            <Text weight="semibold" style={styles.userName}>
-              Olivia Jane
-            </Text>
-            <Text weight="regular" style={styles.userEmail}>
-              janebetty@gmail.com
-            </Text>
+            {isLoading ? (
+              <ActivityIndicator color={Colors.primary} />
+            ) : isError ? (
+              <>
+                <Text weight="semibold" style={styles.userName}>
+                  —
+                </Text>
+                <Text
+                  weight="medium"
+                  style={styles.retryText}
+                  onPress={() => refetch()}
+                >
+                  Failed to load profile. Tap to retry.
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text weight="semibold" style={styles.userName}>
+                  {user
+                    ? `${user.first_name} ${user.last_name}`.trim()
+                    : "—"}
+                </Text>
+                <Text weight="regular" style={styles.userEmail}>
+                  {user?.email ?? ""}
+                </Text>
+              </>
+            )}
           </View>
 
           {/* Main menu */}
@@ -247,6 +272,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16.8,
     color: Colors.neutral,
+  },
+  retryText: {
+    fontSize: 13,
+    color: Colors.primary,
+    textAlign: "center",
   },
   menuGroup: {
     gap: 8,

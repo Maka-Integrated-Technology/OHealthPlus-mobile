@@ -3,10 +3,15 @@ import AIHealthAssistant from "@/assets/images/ai-assistant.png";
 import DetailHeader from "@/components/DetailHeader";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
+import { useChatHistory, useSendChatMessage } from "@/features/messages/hooks/useChat";
+import type { ChatMessage } from "@/features/messages/types";
+import { getApiErrorMessage } from "@/utils/apiError";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  ActivityIndicator,
+  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -33,100 +38,88 @@ const PROMPT_CARDS = [
   { id: "4", emoji: "❓", label: "I don't know what's wrong" },
 ];
 
-const INITIAL_CONVERSATIONS: Record<string, Message[]> = {
-  "I'm not feeling well": [
-    { id: "u1", role: "user", text: "I'm not feeling well" },
-    {
-      id: "a1",
-      role: "assistant",
-      text: "Hi, I'm here to help. Tell me what's been going on.",
-    },
-  ],
-  "I have a health concern": [
-    { id: "u1", role: "user", text: "I have a health concern" },
-    {
-      id: "a1",
-      role: "assistant",
-      text: "I understand. Please tell me more about your concern so I can help.",
-    },
-  ],
-  "I want to talk to a doctor": [
-    { id: "u1", role: "user", text: "I want to talk to a doctor" },
-    {
-      id: "a1",
-      role: "assistant",
-      text: "I can help with that. Can you tell me a bit about what you'd like to discuss with the doctor?",
-    },
-  ],
-  "I don't know what's wrong": [
-    { id: "u1", role: "user", text: "I don't know what's wrong" },
-    {
-      id: "a1",
-      role: "assistant",
-      text: "That's okay — let's figure it out together. Can you describe how you're feeling right now?",
-    },
-  ],
-};
-
-const QUICK_REPLIES = ["Today", "A few days", "More than a week"];
+/** Convert a backend ChatMessage to the local Message shape. */
+function toMessage(msg: ChatMessage): Message {
+  return {
+    id: msg.id,
+    role: msg.sender === "user" ? "user" : "assistant",
+    text: msg.content,
+  };
+}
 
 export default function AIHealthAssistantScreen() {
   const [viewState, setViewState] = useState<ViewState>("intro");
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
-  const [showQuickReplies, setShowQuickReplies] = useState(false);
+  const [chatId, setChatId] = useState<string | undefined>(undefined);
+  const [hydrated, setHydrated] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
 
-  const startConversation = (prompt: string) => {
-    const initial = INITIAL_CONVERSATIONS[prompt] ?? [
-      { id: "u1", role: "user" as const, text: prompt },
-      {
-        id: "a1",
-        role: "assistant" as const,
-        text: "Thanks for sharing. I'll ask a few questions to better understand your concern.",
-      },
-    ];
+  const { data: history, isLoading: historyLoading } = useChatHistory();
+  const { mutateAsync: sendMessage, isPending: isSending } = useSendChatMessage();
 
-    const withFollowUp: Message[] = [
-      ...initial,
-      {
-        id: "a2",
-        role: "assistant",
-        text: "How long have you been experiencing this?",
-      },
-    ];
+  // Hydrate messages from chat history once loaded.
+  useEffect(() => {
+    if (hydrated || !history) return;
+    const apiMessages = (history.messages ?? [])
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      )
+      .map(toMessage);
 
-    setMessages(withFollowUp);
-    setShowQuickReplies(true);
-    setViewState("chat");
+    if (apiMessages.length > 0) {
+      setMessages(apiMessages);
+      setViewState("chat");
+    }
+    // Pick the most recent chat id to continue the conversation.
+    const recentChat = (history.chats ?? [])
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+      )[0];
+    if (recentChat) setChatId(recentChat.id);
+    setHydrated(true);
+  }, [history, hydrated]);
+
+  const scrollToBottom = () =>
     setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
-  };
 
-  const sendMessage = (text: string) => {
+  const handleSend = async (text: string) => {
     const trimmed = text.trim();
-    if (!trimmed) return;
+    if (!trimmed || isSending) return;
 
     const userMsg: Message = {
       id: `u${Date.now()}`,
       role: "user",
       text: trimmed,
     };
-    const assistantMsg: Message = {
-      id: `a${Date.now()}`,
-      role: "assistant",
-      text: "Thanks. I can help you narrow this down. Are you experiencing any other symptoms?",
-    };
-
-    setMessages((prev) => [...prev, userMsg, assistantMsg]);
+    setMessages((prev) => [...prev, userMsg]);
     setInputText("");
-    setShowQuickReplies(false);
     setViewState("chat");
-    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
+    scrollToBottom();
+
+    try {
+      const res = await sendMessage({ chatId, content: trimmed });
+      if (res.chatId) setChatId(res.chatId);
+      const aiMsg: Message = {
+        id: `a${Date.now()}`,
+        role: "assistant",
+        text: res.ai,
+      };
+      setMessages((prev) => [...prev, aiMsg]);
+      scrollToBottom();
+    } catch (err) {
+      Alert.alert("Error", getApiErrorMessage(err));
+    }
   };
+
+  const canSend = useMemo(() => inputText.trim().length > 0 && !isSending, [inputText, isSending]);
 
   return (
     <Screen>
-      {/* Header */}
       <DetailHeader title="AI Health Assistant" />
 
       <KeyboardAvoidingView
@@ -134,12 +127,11 @@ export default function AIHealthAssistantScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={0}
       >
-        {viewState === "intro" ? (
+        {viewState === "intro" && !historyLoading ? (
           <ScrollView
             contentContainerStyle={styles.introContent}
             keyboardShouldPersistTaps="handled"
           >
-            {/* Hero */}
             <View style={styles.heroWrapper}>
               <Image source={AIHealthAssistant} style={styles.heroIcon} />
             </View>
@@ -152,7 +144,6 @@ export default function AIHealthAssistantScreen() {
               care.
             </Text>
 
-            {/* Prompt grid */}
             <View style={styles.promptGrid}>
               {PROMPT_CARDS.map((card, i) => (
                 <TouchableOpacity
@@ -163,7 +154,8 @@ export default function AIHealthAssistantScreen() {
                       ? styles.promptCardLeft
                       : styles.promptCardRight,
                   ]}
-                  onPress={() => startConversation(card.label)}
+                  onPress={() => handleSend(card.label)}
+                  disabled={isSending}
                   activeOpacity={0.75}
                 >
                   <Text style={styles.promptEmoji}>{card.emoji}</Text>
@@ -174,6 +166,10 @@ export default function AIHealthAssistantScreen() {
               ))}
             </View>
           </ScrollView>
+        ) : viewState === "intro" && historyLoading ? (
+          <View style={styles.center}>
+            <ActivityIndicator color={Colors.primary} />
+          </View>
         ) : (
           <ScrollView
             ref={scrollRef}
@@ -191,9 +187,7 @@ export default function AIHealthAssistantScreen() {
                 ]}
               >
                 {msg.role === "assistant" && (
-                  // <View style={styles.avatarBubble}>
                   <AIHealthAssistantIcon width={25} height={25} />
-                  // </View>
                 )}
                 <View style={styles.bubbleWrapper}>
                   <View
@@ -228,29 +222,16 @@ export default function AIHealthAssistantScreen() {
                 </View>
               </View>
             ))}
-          </ScrollView>
-        )}
-
-        {/* Quick replies */}
-        {viewState === "chat" && showQuickReplies && (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.quickRepliesContent}
-            style={styles.quickRepliesRow}
-          >
-            {QUICK_REPLIES.map((reply) => (
-              <TouchableOpacity
-                key={reply}
-                style={styles.quickReplyChip}
-                onPress={() => sendMessage(reply)}
-                activeOpacity={0.75}
-              >
-                <Text weight="medium" style={styles.quickReplyText}>
-                  {reply}
-                </Text>
-              </TouchableOpacity>
-            ))}
+            {isSending && (
+              <View style={[styles.messageRow, styles.messageRowAssistant]}>
+                <AIHealthAssistantIcon width={25} height={25} />
+                <View style={styles.bubbleWrapper}>
+                  <View style={[styles.bubble, styles.bubbleAssistant]}>
+                    <ActivityIndicator size="small" color={Colors.primary} />
+                  </View>
+                </View>
+              </View>
+            )}
           </ScrollView>
         )}
 
@@ -267,12 +248,10 @@ export default function AIHealthAssistantScreen() {
               value={inputText}
               onChangeText={setInputText}
               multiline
+              editable={!isSending}
               onFocus={() => {
                 if (viewState === "intro") return;
-                setTimeout(
-                  () => scrollRef.current?.scrollToEnd({ animated: true }),
-                  300,
-                );
+                scrollToBottom();
               }}
             />
             <TouchableOpacity style={styles.micButton}>
@@ -284,14 +263,9 @@ export default function AIHealthAssistantScreen() {
             </TouchableOpacity>
           </View>
           <TouchableOpacity
-            style={styles.sendButton}
-            onPress={() => {
-              if (viewState === "intro" && inputText.trim()) {
-                startConversation(inputText.trim());
-              } else {
-                sendMessage(inputText);
-              }
-            }}
+            style={[styles.sendButton, !canSend && styles.sendButtonDisabled]}
+            disabled={!canSend}
+            onPress={() => handleSend(inputText)}
           >
             <Ionicons name="paper-plane" size={18} color="white" />
           </TouchableOpacity>
@@ -308,6 +282,11 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
+  },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   // Intro
@@ -437,33 +416,6 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
   },
 
-  // Quick replies
-  quickRepliesRow: {
-    maxHeight: 48,
-    borderTopWidth: 1,
-    borderTopColor: Colors.homeneutral,
-    backgroundColor: "white",
-  },
-  quickRepliesContent: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    gap: 8,
-    alignItems: "center",
-  },
-  quickReplyChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: Colors.primary,
-    backgroundColor: Colors.lightBlue2,
-    marginRight: 4,
-  },
-  quickReplyText: {
-    fontSize: 13,
-    color: Colors.primary,
-  },
-
   // Composer
   composer: {
     flexDirection: "row",
@@ -514,5 +466,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",
+  },
+  sendButtonDisabled: {
+    opacity: 0.5,
   },
 });

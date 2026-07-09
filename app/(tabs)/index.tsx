@@ -75,6 +75,8 @@ export default function TabOneScreen() {
     <Screen>
       <View style={styles.homeHeader}>
         <Pressable onPress={() => router.toProfile()}>
+          {/* TODO: backend does not currently return a user avatar/profile image.
+              Using local fallback asset until such a field exists. */}
           <Image
             source={avatar}
             style={{ height: 48, width: 48, resizeMode: "contain" }}
