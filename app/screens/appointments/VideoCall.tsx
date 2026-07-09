@@ -2,11 +2,14 @@ import Button from "@/components/Button";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
+import { useBooking } from "@/features/appointments/hooks/useAppointments";
+import { getImageSource } from "@/features/appointments/utils/formatters";
 import { useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   Pressable,
   StyleSheet,
@@ -17,11 +20,16 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 export default function VideoCallScreen() {
   const router = useAppRouter();
   const insets = useSafeAreaInsets();
-  const { doctorName, appointmentId } = useLocalSearchParams<{
-    doctorName?: string;
+  const { appointmentId } = useLocalSearchParams<{
     appointmentId?: string;
   }>();
-  const name = doctorName || "Dr. Tabitha Baker";
+
+  const { data: booking, isLoading } = useBooking(appointmentId ?? "");
+
+  const name = booking?.professional_name ?? "Doctor";
+  const imageSource = booking
+    ? getImageSource(booking.professional_image)
+    : undefined;
   const initials = name
     .split(" ")
     .map((n) => n[0])
@@ -29,15 +37,26 @@ export default function VideoCallScreen() {
     .join("");
 
   const [showEndModal, setShowEndModal] = useState(false);
-  const [isDoctorVisible, setIsDoctorVisible] = useState(true); // Toggle for demo
+  const [isDoctorVisible, setIsDoctorVisible] = useState(true);
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.center}>
+          <ActivityIndicator color={Colors.primary} />
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      {/* Video background - simulates call view */}
+      {/* Video background - simulates call view.
+          Actual video streaming is not implemented by the backend. */}
       <View style={styles.videoContainer}>
-        {isDoctorVisible ? (
+        {isDoctorVisible && imageSource ? (
           <Image
-            source={{ uri: "https://randomuser.me/api/portraits/women/45.jpg" }}
+            source={imageSource}
             style={styles.mainVideo}
             resizeMode="cover"
           />
@@ -49,11 +68,11 @@ export default function VideoCallScreen() {
           </View>
         )}
 
-        {/* PiP - user's video */}
+        {/* PiP - user's video (simulated) */}
         <View style={styles.pipContainer}>
           <View style={styles.pip}>
             <Text weight="semibold" style={styles.pipText}>
-              DA
+              You
             </Text>
           </View>
         </View>
@@ -63,10 +82,15 @@ export default function VideoCallScreen() {
       <SafeAreaView style={styles.overlay} edges={["top"]}>
         <View style={styles.topBar}>
           <View style={styles.topBarLeft}>
-            <Image
-              source={{ uri: "https://randomuser.me/api/portraits/women/45.jpg" }}
-              style={styles.topBarAvatar}
-            />
+            {imageSource ? (
+              <Image source={imageSource} style={styles.topBarAvatar} />
+            ) : (
+              <View style={styles.topBarAvatarFallback}>
+                <Text weight="semibold" style={styles.topBarInitials}>
+                  {initials}
+                </Text>
+              </View>
+            )}
             <View>
               <Text weight="semibold" style={styles.topBarName}>
                 {name}
@@ -110,7 +134,10 @@ export default function VideoCallScreen() {
             <Button
               type="destructive"
               onPress={() =>
-                router.toConsultationCompleted({ doctorName: name, appointmentId })
+                router.toConsultationCompleted({
+                  doctorName: name,
+                  appointmentId: booking?.id ?? appointmentId,
+                })
               }
               style={styles.modalEndButton}
             >
@@ -134,6 +161,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.black300,
+  },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   videoContainer: {
     flex: 1,
@@ -201,6 +233,18 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     resizeMode: "cover",
+  },
+  topBarAvatarFallback: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: Colors.neutral500,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  topBarInitials: {
+    fontSize: 14,
+    color: "white",
   },
   topBarName: {
     fontSize: 16,

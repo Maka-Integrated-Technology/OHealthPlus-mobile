@@ -5,6 +5,7 @@ import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
+import { useGetMe } from "@/features/auth/hooks/useAuth";
 import {
   PersonalInfoValues,
   personalInfoSchema,
@@ -13,6 +14,7 @@ import { toFormikValidate } from "@/utils/formikZod";
 import { Ionicons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -21,14 +23,48 @@ import {
   View,
 } from "react-native";
 
-const initialValues: PersonalInfoValues = {
-  name: "Olivia Jane",
-  email: "janebetty@gmail.com",
-  phone: "+234 801 234 5678",
-};
-
 export default function PersonalInformationScreen() {
   const router = useAppRouter();
+  const { data: user, isLoading, isError, refetch } = useGetMe();
+
+  const initialValues: PersonalInfoValues = {
+    name: user
+      ? `${user.first_name} ${user.last_name}`.trim()
+      : "",
+    email: user?.email ?? "",
+    phone: user?.phone ?? "",
+  };
+
+  if (isLoading) {
+    return (
+      <Screen>
+        <DetailHeader title="Personal Information" />
+        <View style={styles.center}>
+          <ActivityIndicator color={Colors.primary} />
+        </View>
+      </Screen>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Screen>
+        <DetailHeader title="Personal Information" />
+        <View style={styles.center}>
+          <Text weight="regular" style={styles.errorText}>
+            Failed to load profile.
+          </Text>
+          <Text
+            weight="medium"
+            style={styles.retryText}
+            onPress={() => refetch()}
+          >
+            Tap to retry
+          </Text>
+        </View>
+      </Screen>
+    );
+  }
 
   return (
     <Screen>
@@ -40,9 +76,11 @@ export default function PersonalInformationScreen() {
 
         <Formik
           initialValues={initialValues}
+          enableReinitialize
           validate={toFormikValidate(personalInfoSchema)}
           onSubmit={(values) => {
-            // TODO: call API to save personal information
+            // TODO: call API to save personal information.
+            // Backend does not currently expose an update-me endpoint.
             console.log("Save personal info:", values);
           }}
         >
@@ -126,6 +164,21 @@ export default function PersonalInformationScreen() {
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
+  },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+  },
+  errorText: {
+    fontSize: 14,
+    color: Colors.neutral,
+    textAlign: "center",
+  },
+  retryText: {
+    fontSize: 14,
+    color: Colors.primary,
   },
   scrollContent: {
     paddingTop: 24,

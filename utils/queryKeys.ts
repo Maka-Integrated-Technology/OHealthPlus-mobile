@@ -27,4 +27,8 @@ export const QUERY_KEYS = {
     labResult: (id: string) => ["medical", "lab-results", id] as const,
     healthConditions: ["medical", "health-conditions"] as const,
   },
+
+  messages: {
+    chatHistory: ["messages", "chat", "history"] as const,
+  },
 } as const;
