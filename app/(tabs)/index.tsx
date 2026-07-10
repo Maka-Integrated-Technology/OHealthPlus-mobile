@@ -1,6 +1,6 @@
 import AIHealthAssistantIcon from "@/assets/icons/AI-Health-Assistant.png";
 import notificationIcon from "@/assets/icons/notification.png";
-import avatar from "@/assets/images/avatar.png";
+import Avatar, { AvatarFallback } from "@/components/Avatar";
 import Button from "@/components/Button";
 import Pressable from "@/components/Pressable";
 import Screen from "@/components/Screen";
@@ -12,26 +12,17 @@ import { appointmentAssets } from "@/features/appointments/assets";
 import AppointmentCard from "@/features/appointments/components/AppointmentCard";
 import {
   formatBookingDateTime,
-  getImageSource,
   isUpcomingBooking,
 } from "@/features/appointments/utils/formatters";
 import PremiumUpgradeModal from "@/features/premium/components/PremiumUpgradeModal";
 import { useGetMe } from "@/features/auth/hooks/useAuth";
-import { useEffect, useState } from "react";
+import { getInitials } from "@/utils/avatar";
+import { useState } from "react";
 import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, View } from "react-native";
 
 export default function TabOneScreen() {
   const router = useAppRouter();
   const [showPremiumModal, setShowPremiumModal] = useState(false);
-
-  // TODO: Replace with actual API call to check premium status
-  const hasPremium = false;
-
-  useEffect(() => {
-    if (!hasPremium) {
-      setShowPremiumModal(true);
-    }
-  }, [hasPremium]);
 
   const { data: user } = useGetMe();
   const { data: bookings, isLoading: bookingsLoading } = useBookings();
@@ -50,7 +41,7 @@ export default function TabOneScreen() {
     .slice(0, 3);
 
   const handleViewPlans = () => {
-    // TODO: Navigate to plans page when implemented
+    router.toSubscription();
     setShowPremiumModal(false);
   };
 
@@ -66,7 +57,7 @@ export default function TabOneScreen() {
     },
     {
       icon: appointmentAssets.icons.bookappointment,
-      onPress: () => {},
+      onPress: () => router.toBookAppointments(),
       description: `Book a\nlab-test`,
     },
   ];
@@ -75,12 +66,16 @@ export default function TabOneScreen() {
     <Screen>
       <View style={styles.homeHeader}>
         <Pressable onPress={() => router.toProfile()}>
-          {/* TODO: backend does not currently return a user avatar/profile image.
-              Using local fallback asset until such a field exists. */}
-          <Image
-            source={avatar}
-            style={{ height: 48, width: 48, resizeMode: "contain" }}
-          />
+          <Avatar
+            imageUrl={undefined}
+            size="lg"
+            rounded="full"
+            accessibilityLabel={displayName}
+          >
+            <AvatarFallback size="lg" rounded="full">
+              {getInitials(user?.first_name, user?.last_name)}
+            </AvatarFallback>
+          </Avatar>
         </Pressable>
         <View style={{ flex: 1 }}>
           <Text weight="semibold" style={styles.greetingText}>
@@ -184,7 +179,7 @@ export default function TabOneScreen() {
               scrollEnabled={false}
               renderItem={({ item }) => (
                 <AppointmentCard
-                  image={getImageSource(item.professional_image)}
+                  imageUrl={item.professional_image}
                   name={item.professional_name}
                   type={item.consultation_type}
                   time={formatBookingDateTime(

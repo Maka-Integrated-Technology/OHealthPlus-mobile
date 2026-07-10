@@ -1,3 +1,5 @@
+import Avatar, { AvatarFallback } from "@/components/Avatar";
+import { getNameInitials } from "@/utils/avatar";
 import Button from "@/components/Button";
 import Pressable from "@/components/Pressable";
 import { Text } from "@/components/Text";
@@ -7,7 +9,7 @@ import rating_icon from "@/features/appointments/assets/icons/rating_icon.png";
 import verification_icon from "@/features/appointments/assets/icons/verification_icon.png";
 import { Image, StyleSheet, View } from "react-native";
 import type { ApiProfessional } from "../types";
-import { formatNaira, getImageSource } from "../utils/formatters";
+import { formatNaira } from "../utils/formatters";
 
 interface AvailableProfessionalCardProps {
   professional: ApiProfessional;
@@ -32,10 +34,17 @@ export default function AvailableProfessionalCard({
       onPress={onSelect}
     >
       <View style={styles.professionalImage}>
-        <Image
-          source={getImageSource(professional.image)}
-          style={{ width: "100%", height: "100%", zIndex: -1, borderRadius: 12 }}
-        />
+        <Avatar
+          imageUrl={professional.image}
+          size="4xl"
+          rounded="lg"
+          style={{ width: "100%", height: "100%" }}
+          accessibilityLabel={professional.name}
+        >
+          <AvatarFallback size="4xl" rounded="lg" style={{ width: "100%", height: "100%" }}>
+            {getNameInitials(professional.name)}
+          </AvatarFallback>
+        </Avatar>
         <View style={styles.verificationBadge}>
           <Image source={verification_icon} style={{ height: 20, width: 20 }} />
         </View>
