@@ -1,5 +1,3 @@
-import { ImageSourcePropType } from "react-native";
-import avatar from "@/assets/images/avatar.png";
 import type { ApiBooking, BookingStatus, ConsultationType } from "../types";
 
 // ── Naira formatter ───────────────────────────────────────────────────────────
@@ -100,10 +98,14 @@ export function getSupportedConsultationTypes(
 
 // ── Image helper ──────────────────────────────────────────────────────────────
 
-/** Returns a React Native ImageSource from an optional remote URL, with local fallback. */
+/**
+ * Returns a React Native ImageSource from an optional remote URL, or undefined
+ * when no URL is present. Callers should use the reusable Avatar component
+ * (with initials fallback) instead of rendering a local placeholder image.
+ */
 export function getImageSource(
-  remoteUrl: string | undefined
-): ImageSourcePropType {
+  remoteUrl?: string
+): { uri: string } | undefined {
   if (remoteUrl) return { uri: remoteUrl };
-  return avatar as ImageSourcePropType;
+  return undefined;
 }

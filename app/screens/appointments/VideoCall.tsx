@@ -3,7 +3,7 @@ import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
 import { useBooking } from "@/features/appointments/hooks/useAppointments";
-import { getImageSource } from "@/features/appointments/utils/formatters";
+import { getNameInitials } from "@/utils/avatar";
 import { useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
@@ -27,14 +27,8 @@ export default function VideoCallScreen() {
   const { data: booking, isLoading } = useBooking(appointmentId ?? "");
 
   const name = booking?.professional_name ?? "Doctor";
-  const imageSource = booking
-    ? getImageSource(booking.professional_image)
-    : undefined;
-  const initials = name
-    .split(" ")
-    .map((n) => n[0])
-    .slice(-2)
-    .join("");
+  const imageUrl = booking?.professional_image;
+  const initials = getNameInitials(name);
 
   const [showEndModal, setShowEndModal] = useState(false);
   const [isDoctorVisible, setIsDoctorVisible] = useState(true);
@@ -54,9 +48,9 @@ export default function VideoCallScreen() {
       {/* Video background - simulates call view.
           Actual video streaming is not implemented by the backend. */}
       <View style={styles.videoContainer}>
-        {isDoctorVisible && imageSource ? (
+        {isDoctorVisible && imageUrl ? (
           <Image
-            source={imageSource}
+            source={{ uri: imageUrl }}
             style={styles.mainVideo}
             resizeMode="cover"
           />
@@ -82,8 +76,8 @@ export default function VideoCallScreen() {
       <SafeAreaView style={styles.overlay} edges={["top"]}>
         <View style={styles.topBar}>
           <View style={styles.topBarLeft}>
-            {imageSource ? (
-              <Image source={imageSource} style={styles.topBarAvatar} />
+            {imageUrl ? (
+              <Image source={{ uri: imageUrl }} style={styles.topBarAvatar} />
             ) : (
               <View style={styles.topBarAvatarFallback}>
                 <Text weight="semibold" style={styles.topBarInitials}>

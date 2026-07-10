@@ -14,7 +14,6 @@ export const ROUTES = {
     SIGN_UP: "/(auth)/signup",
     SIGN_IN: "/(auth)/signin",
     LEGAL_TERMS: "/(auth)/legalTerm",
-    OTP: "/(auth)/OTP",
     FORGOT_PASSWORD: "/(auth)/ForgotPassword",
     NEW_PASSWORD: "/(auth)/NewPassword",
     EMAIL_VERIFICATION: "/(auth)/EmailVerification",

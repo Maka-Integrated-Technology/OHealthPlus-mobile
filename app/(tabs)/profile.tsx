@@ -1,14 +1,14 @@
-import avatar from "@/assets/images/avatar-full.jpg";
+import Avatar, { AvatarFallback } from "@/components/Avatar";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
 import { useGetMe, useLogout } from "@/features/auth/hooks/useAuth";
+import { getInitials } from "@/utils/avatar";
 import { Ionicons } from "@expo/vector-icons";
 import {
   ActivityIndicator,
   Alert,
-  Image,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -181,11 +181,20 @@ export default function ProfileScreen() {
         {/* Blue header */}
         <View style={styles.blueHeader} />
 
-        {/* Avatar overlapping header.
-            TODO: backend does not currently return a user avatar/profile image.
-            Keeping local fallback asset until such a field exists. */}
+        {/* Avatar overlapping header. */}
         <View style={styles.avatarWrapper}>
-          <Image source={avatar} style={styles.avatar} />
+          <Avatar
+            imageUrl={undefined}
+            size="4xl"
+            rounded="xl"
+            accessibilityLabel={
+              user ? `${user.first_name} ${user.last_name}`.trim() : "Profile"
+            }
+          >
+            <AvatarFallback size="4xl" rounded="xl">
+              {getInitials(user?.first_name, user?.last_name)}
+            </AvatarFallback>
+          </Avatar>
         </View>
 
         <View style={{ paddingHorizontal: 16, gap: 20 }}>
@@ -209,9 +218,7 @@ export default function ProfileScreen() {
             ) : (
               <>
                 <Text weight="semibold" style={styles.userName}>
-                  {user
-                    ? `${user.first_name} ${user.last_name}`.trim()
-                    : "—"}
+                  {user ? `${user.first_name} ${user.last_name}`.trim() : "—"}
                 </Text>
                 <Text weight="regular" style={styles.userEmail}>
                   {user?.email ?? ""}
@@ -242,8 +249,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   avatarWrapper: {
-    alignItems: "center",
+    alignSelf: "center",
     marginTop: -52,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 4,
     zIndex: 10,
   },
   avatar: {

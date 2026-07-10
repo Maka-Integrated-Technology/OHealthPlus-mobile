@@ -1,3 +1,4 @@
+import Avatar, { AvatarFallback } from "@/components/Avatar";
 import Button from "@/components/Button";
 import DetailHeader from "@/components/DetailHeader";
 import Screen from "@/components/Screen";
@@ -16,10 +17,10 @@ import {
   formatBookingDate,
   formatBookingTime,
   formatNaira,
-  getImageSource,
   isUpcomingBooking,
 } from "@/features/appointments/utils/formatters";
 import { getApiErrorMessage } from "@/utils/apiError";
+import { getNameInitials } from "@/utils/avatar";
 import { useLocalSearchParams } from "expo-router";
 import {
   ActivityIndicator,
@@ -77,7 +78,9 @@ export default function AppointmentDetailsScreen() {
   }
 
   const canJoin =
-    isUpcomingBooking(booking) && booking.status !== "cancelled";
+    isUpcomingBooking(booking) &&
+    booking.status !== "cancelled" &&
+    booking.consultation_type === "video";
   const canCancel =
     booking.status === "pending" || booking.status === "confirmed";
 
@@ -85,18 +88,10 @@ export default function AppointmentDetailsScreen() {
   const displayTime = formatBookingTime(booking.booking_time);
 
   const handleJoin = () => {
-    if (booking.consultation_type === "video") {
-      router.toVideoConsultationSetup({
-        appointmentId: booking.id,
-        doctorName: booking.professional_name,
-      });
-    } else {
-      // TODO: Navigate to chat consultation screen when available
-      Alert.alert(
-        "Chat consultation",
-        "Chat consultation screen is coming soon."
-      );
-    }
+    router.toVideoConsultationSetup({
+      appointmentId: booking.id,
+      doctorName: booking.professional_name,
+    });
   };
 
   const handleCancel = () => {
@@ -132,13 +127,16 @@ export default function AppointmentDetailsScreen() {
           {/* Doctor details */}
           <View style={styles.doctorDetailsContainer}>
             <View style={styles.professionalImageContainer}>
-              <View style={styles.professionalImage}>
-                <Image
-                  source={getImageSource(booking.professional_image)}
-                  style={styles.professionalImageStyle}
-                  resizeMode="cover"
-                />
-              </View>
+              <Avatar
+                imageUrl={booking.professional_image}
+                size="xl"
+                rounded="md"
+                accessibilityLabel={booking.professional_name}
+              >
+                <AvatarFallback size="xl" rounded="md">
+                  {getNameInitials(booking.professional_name)}
+                </AvatarFallback>
+              </Avatar>
               <View style={styles.verificationBadge}>
                 <Image
                   source={verification_icon}
@@ -249,6 +247,13 @@ export default function AppointmentDetailsScreen() {
           Ensure you have a stable internet connection. Find a quiet place
           before your consultation.
         </Text>
+
+        {booking.consultation_type === "chat" && (
+          <Text weight="regular" style={styles.noteText}>
+            Chat consultations are not available yet. Only video consultations
+            can be joined from the app.
+          </Text>
+        )}
       </ScrollView>
 
       <View style={[styles.actions, { paddingBottom: insets.bottom + 16 }]}>
@@ -258,10 +263,6 @@ export default function AppointmentDetailsScreen() {
           style={styles.primaryButton}
         >
           Join consultation
-        </Button>
-        {/* TODO: Reschedule when backend supports it */}
-        <Button type="secondary" onPress={() => {}} style={styles.secondaryButton}>
-          Reschedule appointment
         </Button>
         {canCancel && (
           <Button
