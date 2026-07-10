@@ -114,6 +114,10 @@ export default function NotificationsScreen() {
           <Text weight="regular" style={styles.infoBannerText}>
             Manage how you receive notifications from OHealth+
           </Text>
+          <Text weight="regular" style={styles.localNoteText}>
+            These preferences are saved on this device only and won't sync
+            across devices.
+          </Text>
         </View>
 
         {/* Message notifications section */}
@@ -206,6 +210,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     color: Colors.neutral,
+  },
+  localNoteText: {
+    fontSize: 12,
+    lineHeight: 17,
+    color: Colors.neutral400,
+    marginTop: 6,
   },
   section: {
     gap: 8,

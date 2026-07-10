@@ -1,3 +1,4 @@
+import Avatar, { AvatarFallback } from "@/components/Avatar";
 import { BackButton } from "@/components/BackButton";
 import Button from "@/components/Button";
 import Screen from "@/components/Screen";
@@ -19,9 +20,9 @@ import {
   formatBookingDate,
   formatBookingTime,
   formatNaira,
-  getImageSource,
 } from "@/features/appointments/utils/formatters";
 import { getApiErrorMessage } from "@/utils/apiError";
+import { getNameInitials } from "@/utils/avatar";
 import { useLocalSearchParams } from "expo-router";
 import { Image, Platform, ScrollView, StyleSheet, View } from "react-native";
 
@@ -83,13 +84,16 @@ export default function ConfirmAppointment() {
           {/* Doctor details */}
           <View style={styles.doctorDetailsContainer}>
             <View style={styles.professionalImageContainer}>
-              <View style={styles.professionalImage}>
-                <Image
-                  source={getImageSource(professional?.image)}
-                  style={styles.professionalImageStyle}
-                  resizeMode="cover"
-                />
-              </View>
+              <Avatar
+                imageUrl={professional?.image}
+                size="xl"
+                rounded="md"
+                accessibilityLabel={professional?.name ?? "Professional"}
+              >
+                <AvatarFallback size="xl" rounded="md">
+                  {getNameInitials(professional?.name)}
+                </AvatarFallback>
+              </Avatar>
               <View style={styles.verificationBadge}>
                 <Image
                   source={verification_icon}

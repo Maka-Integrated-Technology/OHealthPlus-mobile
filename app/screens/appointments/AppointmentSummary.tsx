@@ -1,3 +1,4 @@
+import Avatar, { AvatarFallback } from "@/components/Avatar";
 import Button from "@/components/Button";
 import DetailHeader from "@/components/DetailHeader";
 import Screen from "@/components/Screen";
@@ -12,9 +13,9 @@ import {
 } from "@/features/appointments/hooks/useAppointments";
 import {
   formatBookingDateTime,
-  getImageSource,
 } from "@/features/appointments/utils/formatters";
 import { useLocalSearchParams } from "expo-router";
+import { getNameInitials } from "@/utils/avatar";
 import {
   ActivityIndicator,
   Alert,
@@ -98,10 +99,16 @@ export default function AppointmentSummaryScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.doctorCard}>
-          <Image
-            source={getImageSource(booking.professional_image)}
-            style={styles.avatar}
-          />
+          <Avatar
+            imageUrl={booking.professional_image}
+            size="xl"
+            rounded="full"
+            accessibilityLabel={booking.professional_name}
+          >
+            <AvatarFallback size="xl" rounded="full">
+              {getNameInitials(booking.professional_name)}
+            </AvatarFallback>
+          </Avatar>
           <View style={styles.doctorInfo}>
             <Text weight="semibold" style={styles.doctorName}>
               {booking.professional_name}
@@ -144,13 +151,6 @@ export default function AppointmentSummaryScreen() {
             style={styles.primaryButton}
           >
             Leave a review
-          </Button>
-          <Button
-            type="secondary"
-            onPress={() => {}}
-            style={styles.secondaryButton}
-          >
-            Send follow-up
           </Button>
           <Button
             type="secondary"
