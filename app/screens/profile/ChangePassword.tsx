@@ -41,10 +41,7 @@ export default function ChangePasswordScreen() {
         <Formik
           initialValues={initialValues}
           validate={toFormikValidate(changePasswordSchema)}
-          onSubmit={(values) => {
-            // TODO: call API to update password
-            console.log("Change password submitted:", values.newPassword);
-          }}
+          onSubmit={() => {}}
         >
           {({ handleSubmit, isSubmitting }) => (
             <ScrollView
@@ -96,9 +93,17 @@ export default function ChangePasswordScreen() {
                 />
               </View>
 
-              <Button onPress={() => handleSubmit()} disabled={isSubmitting}>
-                Update Password
-              </Button>
+              {/* Update button — disabled: backend does not expose an
+                  authenticated change-password endpoint yet. */}
+              <View style={styles.buttonWrapper}>
+                <Button onPress={() => handleSubmit()} isLoading={isSubmitting}>
+                  Update Password
+                </Button>
+                <Text weight="regular" style={styles.unavailableNote}>
+                  Password changes from within the app are not available yet.
+                  Use the forgot-password flow to reset it.
+                </Text>
+              </View>
             </ScrollView>
           )}
         </Formik>
@@ -130,5 +135,14 @@ const styles = StyleSheet.create({
   },
   form: {
     gap: 16,
+  },
+  buttonWrapper: {
+    gap: 8,
+  },
+  unavailableNote: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: Colors.neutral400,
+    textAlign: "center",
   },
 });
