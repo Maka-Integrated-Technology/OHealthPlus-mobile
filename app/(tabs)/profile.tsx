@@ -184,7 +184,7 @@ export default function ProfileScreen() {
         {/* Avatar overlapping header. */}
         <View style={styles.avatarWrapper}>
           <Avatar
-            imageUrl={undefined}
+            imageUrl={user?.image}
             size="4xl"
             rounded="xl"
             accessibilityLabel={
