@@ -7,7 +7,6 @@ import type { AppointmentStatus } from "@/features/appointments/components/Appoi
 import AppointmentListCard from "@/features/appointments/components/AppointmentListCard";
 import {
   formatBookingDateTime,
-  getImageSource,
   isUpcomingBooking,
 } from "@/features/appointments/utils/formatters";
 import type { ApiBooking, BookingConsultationType } from "@/features/appointments/types";
@@ -155,7 +154,6 @@ export default function AppointmentsScreen() {
             const canJoin = isUpcomingBooking(item);
             return (
               <AppointmentListCard
-                image={getImageSource(item.professional_image)}
                 doctorName={item.professional_name}
                 specialization={item.speciality_name}
                 consultationType={

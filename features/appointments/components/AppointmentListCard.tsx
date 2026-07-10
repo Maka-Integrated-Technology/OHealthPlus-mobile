@@ -2,13 +2,12 @@ import Button from "@/components/Button";
 import Pressable from "@/components/Pressable";
 import { Text } from "@/components/Text";
 import Colors from "@/constants/Colors";
-import { Image, ImageSourcePropType, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { appointmentAssets } from "../assets";
 
 export type AppointmentStatus = "upcoming" | "completed" | "cancelled";
 
 interface AppointmentListCardProps {
-  image: ImageSourcePropType | { uri: string };
   doctorName: string;
   specialization: string;
   consultationType: "video" | "chat";
@@ -21,7 +20,6 @@ interface AppointmentListCardProps {
 }
 
 export default function AppointmentListCard({
-  image,
   doctorName,
   specialization,
   consultationType,
