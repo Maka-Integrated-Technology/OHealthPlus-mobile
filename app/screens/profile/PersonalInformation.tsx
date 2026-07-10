@@ -3,36 +3,50 @@ import DetailHeader from "@/components/DetailHeader";
 import { FormInputField } from "@/components/forms";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
-import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
-import { useGetMe } from "@/features/auth/hooks/useAuth";
+import { useGetMe, useUpdateProfile } from "@/features/auth/hooks/useAuth";
 import {
   PersonalInfoValues,
   personalInfoSchema,
 } from "@/features/profile/validationSchema";
+import { getApiErrorMessage } from "@/utils/apiError";
 import { toFormikValidate } from "@/utils/formikZod";
-import { Ionicons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from "react-native";
 
 export default function PersonalInformationScreen() {
-  const router = useAppRouter();
   const { data: user, isLoading, isError, refetch } = useGetMe();
+  const { mutateAsync: updateProfile, isPending } = useUpdateProfile();
 
   const initialValues: PersonalInfoValues = {
-    name: user
-      ? `${user.first_name} ${user.last_name}`.trim()
-      : "",
+    first_name: user?.first_name ?? "",
+    last_name: user?.last_name ?? "",
     email: user?.email ?? "",
     phone: user?.phone ?? "",
+  };
+
+  const handleSubmit = async (values: PersonalInfoValues) => {
+    try {
+      await updateProfile({
+        first_name: values.first_name.trim(),
+        last_name: values.last_name.trim(),
+        phone: values.phone.trim() ? values.phone.trim() : null,
+      });
+      Alert.alert(
+        "Profile updated",
+        "Your personal information has been saved."
+      );
+    } catch (err) {
+      Alert.alert("Couldn't save", getApiErrorMessage(err));
+    }
   };
 
   if (isLoading) {
@@ -78,11 +92,7 @@ export default function PersonalInformationScreen() {
           initialValues={initialValues}
           enableReinitialize
           validate={toFormikValidate(personalInfoSchema)}
-          onSubmit={(values) => {
-            // TODO: call API to save personal information.
-            // Backend does not currently expose an update-me endpoint.
-            console.log("Save personal info:", values);
-          }}
+          onSubmit={handleSubmit}
         >
           {({ handleSubmit, isSubmitting }) => (
             <ScrollView
@@ -93,10 +103,18 @@ export default function PersonalInformationScreen() {
               {/* Form */}
               <View style={styles.form}>
                 <FormInputField
-                  name="name"
-                  label="Full Name"
+                  name="first_name"
+                  label="First Name"
                   icon="name"
-                  placeholder="Full Name"
+                  placeholder="First Name"
+                  placeholderTextColor="#9CA3AF"
+                />
+
+                <FormInputField
+                  name="last_name"
+                  label="Last Name"
+                  icon="name"
+                  placeholder="Last Name"
                   placeholderTextColor="#9CA3AF"
                 />
 
@@ -107,6 +125,7 @@ export default function PersonalInformationScreen() {
                   placeholder="Email Address"
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  editable={false}
                   placeholderTextColor="#9CA3AF"
                 />
 
@@ -122,36 +141,17 @@ export default function PersonalInformationScreen() {
               {/* Divider */}
               <View style={styles.sectionDivider} />
 
-              {/* Change Password row */}
-              <TouchableOpacity
-                style={styles.changePasswordRow}
-                onPress={() => router.toChangePassword()}
-                activeOpacity={0.7}
-              >
-                <View style={styles.changePasswordLeft}>
-                  <View style={styles.lockIconWrapper}>
-                    <Ionicons
-                      name="lock-closed-outline"
-                      size={20}
-                      color={Colors.primary}
-                    />
-                  </View>
-                  <Text weight="medium" style={styles.changePasswordLabel}>
-                    Change Password
-                  </Text>
-                </View>
-                <Ionicons
-                  name="chevron-forward"
-                  size={18}
-                  color={Colors.neutral300}
-                />
-              </TouchableOpacity>
-
               {/* Save button */}
               <View style={styles.buttonWrapper}>
-                <Button onPress={() => handleSubmit()} disabled={isSubmitting}>
+                <Button
+                  onPress={() => handleSubmit()}
+                  isLoading={isPending || isSubmitting}
+                >
                   Save Changes
                 </Button>
+                <Text weight="regular" style={styles.unavailableNote}>
+                  Email cannot be changed from the app.
+                </Text>
               </View>
             </ScrollView>
           )}
@@ -225,5 +225,12 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     marginTop: 8,
+    gap: 8,
+  },
+  unavailableNote: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: Colors.neutral400,
+    textAlign: "center",
   },
 });

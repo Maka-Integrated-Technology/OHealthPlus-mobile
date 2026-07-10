@@ -2,12 +2,14 @@ import { queryClient } from "@/config/queryClient";
 import AuthService from "@/features/auth/services/auth";
 import type {
   AuthSession,
+  ChangePasswordPayload,
   ForgotPasswordRequest,
   GoogleLoginRequest,
   LoginRequest,
   RefreshTokenResponse,
   ResetPasswordRequest,
   SignupRequest,
+  UpdateProfilePayload,
   VerifySignupRequest,
 } from "@/features/auth/types/auth";
 import { QUERY_KEYS } from "@/utils/queryKeys";
@@ -123,6 +125,30 @@ export function useGetMe() {
     queryFn: ({ signal }) => AuthService.getMe({ signal }),
     retry: false,
     staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useUpdateProfile() {
+  return useMutation({
+    mutationFn: (data: UpdateProfilePayload) =>
+      AuthService.updateProfile(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.auth.me });
+    },
+  });
+}
+
+/**
+ * Authenticated change-password.
+ *
+ * Side-effect warning: the backend revokes every active session for the
+ * user on success. Callers must treat a successful response like a forced
+ * logout — clear local auth storage and redirect to sign-in.
+ */
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: (data: ChangePasswordPayload) =>
+      AuthService.changePassword(data),
   });
 }
 
