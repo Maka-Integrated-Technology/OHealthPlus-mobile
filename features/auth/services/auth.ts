@@ -3,6 +3,7 @@ import type {
   ApiResponse,
   AuthSession,
   AuthUser,
+  ChangePasswordPayload,
   Enable2faResponse,
   ForgotPasswordRequest,
   GoogleLoginRequest,
@@ -12,6 +13,7 @@ import type {
   RefreshTokenResponse,
   ResetPasswordRequest,
   SignupRequest,
+  UpdateProfilePayload,
   VerifySignupRequest,
 } from "@/features/auth/types/auth";
 import { unwrapApiData } from "@/utils/apiResponse";
@@ -77,6 +79,26 @@ class AuthService {
     const response = await axiosPrivate.get<ApiResponse<AuthUser>>("/auth/me", {
       signal: options?.signal,
     });
+    return unwrapApiData(response.data);
+  };
+
+  static updateProfile = async (
+    data: UpdateProfilePayload,
+  ): Promise<AuthUser> => {
+    const response = await axiosPrivate.patch<ApiResponse<AuthUser>>(
+      "/auth/me",
+      data,
+    );
+    return unwrapApiData(response.data);
+  };
+
+  static changePassword = async (
+    data: ChangePasswordPayload,
+  ): Promise<{ message: string }> => {
+    const response = await axiosPrivate.post<ApiResponse<{ message: string }>>(
+      "/auth/change-password",
+      data,
+    );
     return unwrapApiData(response.data);
   };
 

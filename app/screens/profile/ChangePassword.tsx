@@ -4,14 +4,21 @@ import { FormInputField } from "@/components/forms";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import Colors from "@/constants/Colors";
+import { useChangePassword } from "@/features/auth/hooks/useAuth";
 import {
   ChangePasswordValues,
   changePasswordSchema,
 } from "@/features/auth/validationSchema";
+import { useAppRouter } from "@/config/route";
+import { clearAuthStorage } from "@/utils/secureStorage";
+import { queryClient } from "@/config/queryClient";
+import { QUERY_KEYS } from "@/utils/queryKeys";
+import { getApiErrorMessage } from "@/utils/apiError";
 import { toFormikValidate } from "@/utils/formikZod";
 import { Formik } from "formik";
 import { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -26,9 +33,36 @@ const initialValues: ChangePasswordValues = {
 };
 
 export default function ChangePasswordScreen() {
+  const router = useAppRouter();
+  const { mutateAsync: changePassword, isPending } = useChangePassword();
+
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+
+  const handleSubmit = async (
+    values: ChangePasswordValues,
+    helpers: { resetForm: () => void }
+  ) => {
+    try {
+      await changePassword({
+        currentPassword: values.currentPassword,
+        newPassword: values.newPassword,
+      });
+      // Backend revokes every active session on success — treat as a forced
+      // logout: clear local auth, drop the cached profile, route to sign-in.
+      await clearAuthStorage();
+      queryClient.removeQueries({ queryKey: QUERY_KEYS.auth.me });
+      helpers.resetForm();
+      Alert.alert(
+        "Password updated",
+        "Your password has been changed. Please sign in again."
+      );
+      router.toSignIn();
+    } catch (err) {
+      Alert.alert("Couldn't update password", getApiErrorMessage(err));
+    }
+  };
 
   return (
     <Screen>
@@ -41,7 +75,7 @@ export default function ChangePasswordScreen() {
         <Formik
           initialValues={initialValues}
           validate={toFormikValidate(changePasswordSchema)}
-          onSubmit={() => {}}
+          onSubmit={handleSubmit}
         >
           {({ handleSubmit, isSubmitting }) => (
             <ScrollView
@@ -53,7 +87,9 @@ export default function ChangePasswordScreen() {
               <View style={styles.helperCard}>
                 <Text weight="regular" style={styles.helperText}>
                   Your new password should be at least 8 characters and include
-                  a mix of letters, numbers, and symbols.
+                  a mix of letters, numbers, and symbols. After changing your
+                  password you'll be signed out everywhere and need to sign in
+                  again.
                 </Text>
               </View>
 
@@ -93,16 +129,13 @@ export default function ChangePasswordScreen() {
                 />
               </View>
 
-              {/* Update button — disabled: backend does not expose an
-                  authenticated change-password endpoint yet. */}
               <View style={styles.buttonWrapper}>
-                <Button onPress={() => handleSubmit()} isLoading={isSubmitting}>
+                <Button
+                  onPress={() => handleSubmit()}
+                  isLoading={isPending || isSubmitting}
+                >
                   Update Password
                 </Button>
-                <Text weight="regular" style={styles.unavailableNote}>
-                  Password changes from within the app are not available yet.
-                  Use the forgot-password flow to reset it.
-                </Text>
               </View>
             </ScrollView>
           )}
@@ -138,11 +171,5 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     gap: 8,
-  },
-  unavailableNote: {
-    fontSize: 13,
-    lineHeight: 18,
-    color: Colors.neutral400,
-    textAlign: "center",
   },
 });
