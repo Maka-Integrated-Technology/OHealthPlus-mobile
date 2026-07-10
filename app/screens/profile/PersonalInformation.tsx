@@ -4,15 +4,17 @@ import { FormInputField } from "@/components/forms";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import Colors from "@/constants/Colors";
-import { useGetMe } from "@/features/auth/hooks/useAuth";
+import { useGetMe, useUpdateProfile } from "@/features/auth/hooks/useAuth";
 import {
   PersonalInfoValues,
   personalInfoSchema,
 } from "@/features/profile/validationSchema";
+import { getApiErrorMessage } from "@/utils/apiError";
 import { toFormikValidate } from "@/utils/formikZod";
 import { Formik } from "formik";
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -22,12 +24,29 @@ import {
 
 export default function PersonalInformationScreen() {
   const { data: user, isLoading, isError, refetch } = useGetMe();
+  const { mutateAsync: updateProfile, isPending } = useUpdateProfile();
 
   const initialValues: PersonalInfoValues = {
     first_name: user?.first_name ?? "",
     last_name: user?.last_name ?? "",
     email: user?.email ?? "",
     phone: user?.phone ?? "",
+  };
+
+  const handleSubmit = async (values: PersonalInfoValues) => {
+    try {
+      await updateProfile({
+        first_name: values.first_name.trim(),
+        last_name: values.last_name.trim(),
+        phone: values.phone.trim() ? values.phone.trim() : null,
+      });
+      Alert.alert(
+        "Profile updated",
+        "Your personal information has been saved."
+      );
+    } catch (err) {
+      Alert.alert("Couldn't save", getApiErrorMessage(err));
+    }
   };
 
   if (isLoading) {
@@ -73,7 +92,7 @@ export default function PersonalInformationScreen() {
           initialValues={initialValues}
           enableReinitialize
           validate={toFormikValidate(personalInfoSchema)}
-          onSubmit={() => {}}
+          onSubmit={handleSubmit}
         >
           {({ handleSubmit, isSubmitting }) => (
             <ScrollView
@@ -106,6 +125,7 @@ export default function PersonalInformationScreen() {
                   placeholder="Email Address"
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  editable={false}
                   placeholderTextColor="#9CA3AF"
                 />
 
@@ -121,13 +141,16 @@ export default function PersonalInformationScreen() {
               {/* Divider */}
               <View style={styles.sectionDivider} />
 
-              {/* Save button — disabled: backend does not expose an update-profile endpoint yet. */}
+              {/* Save button */}
               <View style={styles.buttonWrapper}>
-                <Button onPress={() => handleSubmit()} isLoading={isSubmitting}>
+                <Button
+                  onPress={() => handleSubmit()}
+                  isLoading={isPending || isSubmitting}
+                >
                   Save Changes
                 </Button>
                 <Text weight="regular" style={styles.unavailableNote}>
-                  Profile editing is not available yet.
+                  Email cannot be changed from the app.
                 </Text>
               </View>
             </ScrollView>

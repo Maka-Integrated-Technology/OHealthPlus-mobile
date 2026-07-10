@@ -67,7 +67,7 @@ export default function TabOneScreen() {
       <View style={styles.homeHeader}>
         <Pressable onPress={() => router.toProfile()}>
           <Avatar
-            imageUrl={undefined}
+            imageUrl={user?.image}
             size="lg"
             rounded="full"
             accessibilityLabel={displayName}

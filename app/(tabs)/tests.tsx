@@ -69,7 +69,7 @@ export default function Tests() {
         >
           <Pressable onPress={() => router.toProfile()}>
             <Avatar
-              imageUrl={undefined}
+              imageUrl={user?.image}
               size="lg"
               rounded="full"
               accessibilityLabel={displayName}

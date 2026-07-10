@@ -9,6 +9,7 @@ export interface AuthUser {
   gender?: string;
   dob?: string;
   phone?: string;
+  image?: string | null;
   role: UserRole[];
   is_active: boolean;
   created_at: string;
@@ -99,4 +100,24 @@ export interface Enable2faResponse {
   status_code: number;
   message: string;
   data: Enable2faData;
+}
+
+/**
+ * Payload for `PATCH /auth/me`. All fields are optional — only fields that
+ * are present on the body are applied. `email` is intentionally NOT part of
+ * this payload: the backend rejects email changes through this route.
+ */
+export interface UpdateProfilePayload {
+  first_name?: string;
+  last_name?: string;
+  middle_name?: string | null;
+  gender?: string | null;
+  dob?: string | null;
+  phone?: string | null;
+  image?: string | null;
+}
+
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
 }
