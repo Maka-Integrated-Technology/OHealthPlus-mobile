@@ -110,6 +110,31 @@ export const useAppRouter = () => {
         toAppointmentSummary: (params?: { appointmentId?: string }) =>
             navigate(ROUTES.APPOINTMENT_SUMMARY, params),
 
+        // ============================================
+        // Lab Test Booking Navigation
+        // ============================================
+        toLaboratory: () => navigate(ROUTES.LABORATORY),
+        toLabEnableLocation: (params?: { next?: "laboratory" | "chooseLab" }) =>
+            navigate(ROUTES.LAB_ENABLE_LOCATION, params),
+        toUploadTestRequest: (params?: { fileName?: string; fileSize?: string }) =>
+            navigate(ROUTES.UPLOAD_TEST_REQUEST, params),
+        toUploadTestRequestCamera: () => navigate(ROUTES.UPLOAD_TEST_REQUEST_CAMERA),
+        toReadingTestRequest: () => navigate(ROUTES.READING_TEST_REQUEST),
+        toExtractedTests: () => navigate(ROUTES.EXTRACTED_TESTS),
+        toChooseLab: () => navigate(ROUTES.CHOOSE_LAB),
+        toLabOverview: (params: { labId: string }) =>
+            navigate(ROUTES.LAB_OVERVIEW, params),
+        toSelectLabDateTime: (params: { labId: string }) =>
+            navigate(ROUTES.SELECT_LAB_DATE_TIME, params),
+        toReviewLabBooking: (params: { labId: string; date?: string; time?: string }) =>
+            navigate(ROUTES.REVIEW_LAB_BOOKING, params),
+        toLabBookingConfirmed: (params?: { bookingId?: string; labId?: string }) =>
+            navigate(ROUTES.LAB_BOOKING_CONFIRMED, params),
+        toSearchTests: () => navigate(ROUTES.SEARCH_TESTS),
+        toMyTests: () => navigate(ROUTES.MY_TESTS),
+        toLabTestResultDetail: (params?: { id?: string }) =>
+            navigate(ROUTES.LAB_TEST_RESULT_DETAIL, params),
+
         toAIHealthAssistant: () => navigate(ROUTES.AI_HEALTH_ASSISTANT),
 
         // ============================================
