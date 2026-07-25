@@ -59,6 +59,9 @@ export const ROUTES = {
     SELECT_LAB_DATE_TIME: "/screens/labs/SelectDateTime",
     REVIEW_LAB_BOOKING: "/screens/labs/ReviewBooking",
     LAB_BOOKING_CONFIRMED: "/screens/labs/BookingConfirmed",
+    SEARCH_TESTS: "/screens/labs/SearchTests",
+    MY_TESTS: "/screens/labs/MyTests",
+    LAB_TEST_RESULT_DETAIL: "/screens/labs/TestResultDetail",
 
     // ============================================
     // Messages Routes

@@ -56,3 +56,26 @@ export interface LabBookingSummary {
   date: string;
   time: string;
 }
+
+export interface UpcomingLabTest {
+  id: string;
+  testName: string;
+  labName: string;
+  daysAwayLabel: string;
+  date: string;
+  time: string;
+}
+
+export interface LabResultValue {
+  label: string;
+  value: string;
+  normalRangeLabel: string;
+}
+
+export interface CompletedLabTest {
+  id: string;
+  testName: string;
+  labName: string;
+  completedDateLabel: string;
+  results: LabResultValue[];
+}
