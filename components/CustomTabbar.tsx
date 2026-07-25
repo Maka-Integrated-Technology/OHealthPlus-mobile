@@ -28,9 +28,6 @@ const iconMap = {
 
 type IconName = keyof typeof iconMap;
 
-const TAB_BAR_RADIUS = 24;
-const TAB_BAR_PADDING = 5;
-
 function AnimatedTabItem({
   isFocused,
   children,
@@ -125,16 +122,17 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
               ]}
               onPress={onPress}
             >
-              {/* ✅ Only wraps the icon — your flex layout is untouched */}
               <AnimatedTabItem isFocused={isFocused}>
-                <Icon size={32} color={isFocused ? "#fff" : Colors.primary} />
+                <Icon size={24} color={isFocused ? "#fff" : Colors.primary} />
               </AnimatedTabItem>
 
-              <Text
-                style={[styles.tabLabel, isFocused && styles.tabLabelActive]}
-              >
-                {getLabel()}
-              </Text>
+              {isFocused && (
+                <Text
+                  style={[styles.tabLabel, styles.tabLabelActive]}
+                >
+                  {getLabel()}
+                </Text>
+              )}
             </Pressable>
           );
         })}
@@ -153,55 +151,42 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: Colors.lightBlue2,
     justifyContent: "space-between",
     alignItems: "center",
-    borderTopWidth: 2,
-    borderLeftWidth: 2,
-    borderRightWidth: 2,
-    borderBottomWidth: 2,
-    borderColor: Colors.homeneutral,
-    height: 80,
-    borderRadius: TAB_BAR_RADIUS,
-    paddingVertical: TAB_BAR_PADDING,
-    paddingHorizontal: TAB_BAR_PADDING,
+    borderWidth: 1,
+    borderColor: Colors.lightBlue,
+    height: 72,
+    borderRadius: 100,
+    paddingHorizontal: 15,
     width: "100%",
-    shadowColor: "#fff",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 2,
-    elevation: 8,
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 4,
   },
   tabItem: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    height: "100%",
-    flex: 0.3,
+    gap: 4,
   },
   tabLabel: {
     fontSize: 12,
-    marginTop: 4,
+    lineHeight: 14.4,
     textAlign: "center",
-    display: "none",
   },
   tabLabelActive: {
     color: "#fff",
-    display: "flex",
-  },
-  iconContainer: {
-    width: "100%",
-    padding: 4,
-    borderRadius: 2,
-    justifyContent: "center",
-    alignItems: "center",
   },
   tabItemActive: {
     backgroundColor: Colors.primary,
-    borderRadius: TAB_BAR_RADIUS - TAB_BAR_PADDING,
-    flex: 0.4,
+    borderRadius: 100,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
   },
   whiteView: {
-    // borderWidth: 23,
     backgroundColor: "white",
     height: 12,
     flex: 1,
