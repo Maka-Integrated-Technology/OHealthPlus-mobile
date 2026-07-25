@@ -46,6 +46,21 @@ export const ROUTES = {
     APPOINTMENT_SUMMARY: "/screens/appointments/AppointmentSummary",
 
     // ============================================
+    // Lab Test Booking Routes
+    // ============================================
+    LABORATORY: "/screens/labs/Laboratory",
+    LAB_ENABLE_LOCATION: "/screens/labs/EnableLocation",
+    UPLOAD_TEST_REQUEST: "/screens/labs/UploadTestRequest",
+    UPLOAD_TEST_REQUEST_CAMERA: "/screens/labs/Camera",
+    READING_TEST_REQUEST: "/screens/labs/ReadingTestRequest",
+    EXTRACTED_TESTS: "/screens/labs/ExtractedTests",
+    CHOOSE_LAB: "/screens/labs/ChooseLab",
+    LAB_OVERVIEW: "/screens/labs/LabOverview",
+    SELECT_LAB_DATE_TIME: "/screens/labs/SelectDateTime",
+    REVIEW_LAB_BOOKING: "/screens/labs/ReviewBooking",
+    LAB_BOOKING_CONFIRMED: "/screens/labs/BookingConfirmed",
+
+    // ============================================
     // Messages Routes
     // ============================================
     AI_HEALTH_ASSISTANT: "/screens/messages/AIHealthAssistant",
