@@ -3,7 +3,7 @@ import {
   HomeIcon,
   MessagesIcon,
   ProfileIcon,
-  SparkIcon,
+  TestsAndMedsIcon,
 } from "@/components/TabIcons";
 import Colors from "@/constants/Colors";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
@@ -22,7 +22,7 @@ const iconMap = {
   index: HomeIcon,
   appointments: AppointmentsIcon,
   messages: MessagesIcon,
-  tests: SparkIcon,
+  labs: TestsAndMedsIcon,
   profile: ProfileIcon,
 };
 
@@ -106,8 +106,8 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
                 return "Appointments";
               case "messages":
                 return "Messages";
-              case "tests":
-                return "Tests";
+              case "labs":
+                return "Tests & Meds";
               case "profile":
                 return "Profile";
               default:
