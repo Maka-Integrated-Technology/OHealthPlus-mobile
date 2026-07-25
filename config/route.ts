@@ -130,6 +130,10 @@ export const useAppRouter = () => {
             navigate(ROUTES.REVIEW_LAB_BOOKING, params),
         toLabBookingConfirmed: (params?: { bookingId?: string; labId?: string }) =>
             navigate(ROUTES.LAB_BOOKING_CONFIRMED, params),
+        toSearchTests: () => navigate(ROUTES.SEARCH_TESTS),
+        toMyTests: () => navigate(ROUTES.MY_TESTS),
+        toLabTestResultDetail: (params?: { id?: string }) =>
+            navigate(ROUTES.LAB_TEST_RESULT_DETAIL, params),
 
         toAIHealthAssistant: () => navigate(ROUTES.AI_HEALTH_ASSISTANT),
 

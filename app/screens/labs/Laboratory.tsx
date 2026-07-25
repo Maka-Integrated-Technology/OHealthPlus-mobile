@@ -5,7 +5,7 @@ import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Alert, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function Laboratory() {
   const router = useAppRouter();
@@ -64,9 +64,7 @@ export default function Laboratory() {
         </Pressable>
 
         <Pressable
-          onPress={() =>
-            Alert.alert("Coming soon", "Searching for tests directly is coming soon.")
-          }
+          onPress={() => router.toSearchTests()}
           style={styles.card}
         >
           <View style={styles.cardIcon}>
@@ -87,9 +85,7 @@ export default function Laboratory() {
         </Pressable>
 
         <Pressable
-          onPress={() =>
-            Alert.alert("Coming soon", "Viewing your lab tests is coming soon.")
-          }
+          onPress={() => router.toMyTests()}
           style={styles.card}
         >
           <View style={styles.cardIcon}>
