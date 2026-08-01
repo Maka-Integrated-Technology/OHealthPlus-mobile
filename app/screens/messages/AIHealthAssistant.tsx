@@ -3,10 +3,11 @@ import AIHealthAssistant from "@/assets/images/ai-assistant.png";
 import DetailHeader from "@/components/DetailHeader";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
+import { useAppRouter } from "@/config/route";
+import Colors from "@/constants/Colors";
 import { useChatHistory, useSendChatMessage } from "@/features/messages/hooks/useChat";
 import type { ChatMessage } from "@/features/messages/types";
 import { getApiErrorMessage } from "@/utils/apiError";
-import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -32,9 +33,9 @@ type Message = {
 type ViewState = "intro" | "chat";
 
 const PROMPT_CARDS = [
-  { id: "1", emoji: "🤒", label: "I'm not feeling well" },
-  { id: "2", emoji: "📋", label: "I have a health concern" },
-  { id: "3", emoji: "👨‍⚕️", label: "I want to talk to a doctor" },
+  { id: "1", emoji: "🤦", label: "I'm not feeling well" },
+  { id: "2", emoji: "📓", label: "I have a health concern" },
+  { id: "3", emoji: "👨‍⚕️", label: "I want to talk to a doctor", action: "doctor" as const },
   { id: "4", emoji: "❓", label: "I don't know what's wrong" },
 ];
 
@@ -48,6 +49,7 @@ function toMessage(msg: ChatMessage): Message {
 }
 
 export default function AIHealthAssistantScreen() {
+  const router = useAppRouter();
   const [viewState, setViewState] = useState<ViewState>("intro");
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
@@ -154,7 +156,13 @@ export default function AIHealthAssistantScreen() {
                       ? styles.promptCardLeft
                       : styles.promptCardRight,
                   ]}
-                  onPress={() => handleSend(card.label)}
+                  onPress={() => {
+                    if ("action" in card && card.action === "doctor") {
+                      router.toBookAppointments();
+                      return;
+                    }
+                    handleSend(card.label);
+                  }}
                   disabled={isSending}
                   activeOpacity={0.75}
                 >

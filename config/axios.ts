@@ -14,14 +14,20 @@ import {
 const BASE_URL =
   process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000/api/v1";
 
+/** Default axios request timeout (ms). Prevents a hanging mutation from
+ *  leaving the UI in a stuck disabled state. */
+const REQUEST_TIMEOUT_MS = 30000;
+
 export const axiosPublic = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
+  timeout: REQUEST_TIMEOUT_MS,
 });
 
 export const axiosPrivate = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
+  timeout: REQUEST_TIMEOUT_MS,
 });
 
 axiosPrivate.interceptors.request.use(
