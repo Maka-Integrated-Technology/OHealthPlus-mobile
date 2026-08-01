@@ -14,15 +14,12 @@ import {
   formatBookingDateTime,
   isUpcomingBooking,
 } from "@/features/appointments/utils/formatters";
-import PremiumUpgradeModal from "@/features/premium/components/PremiumUpgradeModal";
 import { useGetMe } from "@/features/auth/hooks/useAuth";
 import { getInitials } from "@/utils/avatar";
-import { useState } from "react";
 import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, View } from "react-native";
 
 export default function TabOneScreen() {
   const router = useAppRouter();
-  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   const { data: user } = useGetMe();
   const { data: bookings, isLoading: bookingsLoading } = useBookings();
@@ -39,15 +36,6 @@ export default function TabOneScreen() {
         new Date(a.booking_date).getTime() - new Date(b.booking_date).getTime()
     )
     .slice(0, 3);
-
-  const handleViewPlans = () => {
-    router.toSubscription();
-    setShowPremiumModal(false);
-  };
-
-  const handleCloseModal = () => {
-    setShowPremiumModal(false);
-  };
 
   const QuickAction = [
     {
@@ -195,12 +183,6 @@ export default function TabOneScreen() {
           )}
         </View>
       </ScrollView>
-
-      <PremiumUpgradeModal
-        visible={showPremiumModal}
-        onClose={handleCloseModal}
-        onViewPlans={handleViewPlans}
-      />
     </Screen>
   );
 }
