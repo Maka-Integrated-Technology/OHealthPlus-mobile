@@ -7,12 +7,17 @@ import Colors from "@/constants/Colors";
 import { ROUTES } from "@/constants/routes";
 import { useSignup } from "@/features/auth/hooks/useAuth";
 import type { UserRole } from "@/features/auth/types/auth";
-import { SignUpValues, signUpSchema } from "@/features/auth/validationSchema";
+import {
+  SignUpValues,
+  signUpSchema,
+  splitFullName,
+} from "@/features/auth/validationSchema";
 import { getApiErrorMessage } from "@/utils/apiError";
 import { toFormikValidate } from "@/utils/formikZod";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -24,8 +29,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const initialValues: SignUpValues = {
   role: "PATIENT",
-  first_name: "",
-  last_name: "",
+  name: "",
   email: "",
   password: "",
   confirmPassword: "",
@@ -39,6 +43,22 @@ export default function SignUpScreen() {
   const [serverError, setServerError] = useState<string | null>(null);
   const { mutateAsync: signUp } = useSignup();
 
+  const handleGoogleSignUp = () => {
+    Alert.alert(
+      "Google Sign-Up",
+      "Social sign-in is not available in this build yet. Please create an account with email and password."
+    );
+  };
+
+  const handleAppleSignUp = () => {
+    Alert.alert(
+      "Apple Sign-In",
+      Platform.OS === "ios"
+        ? "Social sign-in is not available in this build yet. Please create an account with email and password."
+        : "Apple Sign-In is only available on iOS. Please create an account with email and password."
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -49,7 +69,7 @@ export default function SignUpScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <BackButton />
+          <BackButton onPress={() => router.toWelcome()} />
 
           <View style={styles.header}>
             <Text weight="bold" style={styles.title}>
@@ -66,13 +86,18 @@ export default function SignUpScreen() {
             onSubmit={async (values, { setSubmitting }) => {
               setServerError(null);
               try {
-                const {
-                  confirmPassword: _c,
-                  agreetoTerms: _a,
-                  role,
-                  ...rest
-                } = values;
-                await signUp({ ...rest, role: [role as UserRole] });
+                const parts = splitFullName(values.name);
+                if (!parts) {
+                  setServerError("Please enter your first and last name.");
+                  return;
+                }
+                await signUp({
+                  first_name: parts.first_name,
+                  last_name: parts.last_name,
+                  email: values.email,
+                  password: values.password,
+                  role: [values.role as UserRole],
+                });
                 router.toEmailVerification({
                   email: values.email,
                   mode: "signup",
@@ -84,7 +109,7 @@ export default function SignUpScreen() {
               }
             }}
           >
-            {({ handleSubmit, isSubmitting, values, setFieldValue }) => (
+            {({ handleSubmit, isSubmitting }) => (
               <View style={styles.form}>
                 {/* Role selector: This is commented out because I am not sure if we will need it for the onboarding */}
                 {/* <View style={styles.roleSelector}>
@@ -111,16 +136,10 @@ export default function SignUpScreen() {
 
                 <View style={styles.inputGroup}>
                   <FormInputField
-                    name="first_name"
+                    name="name"
                     icon="name"
-                    placeholder="First Name"
-                    placeholderTextColor="#9CA3AF"
-                  />
-
-                  <FormInputField
-                    name="last_name"
-                    icon="name"
-                    placeholder="Last Name"
+                    placeholder="Name"
+                    autoCapitalize="words"
                     placeholderTextColor="#9CA3AF"
                   />
 
@@ -196,8 +215,8 @@ export default function SignUpScreen() {
 
                 <View>
                   <View style={styles.socialBtnGroup}>
-                    <GoogleButton onPress={() => {}} />
-                    <AppleButton onPress={() => {}} />
+                    <GoogleButton onPress={handleGoogleSignUp} />
+                    <AppleButton onPress={handleAppleSignUp} />
                   </View>
                   <TouchableOpacity
                     style={styles.footerLink}

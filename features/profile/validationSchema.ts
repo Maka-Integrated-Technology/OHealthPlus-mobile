@@ -1,21 +1,22 @@
 import { z } from "zod";
 
+/**
+ * The Personal Information screen shows a single "Full Name" field per Figma.
+ * On submit we split this into first_name + last_name before calling the API.
+ */
 export const personalInfoSchema = z.object({
-  first_name: z
+  full_name: z
     .string()
     .trim()
-    .min(2, "First name must be at least 2 characters"),
-  last_name: z
-    .string()
-    .trim()
-    .min(2, "Last name must be at least 2 characters"),
+    .min(1, "Please enter your name")
+    .refine(
+      (val) => {
+        const parts = val.trim().split(/\s+/).filter(Boolean);
+        return parts.length >= 2;
+      },
+      { message: "Please enter your first and last name" },
+    ),
   email: z.string().trim().email("Please enter a valid email address"),
-  phone: z
-    .string()
-    .trim()
-    .refine((val) => val === "" || val.replace(/\D/g, "").length >= 7, {
-      message: "Please enter a valid phone number",
-    }),
 });
 
 export type PersonalInfoValues = z.infer<typeof personalInfoSchema>;

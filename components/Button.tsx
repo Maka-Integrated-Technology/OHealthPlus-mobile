@@ -27,6 +27,12 @@ interface CustomButtonProps {
   icon?: ImageSourcePropType;
   disabled?: boolean;
   isLoading?: boolean;
+  /**
+   * Optional label to show while isLoading is true. If provided, replaces the
+   * default activity indicator with a label that gets re-enabled if the
+   * label needs to convey progress ("Saving...", etc).
+   */
+  loadingText?: string;
 }
 
 export default function Button({
@@ -37,6 +43,7 @@ export default function Button({
   icon,
   disabled = false,
   isLoading = false,
+  loadingText,
 }: CustomButtonProps) {
   const isButtonDisabled = disabled || isLoading;
 
@@ -87,7 +94,13 @@ export default function Button({
     >
       <View style={styles.content}>
         {isLoading ? (
-          <ActivityIndicator color={getSpinnerColor()} />
+          loadingText !== undefined ? (
+            <Text weight="medium" style={[styles.text, getTextStyle()]}>
+              {loadingText}
+            </Text>
+          ) : (
+            <ActivityIndicator color={getSpinnerColor()} />
+          )
         ) : (
           <>
             {icon && <Image source={icon} style={styles.icon} />}
