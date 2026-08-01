@@ -12,6 +12,7 @@ import { toFormikValidate } from "@/utils/formikZod";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -29,6 +30,22 @@ export default function SignInScreen() {
   const [serverError, setServerError] = useState<string | null>(null);
   const { mutateAsync: login } = useLogin();
 
+  const handleGoogleSignIn = () => {
+    Alert.alert(
+      "Google Sign-In",
+      "Social sign-in is not available in this build yet. Please use email and password."
+    );
+  };
+
+  const handleAppleSignIn = () => {
+    Alert.alert(
+      "Apple Sign-In",
+      Platform.OS === "ios"
+        ? "Social sign-in is not available in this build yet. Please use email and password."
+        : "Apple Sign-In is only available on iOS. Please use email and password."
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -36,7 +53,7 @@ export default function SignInScreen() {
         style={{ flex: 1 }}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <BackButton />
+          <BackButton onPress={() => router.toWelcome()} />
 
           <View style={styles.header}>
             <Text weight="bold" style={styles.title}>
@@ -116,8 +133,8 @@ export default function SignInScreen() {
 
                 <View>
                   <View style={styles.socialBtnGroup}>
-                    <GoogleButton onPress={() => {}} />
-                    <AppleButton onPress={() => {}} />
+                    <GoogleButton onPress={handleGoogleSignIn} />
+                    <AppleButton onPress={handleAppleSignIn} />
                   </View>
                   <TouchableOpacity
                     style={styles.footerLink}
