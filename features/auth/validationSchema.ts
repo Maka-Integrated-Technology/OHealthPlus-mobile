@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /** Allow letters (incl. common Latin diacritics), spaces, apostrophes, hyphens. */
-const NAME_PART_REGEX = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
+export const NAME_PART_REGEX = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
 
 const COMMON_EMAIL_TLDS = new Set([
   "com",
