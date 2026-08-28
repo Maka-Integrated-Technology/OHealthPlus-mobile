@@ -87,7 +87,6 @@ export interface VerifySignupRequest {
 
 export interface LogoutRequest {
   session_id: string;
-  user_id: string;
 }
 
 export interface Enable2faData {
