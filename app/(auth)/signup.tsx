@@ -5,7 +5,7 @@ import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
 import { ROUTES } from "@/constants/routes";
-import { useSignup } from "@/features/auth/hooks/useAuth";
+import { useGoogleLogin, useSignup } from "@/features/auth/hooks/useAuth";
 import type { UserRole } from "@/features/auth/types/auth";
 import {
   SignUpValues,
@@ -14,6 +14,11 @@ import {
 } from "@/features/auth/validationSchema";
 import { getApiErrorMessage } from "@/utils/apiError";
 import { toFormikValidate } from "@/utils/formikZod";
+import {
+  GoogleSignin,
+  isErrorWithCode,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import {
@@ -42,12 +47,46 @@ export default function SignUpScreen() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const { mutateAsync: signUp } = useSignup();
+  const { mutateAsync: googleLogin } = useGoogleLogin();
 
-  const handleGoogleSignUp = () => {
-    Alert.alert(
-      "Google Sign-Up",
-      "Social sign-in is not available in this build yet. Please create an account with email and password."
-    );
+  const handleGoogleSignUp = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const response = await GoogleSignin.signIn();
+      const idToken = response.data?.idToken;
+      if (!idToken) {
+        Alert.alert(
+          "Google Sign-Up",
+          "Could not retrieve a Google ID token. Please try again."
+        );
+        return;
+      }
+      // The backend creates-or-logs-in on this same endpoint and the Google
+      // account is already email-verified, so this skips the OTP step that
+      // password signup requires.
+      await googleLogin({ token: idToken });
+      router.toHome();
+    } catch (err) {
+      if (isErrorWithCode(err)) {
+        if (
+          err.code === statusCodes.SIGN_IN_CANCELLED ||
+          err.code === statusCodes.IN_PROGRESS
+        ) {
+          return;
+        }
+        if (err.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+          Alert.alert(
+            "Google Sign-Up",
+            "Google Play Services is required for Google Sign-In."
+          );
+          return;
+        }
+      }
+      Alert.alert(
+        "Google Sign-Up",
+        getApiErrorMessage(err, "Google sign-in failed. Please try again.")
+      );
+    }
   };
 
   const handleAppleSignUp = () => {
