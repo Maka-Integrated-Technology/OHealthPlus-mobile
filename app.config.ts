@@ -66,6 +66,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     "expo-font",
     "expo-web-browser",
     [
+      "@react-native-google-signin/google-signin",
+      {
+        // Reversed iOS OAuth client ID, e.g.
+        // "com.googleusercontent.apps.XXXX-XXXX". Required for iOS native
+        // sign-in; leave unset while iOS builds are blocked on signing certs.
+        iosUrlScheme: process.env.GOOGLE_IOS_URL_SCHEME ?? "",
+      },
+    ],
+    [
       "expo-build-properties",
       {
         ios: {
