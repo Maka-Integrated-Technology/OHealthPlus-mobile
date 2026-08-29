@@ -5,10 +5,15 @@ import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
 import { ROUTES } from "@/constants/routes";
-import { useLogin } from "@/features/auth/hooks/useAuth";
+import { useGoogleLogin, useLogin } from "@/features/auth/hooks/useAuth";
 import { SignInValues, signInSchema } from "@/features/auth/validationSchema";
 import { getApiErrorMessage } from "@/utils/apiError";
 import { toFormikValidate } from "@/utils/formikZod";
+import {
+  GoogleSignin,
+  isErrorWithCode,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import {
@@ -29,12 +34,43 @@ export default function SignInScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const { mutateAsync: login } = useLogin();
+  const { mutateAsync: googleLogin } = useGoogleLogin();
 
-  const handleGoogleSignIn = () => {
-    Alert.alert(
-      "Google Sign-In",
-      "Social sign-in is not available in this build yet. Please use email and password."
-    );
+  const handleGoogleSignIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const response = await GoogleSignin.signIn();
+      const idToken = response.data?.idToken;
+      if (!idToken) {
+        Alert.alert(
+          "Google Sign-In",
+          "Could not retrieve a Google ID token. Please try again."
+        );
+        return;
+      }
+      await googleLogin({ token: idToken });
+      router.toHome();
+    } catch (err) {
+      if (isErrorWithCode(err)) {
+        if (
+          err.code === statusCodes.SIGN_IN_CANCELLED ||
+          err.code === statusCodes.IN_PROGRESS
+        ) {
+          return;
+        }
+        if (err.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+          Alert.alert(
+            "Google Sign-In",
+            "Google Play Services is required for Google Sign-In."
+          );
+          return;
+        }
+      }
+      Alert.alert(
+        "Google Sign-In",
+        getApiErrorMessage(err, "Google sign-in failed. Please try again.")
+      );
+    }
   };
 
   const handleAppleSignIn = () => {

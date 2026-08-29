@@ -1,4 +1,5 @@
 import { useColorScheme } from "@/components/useColorScheme";
+import { configureGoogleSignIn } from "@/config/googleSignIn";
 import { queryClient } from "@/config/queryClient";
 import { ROUTES } from "@/constants/routes";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -39,6 +40,10 @@ export default function RootLayout() {
       NavigationBar.setBackgroundColorAsync("#ffffff");
       NavigationBar.setButtonStyleAsync("dark");
     }
+  }, []);
+
+  useEffect(() => {
+    configureGoogleSignIn();
   }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.

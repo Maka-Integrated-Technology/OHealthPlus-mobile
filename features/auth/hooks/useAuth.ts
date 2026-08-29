@@ -17,7 +17,6 @@ import {
   clearAuthStorage,
   getRefreshToken,
   getSessionId,
-  getUserId,
   saveRefreshToken,
   saveSessionExpiresAt,
   saveSessionId,
@@ -155,12 +154,11 @@ export function useChangePassword() {
 export function useLogout() {
   return useMutation({
     mutationFn: async () => {
-      const [session_id, user_id] = await Promise.all([
-        getSessionId(),
-        getUserId(),
-      ]);
-      if (session_id && user_id) {
-        await AuthService.logout({ session_id, user_id });
+      // The server resolves the session owner from the access token; the
+      // body only needs to name which session to revoke.
+      const session_id = await getSessionId();
+      if (session_id) {
+        await AuthService.logout({ session_id });
       }
     },
     onSettled: async () => {
