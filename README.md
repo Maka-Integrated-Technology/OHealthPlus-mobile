@@ -115,7 +115,7 @@ OHealthPlus-mobile/
    ```
    Edit `.env` with your configuration:
    ```
-   EXPO_PUBLIC_API_URL=https://api.staging.ohealthltd.com/api/v1
+   EXPO_PUBLIC_API_URL=https://api.staging.ohealthltd.com/api
    EXPO_PUBLIC_ENV=development
    ```
 
@@ -370,7 +370,7 @@ Create `.env` file in the project root:
 
 ```env
 # API Configuration
-EXPO_PUBLIC_API_URL=https://api.staging.ohealthltd.com/api/v1
+EXPO_PUBLIC_API_URL=https://api.staging.ohealthltd.com/api
 EXPO_PUBLIC_API_TIMEOUT=10000
 
 # Environment

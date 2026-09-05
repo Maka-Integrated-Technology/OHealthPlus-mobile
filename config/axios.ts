@@ -12,7 +12,7 @@ import {
 } from "@/utils/secureStorage";
 
 const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000/api/v1";
+  process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000/api";
 
 /** Default axios request timeout (ms). Prevents a hanging mutation from
  *  leaving the UI in a stuck disabled state. */
