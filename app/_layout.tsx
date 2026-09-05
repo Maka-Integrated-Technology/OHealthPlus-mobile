@@ -1,7 +1,6 @@
 import { useColorScheme } from "@/components/useColorScheme";
 import { configureGoogleSignIn } from "@/config/googleSignIn";
 import { queryClient } from "@/config/queryClient";
-import { ROUTES } from "@/constants/routes";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
   DarkTheme,
@@ -19,8 +18,7 @@ import "react-native-reanimated";
 export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: ROUTES.ONBOARDING,
+  initialRouteName: "(auth)",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
