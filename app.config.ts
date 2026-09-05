@@ -5,6 +5,17 @@ const IS_DEV = APP_VARIANT === "development";
 const IS_PREVIEW = APP_VARIANT === "preview";
 
 const PROJECT_ID = "46030814-1813-4aaf-b866-0abca2226b63";
+const GOOGLE_IOS_URL_SCHEME = process.env.GOOGLE_IOS_URL_SCHEME;
+
+const googleSignInPlugins: NonNullable<ExpoConfig["plugins"]> =
+  GOOGLE_IOS_URL_SCHEME
+    ? [
+        [
+          "@react-native-google-signin/google-signin",
+          { iosUrlScheme: GOOGLE_IOS_URL_SCHEME },
+        ],
+      ]
+    : [];
 
 const getUniqueIdentifier = () => {
   if (IS_DEV) return "com.ohealth.patientapp.dev";
@@ -65,15 +76,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     "expo-router",
     "expo-font",
     "expo-web-browser",
-    [
-      "@react-native-google-signin/google-signin",
-      {
-        // Reversed iOS OAuth client ID, e.g.
-        // "com.googleusercontent.apps.XXXX-XXXX". Required for iOS native
-        // sign-in; leave unset while iOS builds are blocked on signing certs.
-        iosUrlScheme: process.env.GOOGLE_IOS_URL_SCHEME ?? "",
-      },
-    ],
+    ...googleSignInPlugins,
     [
       "expo-build-properties",
       {
