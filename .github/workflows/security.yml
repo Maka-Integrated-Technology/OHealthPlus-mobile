@@ -1,0 +1,33 @@
+name: Supply Chain Security
+
+on:
+  push:
+    branches: [dev, staging, main]
+  pull_request:
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Static Repository Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Run supply-chain security scan
+        shell: bash
+        run: bash scripts/security/supply-chain-scan.sh
+
+      - name: Verify supply-chain scanner controls
+        shell: bash
+        run: bash scripts/security/supply-chain-scan.test.sh
