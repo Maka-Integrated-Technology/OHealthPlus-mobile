@@ -44,7 +44,7 @@ export default function ForgotPasswordScreen() {
             Forgot Password?
           </Text>
           <Text style={styles.subtitle}>
-            Enter the email address linked to your Healthbridge account.
+            Enter the email address linked to your OHealth account.
           </Text>
         </View>
 
