@@ -1,13 +1,14 @@
-import avatar from "@/assets/images/avatar-full.jpg";
+import Avatar, { AvatarFallback } from "@/components/Avatar";
 import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
-import { useLogout } from "@/features/auth/hooks/useAuth";
+import { useGetMe, useLogout } from "@/features/auth/hooks/useAuth";
+import { getInitials } from "@/utils/avatar";
 import { Ionicons } from "@expo/vector-icons";
 import {
+  ActivityIndicator,
   Alert,
-  Image,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -27,6 +28,7 @@ type MenuItem = {
 export default function ProfileScreen() {
   const router = useAppRouter();
   const { mutateAsync: logout, isPending: isLoggingOut } = useLogout();
+  const { data: user, isLoading, isError, refetch } = useGetMe();
 
   const handleLogout = () => {
     Alert.alert("Log out", "Are you sure you want to log out?", [
@@ -63,10 +65,9 @@ export default function ProfileScreen() {
     },
     {
       id: "medical",
-      label: "Medical Information",
+      label: "Medical Records",
       icon: "fitness-outline",
-      disabled: true,
-      badge: "Coming soon",
+      onPress: () => router.toMedicalRecords(),
     },
     {
       id: "notifications",
@@ -180,20 +181,50 @@ export default function ProfileScreen() {
         {/* Blue header */}
         <View style={styles.blueHeader} />
 
-        {/* Avatar overlapping header */}
+        {/* Avatar overlapping header. */}
         <View style={styles.avatarWrapper}>
-          <Image source={avatar} style={styles.avatar} />
+          <Avatar
+            imageUrl={user?.image}
+            size="4xl"
+            rounded="xl"
+            accessibilityLabel={
+              user ? `${user.first_name} ${user.last_name}`.trim() : "Profile"
+            }
+          >
+            <AvatarFallback size="4xl" rounded="xl">
+              {getInitials(user?.first_name, user?.last_name)}
+            </AvatarFallback>
+          </Avatar>
         </View>
 
         <View style={{ paddingHorizontal: 16, gap: 20 }}>
           {/* Name + email */}
           <View style={styles.userInfo}>
-            <Text weight="semibold" style={styles.userName}>
-              Olivia Jane
-            </Text>
-            <Text weight="regular" style={styles.userEmail}>
-              janebetty@gmail.com
-            </Text>
+            {isLoading ? (
+              <ActivityIndicator color={Colors.primary} />
+            ) : isError ? (
+              <>
+                <Text weight="semibold" style={styles.userName}>
+                  —
+                </Text>
+                <Text
+                  weight="medium"
+                  style={styles.retryText}
+                  onPress={() => refetch()}
+                >
+                  Failed to load profile. Tap to retry.
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text weight="semibold" style={styles.userName}>
+                  {user ? `${user.first_name} ${user.last_name}`.trim() : "—"}
+                </Text>
+                <Text weight="regular" style={styles.userEmail}>
+                  {user?.email ?? ""}
+                </Text>
+              </>
+            )}
           </View>
 
           {/* Main menu */}
@@ -218,8 +249,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   avatarWrapper: {
-    alignItems: "center",
+    alignSelf: "center",
     marginTop: -52,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 4,
     zIndex: 10,
   },
   avatar: {
@@ -248,6 +284,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16.8,
     color: Colors.neutral,
+  },
+  retryText: {
+    fontSize: 13,
+    color: Colors.primary,
+    textAlign: "center",
   },
   menuGroup: {
     gap: 8,

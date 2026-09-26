@@ -1,24 +1,45 @@
 import { CustomTabBar } from "@/components/CustomTabbar";
 import { ROUTES } from "@/constants/routes";
-import { hasToken } from "@/utils/secureStorage";
+import { useGetMe } from "@/features/auth/hooks/useAuth";
 import { Tabs, useRouter } from "expo-router";
 import { useEffect } from "react";
+import { ActivityIndicator, View } from "react-native";
 
 /**
- * Tabs layout — guards every tab screen behind authentication.
- * If no access token is found in SecureStore the user is redirected to
- * sign-in. This runs once on mount; logout flows handle their own redirect.
+ * Tabs layout — guards every tab screen behind a *valid* session.
+ * On cold start we fetch the current user (`/auth/me`); a 401 (expired/revoked
+ * token) surfaces as `isError` and redirects to sign-in. The axios response
+ * interceptor handles 401s that happen mid-session.
  */
 export default function TabLayout() {
   const router = useRouter();
+  const { data: user, isLoading, isError } = useGetMe();
 
   useEffect(() => {
-    hasToken().then((authenticated) => {
-      if (!authenticated) {
-        router.replace(ROUTES.SIGN_IN as any);
-      }
-    });
-  }, []);
+    if (isError) {
+      router.replace(ROUTES.SIGN_IN as never);
+    }
+  }, [isError]);
+
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#fff",
+        }}
+      >
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  // Errored / unauthenticated: render nothing while the redirect above runs.
+  if (isError || !user) {
+    return null;
+  }
 
   return (
     <Tabs
@@ -33,7 +54,7 @@ export default function TabLayout() {
       <Tabs.Screen name="index" options={{ headerShown: false }} />
       <Tabs.Screen name="appointments" options={{ headerShown: false }} />
       <Tabs.Screen name="messages" options={{ headerShown: false }} />
-      <Tabs.Screen name="tests" options={{ headerShown: false }} />
+      <Tabs.Screen name="labs" options={{ headerShown: false }} />
       <Tabs.Screen name="profile" options={{ headerShown: false }} />
     </Tabs>
   );

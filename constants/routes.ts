@@ -14,7 +14,6 @@ export const ROUTES = {
     SIGN_UP: "/(auth)/signup",
     SIGN_IN: "/(auth)/signin",
     LEGAL_TERMS: "/(auth)/legalTerm",
-    OTP: "/(auth)/OTP",
     FORGOT_PASSWORD: "/(auth)/ForgotPassword",
     NEW_PASSWORD: "/(auth)/NewPassword",
     EMAIL_VERIFICATION: "/(auth)/EmailVerification",
@@ -47,6 +46,24 @@ export const ROUTES = {
     APPOINTMENT_SUMMARY: "/screens/appointments/AppointmentSummary",
 
     // ============================================
+    // Lab Test Booking Routes
+    // ============================================
+    LABORATORY: "/screens/labs/Laboratory",
+    LAB_ENABLE_LOCATION: "/screens/labs/EnableLocation",
+    UPLOAD_TEST_REQUEST: "/screens/labs/UploadTestRequest",
+    UPLOAD_TEST_REQUEST_CAMERA: "/screens/labs/Camera",
+    READING_TEST_REQUEST: "/screens/labs/ReadingTestRequest",
+    EXTRACTED_TESTS: "/screens/labs/ExtractedTests",
+    CHOOSE_LAB: "/screens/labs/ChooseLab",
+    LAB_OVERVIEW: "/screens/labs/LabOverview",
+    SELECT_LAB_DATE_TIME: "/screens/labs/SelectDateTime",
+    REVIEW_LAB_BOOKING: "/screens/labs/ReviewBooking",
+    LAB_BOOKING_CONFIRMED: "/screens/labs/BookingConfirmed",
+    SEARCH_TESTS: "/screens/labs/SearchTests",
+    MY_TESTS: "/screens/labs/MyTests",
+    LAB_TEST_RESULT_DETAIL: "/screens/labs/TestResultDetail",
+
+    // ============================================
     // Messages Routes
     // ============================================
     AI_HEALTH_ASSISTANT: "/screens/messages/AIHealthAssistant",
@@ -59,6 +76,20 @@ export const ROUTES = {
     NOTIFICATIONS: "/screens/profile/Notifications",
     TERMS_AND_CONDITIONS: "/screens/profile/TermsAndConditions",
     PRIVACY_POLICY: "/screens/profile/PrivacyPolicy",
+
+    // ============================================
+    // Medical Records Routes
+    // ============================================
+    MEDICAL_RECORDS: "/screens/medical/MedicalRecords",
+    GENERAL_INFORMATION: "/screens/medical/GeneralInformation",
+    UPDATE_GENERAL_INFORMATION: "/screens/medical/UpdateGeneralInformation",
+    ALLERGIES: "/screens/medical/Allergies",
+    ADD_ALLERGY: "/screens/medical/AddAllergy",
+    LAB_RESULTS: "/screens/medical/LabResults",
+    LAB_RESULT_DETAIL: "/screens/medical/LabResultDetail",
+    HEALTH_CONDITIONS: "/screens/medical/HealthConditions",
+    ADD_HEALTH_CONDITION: "/screens/medical/AddHealthCondition",
+    ADD_OTHER_CONDITION: "/screens/medical/AddOtherCondition",
 
     // ============================================
     // Paywall Routes

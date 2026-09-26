@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, TouchableOpacityProps } from "react-native";
 
 interface BackButtonProps extends TouchableOpacityProps {}
 
-export function BackButton({ style, ...props }: BackButtonProps) {
+export function BackButton({ style, onPress, ...props }: BackButtonProps) {
   const router = useAppRouter();
 
   const handleBack = () => {
@@ -18,9 +18,9 @@ export function BackButton({ style, ...props }: BackButtonProps) {
 
   return (
     <Pressable
-      style={[styles.backButton, style]}
       {...props}
-      onPress={handleBack}
+      style={[styles.backButton, style]}
+      onPress={onPress ?? handleBack}
     >
       <Ionicons name="chevron-back" size={20} color="black" />
     </Pressable>
