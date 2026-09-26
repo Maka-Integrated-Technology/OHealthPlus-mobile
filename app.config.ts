@@ -4,30 +4,41 @@ const APP_VARIANT = process.env.APP_VARIANT ?? "production";
 const IS_DEV = APP_VARIANT === "development";
 const IS_PREVIEW = APP_VARIANT === "preview";
 
-const PROJECT_ID = "6925669e-29f1-4aec-aed2-11be70a1a138";
+const PROJECT_ID = "46030814-1813-4aaf-b866-0abca2226b63";
+const GOOGLE_IOS_URL_SCHEME = process.env.GOOGLE_IOS_URL_SCHEME;
+
+const googleSignInPlugins: NonNullable<ExpoConfig["plugins"]> =
+  GOOGLE_IOS_URL_SCHEME
+    ? [
+        [
+          "@react-native-google-signin/google-signin",
+          { iosUrlScheme: GOOGLE_IOS_URL_SCHEME },
+        ],
+      ]
+    : [];
 
 const getUniqueIdentifier = () => {
-  if (IS_DEV) return "com.ohealth.healthbridge.dev";
-  if (IS_PREVIEW) return "com.ohealth.healthbridge.preview";
-  return "com.ohealth.healthbridge";
+  if (IS_DEV) return "com.ohealth.patientapp.dev";
+  if (IS_PREVIEW) return "com.ohealth.patientapp.preview";
+  return "com.ohealth.patientapp";
 };
 
 const getAppName = () => {
-  if (IS_DEV) return "Health Bridge (Dev)";
-  if (IS_PREVIEW) return "Health Bridge (Preview)";
-  return "Health Bridge";
+  if (IS_DEV) return "OHealth Patient App (Dev)";
+  if (IS_PREVIEW) return "OHealth Patient App (Preview)";
+  return "OHealth Patient App";
 };
 
 const getAppScheme = () => {
-  if (IS_DEV) return "healthbridge-dev";
-  if (IS_PREVIEW) return "healthbridge-preview";
-  return "healthbridge";
+  if (IS_DEV) return "ohealth-dev";
+  if (IS_PREVIEW) return "ohealth-preview";
+  return "ohealth";
 };
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: getAppName(),
-  slug: "health-bridge",
+  slug: "ohealth-patient-app",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/icons/logo.png",
@@ -65,6 +76,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     "expo-router",
     "expo-font",
     "expo-web-browser",
+    ...googleSignInPlugins,
     [
       "expo-build-properties",
       {

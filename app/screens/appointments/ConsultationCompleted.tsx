@@ -3,14 +3,29 @@ import Screen from "@/components/Screen";
 import { Text } from "@/components/Text";
 import { useAppRouter } from "@/config/route";
 import Colors from "@/constants/Colors";
+import { useBooking } from "@/features/appointments/hooks/useAppointments";
 import { useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 export default function ConsultationCompletedScreen() {
   const router = useAppRouter();
-  const { doctorName } = useLocalSearchParams<{ doctorName?: string }>();
-  const name = doctorName || "Dr. Tabitha Baker";
+  const { appointmentId } = useLocalSearchParams<{
+    appointmentId?: string;
+  }>();
+
+  const { data: booking, isLoading } = useBooking(appointmentId ?? "");
+  const name = booking?.professional_name ?? "your doctor";
+
+  if (isLoading) {
+    return (
+      <Screen style={styles.screen}>
+        <View style={styles.center}>
+          <ActivityIndicator color={Colors.primary} />
+        </View>
+      </Screen>
+    );
+  }
 
   return (
     <Screen style={styles.screen}>
@@ -37,7 +52,7 @@ export default function ConsultationCompletedScreen() {
         <Button
           onPress={() =>
             router.toAppointmentSummary({
-              appointmentId: "1",
+              appointmentId: booking?.id ?? appointmentId,
             })
           }
           style={styles.primaryButton}
@@ -60,6 +75,11 @@ const styles = StyleSheet.create({
   screen: {
     paddingHorizontal: 24,
     justifyContent: "space-between",
+  },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   content: {
     flex: 1,

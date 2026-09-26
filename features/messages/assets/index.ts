@@ -1,5 +1,5 @@
 export const messagesAssets = {
-    icons: {
-        splashIcon: require("./icons/flash-circle.png")
-    },
+  icons: {
+    splashIcon: require("./icons/flash-circle.png"),
+  },
 };

@@ -18,15 +18,15 @@ export default function Legalterms() {
     const terms = [
         {
             title: "Acceptance of Terms",
-            description: "By accessing and using Health Bridge, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our services.",
+            description: "By accessing and using OHealth, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our services.",
         },
         {
             title: "Use of Services",
-            description: "Health Bridge provides a platform to connect patients with healthcare professionals. You agree to use our services only for lawful purposes and in accordance with these Terms. You are responsible for maintaining the confidentiality of your account information.",
+            description: "OHealth provides a platform to connect patients with healthcare professionals. You agree to use our services only for lawful purposes and in accordance with these Terms. You are responsible for maintaining the confidentiality of your account information.",
         },
         {
             title: "Medical Disclaimer",
-            description: "Health Bridge is not a healthcare provider. The platform facilitates connections between patients and licensed healthcare professionals. Any medical advice, diagnosis, or treatment you receive is provided by independent healthcare professionals, not by Health Bridge.",
+            description: "OHealth is not a healthcare provider. The platform facilitates connections between patients and licensed healthcare professionals. Any medical advice, diagnosis, or treatment you receive is provided by independent healthcare professionals, not by OHealth.",
         },
         {
             title: "Privacy and Data Protection",
@@ -38,11 +38,11 @@ export default function Legalterms() {
         },
         {
             title: "Payment Terms",
-            description: "You agree to pay all fees associated with your use of Health Bridge services. Payment is due at the time of service unless otherwise arranged. We accept various payment methods as displayed in the app.",
+            description: "You agree to pay all fees associated with your use of OHealth services. Payment is due at the time of service unless otherwise arranged. We accept various payment methods as displayed in the app.",
         },
         {
             title: "Limitation of Liability",
-            description: "Health Bridge shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use or inability to use the service, or for the cost of procurement of substitute services.",
+            description: "OHealth shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use or inability to use the service, or for the cost of procurement of substitute services.",
         },
         {
             title: "Changes to Terms",
@@ -69,7 +69,7 @@ export default function Legalterms() {
         },
         {
             title: "HIPAA Compliance",
-            description: "Health Bridge is committed to complying with the Health Insurance Portability and Accountability Act (HIPAA). Your protected health information is handled in accordance with HIPAA privacy and security rules.",
+            description: "OHealth is committed to complying with the Health Insurance Portability and Accountability Act (HIPAA). Your protected health information is handled in accordance with HIPAA privacy and security rules.",
         },
         {
             title: "Your Rights and Choices",
@@ -96,8 +96,8 @@ export default function Legalterms() {
 
         },
         Description: {
-            'terms': "Please read these terms and conditions carefully before using HealthBridge. Your use of our service constitutes your agreement to these terms.",
-            "privacy": "Please read these privacy practices carefully before using HealthBridge. Your use of our service constitutes your agreement to these policies."
+            'terms': "Please read these terms and conditions carefully before using OHealth. Your use of our service constitutes your agreement to these terms.",
+            "privacy": "Please read these privacy practices carefully before using OHealth. Your use of our service constitutes your agreement to these policies."
         },
 
         content: {

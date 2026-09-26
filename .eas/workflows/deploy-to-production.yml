@@ -1,5 +1,5 @@
 name: Deploy to production
-# Temporarily disabled: production deployment is not enabled for Health Bridge yet.
+# Temporarily disabled: production deployment is not enabled for OHealth yet.
 # Prerequisites before re-enabling:
 #   - iOS signing certificate and provisioning profile (run: npx eas credentials --platform ios)
 #   - Android production keystore (run: npx eas credentials --platform android)

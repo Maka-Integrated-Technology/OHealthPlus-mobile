@@ -2,12 +2,14 @@ import { queryClient } from "@/config/queryClient";
 import AuthService from "@/features/auth/services/auth";
 import type {
   AuthSession,
+  ChangePasswordPayload,
   ForgotPasswordRequest,
   GoogleLoginRequest,
   LoginRequest,
   RefreshTokenResponse,
   ResetPasswordRequest,
   SignupRequest,
+  UpdateProfilePayload,
   VerifySignupRequest,
 } from "@/features/auth/types/auth";
 import { QUERY_KEYS } from "@/utils/queryKeys";
@@ -15,7 +17,6 @@ import {
   clearAuthStorage,
   getRefreshToken,
   getSessionId,
-  getUserId,
   saveRefreshToken,
   saveSessionExpiresAt,
   saveSessionId,
@@ -126,15 +127,38 @@ export function useGetMe() {
   });
 }
 
+export function useUpdateProfile() {
+  return useMutation({
+    mutationFn: (data: UpdateProfilePayload) =>
+      AuthService.updateProfile(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.auth.me });
+    },
+  });
+}
+
+/**
+ * Authenticated change-password.
+ *
+ * Side-effect warning: the backend revokes every active session for the
+ * user on success. Callers must treat a successful response like a forced
+ * logout — clear local auth storage and redirect to sign-in.
+ */
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: (data: ChangePasswordPayload) =>
+      AuthService.changePassword(data),
+  });
+}
+
 export function useLogout() {
   return useMutation({
     mutationFn: async () => {
-      const [session_id, user_id] = await Promise.all([
-        getSessionId(),
-        getUserId(),
-      ]);
-      if (session_id && user_id) {
-        await AuthService.logout({ session_id, user_id });
+      // The server resolves the session owner from the access token; the
+      // body only needs to name which session to revoke.
+      const session_id = await getSessionId();
+      if (session_id) {
+        await AuthService.logout({ session_id });
       }
     },
     onSettled: async () => {
