@@ -1,4 +1,4 @@
-# 🏥 HealthBridge Mobile
+# 🏥 OHealth Patient App
 
 A modern, feature-rich mobile application built with React Native and Expo, designed to help users manage their health records, appointments, and wellness journey.
 
@@ -21,7 +21,7 @@ A modern, feature-rich mobile application built with React Native and Expo, desi
 This project follows a **feature-based folder structure** for better scalability and maintainability:
 
 ```
-healthbridge-mobile/
+OHealthPlus-mobile/
 ├── app/                          # Expo Router (file-based routing)
 │   ├── (auth)/                   # Authentication routes
 │   │   ├── _layout.tsx
@@ -93,8 +93,8 @@ healthbridge-mobile/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/healthBridge01/healthBridge-mobile.git
-   cd healthBridge-mobile
+   git clone https://github.com/Maka-Integrated-Technology/OHealthPlus-mobile.git
+   cd OHealthPlus-mobile
    ```
 
 2. **Switch to development branch**
@@ -115,7 +115,7 @@ healthbridge-mobile/
    ```
    Edit `.env` with your configuration:
    ```
-   EXPO_PUBLIC_API_URL=https://api.healthbridge.com
+   EXPO_PUBLIC_API_URL=https://api.staging.ohealthltd.com/api
    EXPO_PUBLIC_ENV=development
    ```
 
@@ -299,31 +299,31 @@ npm test -- LoginForm.test.tsx
 
 ## 🚢 Deployment Status (EAS)
 
-Health Bridge Mobile uses [Expo EAS](https://expo.dev/eas) for builds, OTA updates, and store submission. The project is linked to **@ohealth/health-bridge** on expo.dev.
+OHealth Patient App uses [Expo EAS](https://expo.dev/eas) for builds, OTA updates, and store submission. The project is linked to **@ohealth/ohealth-patient-app** on expo.dev.
 
 | Platform | Preview builds | Preview OTA updates | Production builds | Production submission |
 |----------|:--------------:|:-------------------:|:-----------------:|:---------------------:|
 | Android  | ✅ Active      | ✅ Active           | ⏸ Disabled        | ⏸ Disabled            |
 | iOS      | ⏸ Disabled    | ⏸ Disabled          | ⏸ Disabled        | ⏸ Disabled            |
 
-**Why iOS is disabled:** iOS signing credentials (distribution certificate and provisioning profile) have not been configured yet for `com.ohealth.healthbridge.preview`. See the activation checklist below.
+**Why iOS is disabled:** iOS signing credentials (distribution certificate and provisioning profile) have not been configured yet for `com.ohealth.patientapp.preview`. See the activation checklist below.
 
 **Why production is disabled:** Both Android and iOS production builds require store records, signing credentials, and (for iOS) an App Store Connect `ascAppId` in `eas.json`. The production workflow is preserved in `.eas/workflows/deploy-to-production.yml` but commented out.
 
 ### Current automated behavior
 
-- Push to `preview` branch → fingerprint Android → publish Android OTA update if a matching build exists, or trigger a new Android build if the native code changed.
+- Push to `dev` branch → fingerprint Android → publish Android OTA update if a matching build exists, or trigger a new Android build if the native code changed.
 - Push to `main` branch → **no action** (production workflow is commented out).
 
 ### Activation checklist
 
 **To enable iOS preview builds:**
-1. Run `npx eas credentials --platform ios` and provision a certificate + profile for `com.ohealth.healthbridge.preview`
+1. Run `npx eas credentials --platform ios` and provision a certificate + profile for `com.ohealth.patientapp.preview`
 2. Uncomment `get_ios_build`, `build_ios`, and `publish_ios_update` in `.eas/workflows/publish-preview-update.yml`
 
 **To enable production deployment (both platforms):**
-1. Create the app in **App Store Connect** for `com.ohealth.healthbridge` and add its numeric ID to `eas.json` → `submit.production.ios.ascAppId`
-2. Create the app in **Google Play Console** for `com.ohealth.healthbridge` and configure a service account via `npx eas credentials --platform android`
+1. Create the app in **App Store Connect** for `com.ohealth.patientapp` and add its numeric ID to `eas.json` → `submit.production.ios.ascAppId`
+2. Create the app in **Google Play Console** for `com.ohealth.patientapp` and configure a service account via `npx eas credentials --platform android`
 3. Provision iOS production signing via `npx eas credentials --platform ios`
 4. Uncomment the `on:` block and `jobs:` block in `.eas/workflows/deploy-to-production.yml`
 
@@ -370,7 +370,7 @@ Create `.env` file in the project root:
 
 ```env
 # API Configuration
-EXPO_PUBLIC_API_URL=https://api.healthbridge.com
+EXPO_PUBLIC_API_URL=https://api.staging.ohealthltd.com/api
 EXPO_PUBLIC_API_TIMEOUT=10000
 
 # Environment
@@ -446,8 +446,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/healthBridge01/healthBridge-mobile/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/healthBridge01/healthBridge-mobile/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Maka-Integrated-Technology/OHealthPlus-mobile/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Maka-Integrated-Technology/OHealthPlus-mobile/discussions)
 - **Email**: support@healthbridge.com
 
 ## 🗺️ Roadmap
@@ -465,8 +465,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Expo Documentation](https://docs.expo.dev/)
 - [React Native Documentation](https://reactnative.dev/)
 - [TypeScript Documentation](https://www.typescriptlang.org/)
-- [Project Wiki](https://github.com/healthBridge01/healthBridge-mobile/wiki)
+- [Project Wiki](https://github.com/Maka-Integrated-Technology/OHealthPlus-mobile/wiki)
 
 ---
 
-**Made with ❤️ by the HealthBridge Team**
+**Made with ❤️ by the OHealth Team**

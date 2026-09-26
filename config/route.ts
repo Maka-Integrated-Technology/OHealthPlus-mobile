@@ -83,14 +83,21 @@ export const useAppRouter = () => {
         // ============================================
         toHome: () => navigateReplace(ROUTES.HOME),
         toBookAppointments: () => navigate(ROUTES.BOOK_APPOINTMENT),
-        toAvailabeleProfessionals: () => navigate(ROUTES.AVAILABLE_PROFESSIONALS),
-        toProfessionalProfile: (params?: { professionalId?: string }) => 
+        /** Kept original (misspelled) name for call-site compatibility. */
+        toAvailabeleProfessionals: (params?: { specialityId?: string; specialityName?: string }) =>
+            navigate(ROUTES.AVAILABLE_PROFESSIONALS, params),
+        toProfessionalProfile: (params?: { professionalId?: string }) =>
             navigate(ROUTES.PROFESSIONAL_PROFILE, params),
-        toSelectDateTime: (params?: { professionalId?: string; consultationType?: string }) => 
+        toSelectDateTime: (params?: { professionalId?: string; consultationType?: string }) =>
             navigate(ROUTES.SELECT_DATE_TIME, params),
-        toConfirmAppointment: (params?: { professionalId?: string; consultationType?: string; date?: string; time?: string }) => 
-            navigate(ROUTES.CONFIRM_APPOINTMENT, params),
-        toAppointmentConfirmed: (params?: { professionalId?: string; consultationType?: string; date?: string; time?: string }) => 
+        toConfirmAppointment: (params?: {
+            professionalId?: string;
+            consultationType?: string;
+            bookingDate?: string;
+            bookingTime?: string;
+            slotId?: string;
+        }) => navigate(ROUTES.CONFIRM_APPOINTMENT, params),
+        toAppointmentConfirmed: (params?: { bookingId?: string }) =>
             navigate(ROUTES.APPOINTMENT_CONFIRMED, params),
         toAppointmentDetails: (params?: { id?: string }) =>
             navigate(ROUTES.APPOINTMENT_DETAILS, params),
@@ -98,10 +105,35 @@ export const useAppRouter = () => {
             navigate(ROUTES.VIDEO_CONSULTATION_SETUP, params),
         toVideoCall: (params?: { appointmentId?: string; doctorName?: string }) =>
             navigate(ROUTES.VIDEO_CALL, params),
-        toConsultationCompleted: (params?: { doctorName?: string }) =>
+        toConsultationCompleted: (params?: { doctorName?: string; appointmentId?: string }) =>
             navigate(ROUTES.CONSULTATION_COMPLETED, params),
         toAppointmentSummary: (params?: { appointmentId?: string }) =>
             navigate(ROUTES.APPOINTMENT_SUMMARY, params),
+
+        // ============================================
+        // Lab Test Booking Navigation
+        // ============================================
+        toLaboratory: () => navigate(ROUTES.LABORATORY),
+        toLabEnableLocation: (params?: { next?: "laboratory" | "chooseLab" }) =>
+            navigate(ROUTES.LAB_ENABLE_LOCATION, params),
+        toUploadTestRequest: (params?: { fileName?: string; fileSize?: string }) =>
+            navigate(ROUTES.UPLOAD_TEST_REQUEST, params),
+        toUploadTestRequestCamera: () => navigate(ROUTES.UPLOAD_TEST_REQUEST_CAMERA),
+        toReadingTestRequest: () => navigate(ROUTES.READING_TEST_REQUEST),
+        toExtractedTests: () => navigate(ROUTES.EXTRACTED_TESTS),
+        toChooseLab: () => navigate(ROUTES.CHOOSE_LAB),
+        toLabOverview: (params: { labId: string }) =>
+            navigate(ROUTES.LAB_OVERVIEW, params),
+        toSelectLabDateTime: (params: { labId: string }) =>
+            navigate(ROUTES.SELECT_LAB_DATE_TIME, params),
+        toReviewLabBooking: (params: { labId: string; date?: string; time?: string }) =>
+            navigate(ROUTES.REVIEW_LAB_BOOKING, params),
+        toLabBookingConfirmed: (params?: { bookingId?: string; labId?: string }) =>
+            navigate(ROUTES.LAB_BOOKING_CONFIRMED, params),
+        toSearchTests: () => navigate(ROUTES.SEARCH_TESTS),
+        toMyTests: () => navigate(ROUTES.MY_TESTS),
+        toLabTestResultDetail: (params?: { id?: string }) =>
+            navigate(ROUTES.LAB_TEST_RESULT_DETAIL, params),
 
         toAIHealthAssistant: () => navigate(ROUTES.AI_HEALTH_ASSISTANT),
 
@@ -113,6 +145,22 @@ export const useAppRouter = () => {
         toNotifications: () => navigate(ROUTES.NOTIFICATIONS),
         toTermsAndConditions: () => navigate(ROUTES.TERMS_AND_CONDITIONS),
         toPrivacyPolicy: () => navigate(ROUTES.PRIVACY_POLICY),
+
+        // ============================================
+        // Medical Records Navigation
+        // ============================================
+        toMedicalRecords: () => navigate(ROUTES.MEDICAL_RECORDS),
+        toGeneralInformation: () => navigate(ROUTES.GENERAL_INFORMATION),
+        toUpdateGeneralInformation: () =>
+            navigate(ROUTES.UPDATE_GENERAL_INFORMATION),
+        toAllergies: () => navigate(ROUTES.ALLERGIES),
+        toAddAllergy: () => navigate(ROUTES.ADD_ALLERGY),
+        toLabResults: () => navigate(ROUTES.LAB_RESULTS),
+        toLabResultDetail: (params: { id: string }) =>
+            navigate(ROUTES.LAB_RESULT_DETAIL, params),
+        toHealthConditions: () => navigate(ROUTES.HEALTH_CONDITIONS),
+        toAddHealthCondition: () => navigate(ROUTES.ADD_HEALTH_CONDITION),
+        toAddOtherCondition: () => navigate(ROUTES.ADD_OTHER_CONDITION),
 
         toFavourites: () => navigate(ROUTES.FAVOURITES),
 
@@ -135,7 +183,6 @@ export const useAppRouter = () => {
         // Paywall Navigation
         // ============================================
         toSubscription: () => navigate(ROUTES.SUBSCRIPTION),
-        toOtp: () => navigate(ROUTES.OTP),
         toUpgradePlan: () => navigate(ROUTES.UPGRADE_PLAN),
         toPaymentSuccess: (params?: { plan?: string; amount?: string }) =>
             navigate(ROUTES.PAYMENT_SUCCESS, params),
