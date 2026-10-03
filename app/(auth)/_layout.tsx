@@ -19,7 +19,6 @@ export default function AuthLayout() {
       <Stack.Screen name="EmailVerification" />
       <Stack.Screen name="NewPassword" />
       <Stack.Screen name="PasswordResetSuccess" />
-      <Stack.Screen name="OTP" />
       <Stack.Screen name="legalTerm" />
     </Stack>
   );

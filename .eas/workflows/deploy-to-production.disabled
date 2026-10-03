@@ -6,7 +6,7 @@ name: Deploy to production
 #   - App Store Connect app record + ascAppId added to eas.json submit.production.ios
 #   - Google Play app record + service account JSON for Android submission
 #   - All EAS secrets and environment variables confirmed on expo.dev
-# To restore: uncomment the `on:` block and the entire `jobs:` block below.
+# To restore: uncomment the `on:` and `jobs:` blocks, then rename this file with a `.yml` extension.
 
 # on:
 #   push:
