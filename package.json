@@ -14,7 +14,10 @@
     "build:prod:android": "eas build --profile production --platform android",
     "build:prod:all": "eas build --profile production --platform all",
     "submit:ios": "eas submit --platform ios",
-    "submit:android": "eas submit --platform android"
+    "submit:android": "eas submit --platform android",
+    "typecheck": "tsc --noEmit",
+    "audit:dependencies": "node scripts/security/dependency-audit-policy.mjs",
+    "test:audit-policy": "node --test scripts/security/dependency-audit-policy.test.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
