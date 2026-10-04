@@ -20,30 +20,6 @@ export const acceptedAdvisories = new Map([
       reason: "No patched release exists; Expo uses it for update code-signing tooling.",
     },
   ],
-  [
-    "GHSA-5p2g-fcmc-qvqq",
-    {
-      packageName: "image-size",
-      reviewBy: REVIEW_BY,
-      reason: "The fixed major is incompatible with Metro 0.83 and breaks Expo exports.",
-    },
-  ],
-  [
-    "GHSA-w3rx-r6r6-pgpr",
-    {
-      packageName: "image-size",
-      reviewBy: REVIEW_BY,
-      reason: "The fixed major is incompatible with Metro 0.83 and breaks Expo exports.",
-    },
-  ],
-  [
-    "GHSA-vcc3-ghjq-m6fr",
-    {
-      packageName: "decode-uri-component",
-      reviewBy: REVIEW_BY,
-      reason: "The fixed major is incompatible with query-string 7 used by Expo Router.",
-    },
-  ],
 ]);
 
 function advisoryId(url) {
