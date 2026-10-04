@@ -74,6 +74,8 @@ jobs:
 
       - name: Export application bundles
         run: npx --no-install expo export --output-dir "$RUNNER_TEMP/ohealth-mobile-export"
+        env:
+          NODE_OPTIONS: --require=./scripts/compat/image-size-register.cjs
 
       - name: Verify repository was not modified
         if: always()

@@ -1,6 +1,6 @@
 // Metro configuration for Expo
 // Enables importing `.svg` files as React components via `react-native-svg-transformer`.
-require("./scripts/compat/image-size.cjs").installImageSizeCompatibility();
+require("./scripts/compat/image-size-register.cjs");
 
 const { getDefaultConfig } = require("expo/metro-config");
 
