@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { evaluateAudit } from "./dependency-audit-policy.mjs";
+import { acceptedAdvisories, evaluateAudit } from "./dependency-audit-policy.mjs";
 
 const beforeDeadline = new Date("2026-10-03T00:00:00Z");
 
@@ -16,13 +16,22 @@ function auditFor(packageName, url) {
   };
 }
 
-test("accepts a reviewed advisory for its expected package", () => {
-  const audit = auditFor(
-    "braces",
-    "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
-  );
+for (const [id, advisory] of acceptedAdvisories) {
+  test(`accepts reviewed advisory ${id} for ${advisory.packageName}`, () => {
+    const audit = auditFor(
+      advisory.packageName,
+      `https://github.com/advisories/${id}`,
+    );
 
-  assert.equal(evaluateAudit(audit, beforeDeadline).length, 1);
+    assert.equal(evaluateAudit(audit, beforeDeadline).length, 1);
+  });
+}
+
+test("requires ownership and an expiry date for every temporary exception", () => {
+  for (const advisory of acceptedAdvisories.values()) {
+    assert.equal(advisory.reviewBy, "2026-11-14");
+    assert.match(advisory.reason, /OHealthPlus-mobile\/issues\/50/);
+  }
 });
 
 test("rejects an advisory that is not explicitly reviewed", () => {
@@ -37,7 +46,7 @@ test("rejects an advisory that is not explicitly reviewed", () => {
 test("rejects an accepted advisory reported against another package", () => {
   const audit = auditFor(
     "example-package",
-    "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
   );
 
   assert.throws(() => evaluateAudit(audit, beforeDeadline), /Unapproved dependency advisories/);
@@ -45,10 +54,10 @@ test("rejects an accepted advisory reported against another package", () => {
 
 test("accepts a transitive finding only when it reaches a reviewed advisory", () => {
   const audit = auditFor(
-    "braces",
-    "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "deepmerge",
+    "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
   );
-  audit.vulnerabilities.micromatch = { via: ["braces"] };
+  audit.vulnerabilities["@expo/config"] = { via: ["deepmerge"] };
   audit.metadata.vulnerabilities.total = 2;
 
   assert.equal(evaluateAudit(audit, beforeDeadline).length, 1);
@@ -58,7 +67,7 @@ test("rejects a transitive finding with a missing advisory root", () => {
   const audit = {
     metadata: { vulnerabilities: { total: 1 } },
     vulnerabilities: {
-      micromatch: { via: ["braces"] },
+      "@expo/config": { via: ["deepmerge"] },
     },
   };
 
@@ -67,11 +76,11 @@ test("rejects a transitive finding with a missing advisory root", () => {
 
 test("accepts a dependency cycle when it also reaches a reviewed root", () => {
   const audit = auditFor(
-    "braces",
-    "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "deepmerge",
+    "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
   );
-  audit.vulnerabilities.metro = { via: ["metro-config", "braces"] };
-  audit.vulnerabilities["metro-config"] = { via: ["metro"] };
+  audit.vulnerabilities["@expo/config"] = { via: ["expo", "deepmerge"] };
+  audit.vulnerabilities.expo = { via: ["@expo/config"] };
   audit.metadata.vulnerabilities.total = 3;
 
   assert.equal(evaluateAudit(audit, beforeDeadline).length, 1);
@@ -79,12 +88,12 @@ test("accepts a dependency cycle when it also reaches a reviewed root", () => {
 
 test("rejects expired advisory exceptions", () => {
   const audit = auditFor(
-    "braces",
-    "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "deepmerge",
+    "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
   );
 
   assert.throws(
-    () => evaluateAudit(audit, new Date("2026-11-04T00:00:00Z")),
+    () => evaluateAudit(audit, new Date("2026-11-15T00:00:00Z")),
     /exception expired/,
   );
 });
@@ -95,8 +104,8 @@ test("rejects unsupported audit output", () => {
 
 test("rejects audit output with inconsistent vulnerability metadata", () => {
   const audit = auditFor(
-    "braces",
-    "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "deepmerge",
+    "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
   );
   audit.metadata.vulnerabilities.total = 0;
 
