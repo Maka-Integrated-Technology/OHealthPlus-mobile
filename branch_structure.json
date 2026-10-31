@@ -1,0 +1,24 @@
+{
+  "default_branch": "dev",
+  "branches": [
+    "dependabot/npm_and_yarn/npm-security-updates-3385a97451",
+    "dev",
+    "main",
+    "origin",
+    "staging"
+  ],
+  "parent": {
+    "dependabot/npm_and_yarn/npm-security-updates-3385a97451": "dev",
+    "dev": null,
+    "main": "dev",
+    "origin": "dev",
+    "staging": "dev"
+  },
+  "order": [
+    "dev",
+    "dependabot/npm_and_yarn/npm-security-updates-3385a97451",
+    "main",
+    "origin",
+    "staging"
+  ]
+}
