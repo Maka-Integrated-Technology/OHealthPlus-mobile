@@ -13,64 +13,56 @@ updates:
     commit-message:
       prefix: "fix"
       include: "scope"
-    # Expo SDK controls the compatible versions of its native runtime packages.
-    # Routine version updates for this set must go through the SDK migration
-    # tracked in issue #50. Security updates are unaffected by these
-    # version-update-only rules and will still be opened independently.
+    # Routine major upgrades require an intentional migration and dedicated
+    # validation. Expo SDK also controls compatible minor and patch versions
+    # for its native runtime package families. Security updates are unaffected
+    # by these version-update-only rules and remain enabled independently.
     ignore:
-      - dependency-name: "expo"
+      - dependency-name: "*"
         update-types:
           - "version-update:semver-major"
+      - dependency-name: "expo"
+        update-types:
           - "version-update:semver-minor"
           - "version-update:semver-patch"
       - dependency-name: "expo-*"
         update-types:
-          - "version-update:semver-major"
           - "version-update:semver-minor"
           - "version-update:semver-patch"
       - dependency-name: "@expo/*"
         update-types:
-          - "version-update:semver-major"
           - "version-update:semver-minor"
           - "version-update:semver-patch"
       - dependency-name: "react"
         update-types:
-          - "version-update:semver-major"
           - "version-update:semver-minor"
           - "version-update:semver-patch"
       - dependency-name: "react-dom"
         update-types:
-          - "version-update:semver-major"
           - "version-update:semver-minor"
           - "version-update:semver-patch"
       - dependency-name: "react-test-renderer"
         update-types:
-          - "version-update:semver-major"
           - "version-update:semver-minor"
           - "version-update:semver-patch"
       - dependency-name: "@types/react"
         update-types:
-          - "version-update:semver-major"
           - "version-update:semver-minor"
           - "version-update:semver-patch"
       - dependency-name: "react-native"
         update-types:
-          - "version-update:semver-major"
           - "version-update:semver-minor"
           - "version-update:semver-patch"
       - dependency-name: "react-native-*"
         update-types:
-          - "version-update:semver-major"
           - "version-update:semver-minor"
           - "version-update:semver-patch"
       - dependency-name: "@react-native/*"
         update-types:
-          - "version-update:semver-major"
           - "version-update:semver-minor"
           - "version-update:semver-patch"
       - dependency-name: "@react-navigation/*"
         update-types:
-          - "version-update:semver-major"
           - "version-update:semver-minor"
           - "version-update:semver-patch"
     # Keep security updates independent so one incompatible fix cannot block others.
